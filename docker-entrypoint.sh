@@ -8,8 +8,8 @@ if [ -n "$PORT" ]; then
 fi
 
 # Ensure storage directories and permissions exist
-mkdir -p /var/www/html/storage/framework/{sessions,views,cache} /var/www/html/storage/logs /var/www/html/bootstrap/cache /var/www/html/database
-chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+mkdir -p /var/www/html/storage/framework/{sessions,views,cache} /var/www/html/storage/logs /var/www/html/bootstrap/cache /var/www/html/database /var/www/html/public/uploads
+chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database /var/www/html/public/uploads
 
 # Ensure .env exists
 if [ ! -f /var/www/html/.env ]; then

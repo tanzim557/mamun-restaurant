@@ -568,10 +568,66 @@ function closeModal() {
     document.getElementById('adminModal').classList.remove('open');
 }
 
-function previewModalImage(url) {
-    const el = document.getElementById('imgPreviewEl');
+function previewModalImage(url, previewElId = 'imgPreviewEl') {
+    const el = document.getElementById(previewElId);
     if (el && url && url.trim() !== '') {
         el.src = url.trim();
+    }
+}
+
+async function handleDirectImageUpload(inputEl, targetInputId, previewImgId, statusId) {
+    if (!inputEl.files || !inputEl.files[0]) return;
+    const file = inputEl.files[0];
+    const previewEl = document.getElementById(previewImgId);
+    const targetInput = document.getElementById(targetInputId);
+    const statusEl = document.getElementById(statusId);
+
+    if (statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#60a5fa';
+        statusEl.innerText = '⏳ ছবি আপলোড হচ্ছে...';
+    }
+
+    // Instant local preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        if (previewEl) previewEl.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '';
+        const res = await fetch('/api/admin/upload-image', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+            body: formData
+        });
+        const data = await res.json();
+
+        if (res.ok && data.url) {
+            if (targetInput) targetInput.value = data.url;
+            if (statusEl) {
+                statusEl.style.color = '#4ade80';
+                statusEl.innerText = '✅ ছবি সফলভাবে আপলোড হয়েছে!';
+            }
+        } else {
+            // Fallback to data url
+            if (targetInput && reader.result) targetInput.value = reader.result;
+            if (statusEl) {
+                statusEl.style.color = '#4ade80';
+                statusEl.innerText = '✅ ছবি যুক্ত হয়েছে!';
+            }
+        }
+    } catch(err) {
+        if (targetInput && reader.result) targetInput.value = reader.result;
+        if (statusEl) {
+            statusEl.style.color = '#4ade80';
+            statusEl.innerText = '✅ ছবি যুক্ত হয়েছে!';
+        }
     }
 }
 
@@ -612,12 +668,25 @@ function openEditMenuModal(id) {
             </div>
         </div>
 
+        <!-- Direct Image Upload & URL -->
         <div class="form-group mb-3">
-            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ছবির লিংক (Image URL)</label>
-            <input type="text" id="mEditImage" class="form-input" value="${item.image || ''}" placeholder="https://images.unsplash.com/..." oninput="previewModalImage(this.value)" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
-            <div style="margin-top:8px;display:flex;align-items:center;gap:10px;">
-                <img id="imgPreviewEl" src="${img}" style="width:80px;height:55px;border-radius:8px;object-fit:cover;border:1px solid #3f3f46;" alt="Preview">
-                <span style="font-size:0.75rem;color:#71717a;">খাবারের ছবি প্রিভিউ</span>
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:6px;display:block;">খাবারের ছবি (Direct Upload / Link)</label>
+            
+            <div style="background:rgba(255,255,255,0.03);border:2px dashed #3f3f46;border-radius:12px;padding:1.1rem;text-align:center;margin-bottom:0.75rem;cursor:pointer;transition:all 0.2s;" onclick="document.getElementById('mEditFileInput').click()">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+                    <div style="width:40px;height:40px;border-radius:50%;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;color:#60a5fa;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <span style="font-weight:700;color:#fff;font-size:0.92rem;">ডিভাইস / ফোন থেকে সরাসরি ছবি দিন 📷</span>
+                    <span style="font-size:0.75rem;color:#a1a1aa;">যেকোনো ছবি (JPG, PNG, WebP, ক্যামেরা ফটো) সিলেক্ট করুন</span>
+                </div>
+            </div>
+            <input type="file" id="mEditFileInput" accept="image/*" style="display:none;" onchange="handleDirectImageUpload(this, 'mEditImage', 'imgPreviewEl', 'mEditUploadStatus')">
+            <div id="mEditUploadStatus" style="font-size:0.8rem;color:#4ade80;font-weight:700;margin-bottom:6px;display:none;"></div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+                <input type="text" id="mEditImage" class="form-input" value="${item.image || ''}" placeholder="বা ছবির লিংক পেস্ট করুন..." oninput="previewModalImage(this.value, 'imgPreviewEl')" style="flex:1;padding:0.65rem 0.85rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;font-size:0.82rem;">
+                <img id="imgPreviewEl" src="${img}" style="width:65px;height:48px;border-radius:8px;object-fit:cover;border:1px solid #3f3f46;flex-shrink:0;" alt="Preview">
             </div>
         </div>
 
@@ -696,10 +765,29 @@ function openAddMenuModal() {
                 </select>
             </div>
         </div>
+
+        <!-- Direct Image Upload & URL -->
         <div class="form-group mb-3">
-            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ছবির লিংক (Image URL - ঐচ্ছিক)</label>
-            <input type="text" id="mImage" class="form-input" placeholder="https://..." style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:6px;display:block;">খাবারের ছবি (Direct Upload / Link)</label>
+            
+            <div style="background:rgba(255,255,255,0.03);border:2px dashed #3f3f46;border-radius:12px;padding:1.1rem;text-align:center;margin-bottom:0.75rem;cursor:pointer;transition:all 0.2s;" onclick="document.getElementById('mAddFileInput').click()">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+                    <div style="width:40px;height:40px;border-radius:50%;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;color:#60a5fa;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <span style="font-weight:700;color:#fff;font-size:0.92rem;">ডিভাইস / ফোন থেকে সরাসরি ছবি দিন 📷</span>
+                    <span style="font-size:0.75rem;color:#a1a1aa;">যেকোনো ছবি (JPG, PNG, WebP, ক্যামেরা ফটো) সিলেক্ট করুন</span>
+                </div>
+            </div>
+            <input type="file" id="mAddFileInput" accept="image/*" style="display:none;" onchange="handleDirectImageUpload(this, 'mImage', 'addImgPreviewEl', 'mAddUploadStatus')">
+            <div id="mAddUploadStatus" style="font-size:0.8rem;color:#4ade80;font-weight:700;margin-bottom:6px;display:none;"></div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+                <input type="text" id="mImage" class="form-input" placeholder="বা ছবির লিংক পেস্ট করুন..." oninput="previewModalImage(this.value, 'addImgPreviewEl')" style="flex:1;padding:0.65rem 0.85rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;font-size:0.82rem;">
+                <img id="addImgPreviewEl" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80" style="width:65px;height:48px;border-radius:8px;object-fit:cover;border:1px solid #3f3f46;flex-shrink:0;" alt="Preview">
+            </div>
         </div>
+
         <div class="form-group mb-3">
             <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">বিবরণ</label>
             <textarea id="mDesc" class="form-input" rows="2" placeholder="খাবারের বিশেষত্ব..." style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;resize:vertical;"></textarea>

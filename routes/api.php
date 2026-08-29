@@ -61,3 +61,4 @@ Route::delete('/stock/{id}', [StockController::class, 'destroy']);
 
 // Upload
 Route::post('/upload/image', [UploadController::class, 'image']);
+Route::post('/admin/upload-image', [UploadController::class, 'image']);
