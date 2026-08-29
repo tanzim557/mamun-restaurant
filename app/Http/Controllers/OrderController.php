@@ -42,7 +42,48 @@ class OrderController extends Controller
             $order->refresh();
             $order->load('orderItems');
 
-            return response()->json(['success' => true, 'order' => $order], 201);
+            $shortId = 'MR-' . strtoupper(substr(str_replace('-', '', $order->id), 0, 6));
+
+            return response()->json([
+                'success' => true,
+                'order' => array_merge($order->toArray(), ['shortId' => $shortId])
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function track(Request $request)
+    {
+        try {
+            $query = trim($request->input('query', ''));
+            $phone = trim($request->input('phone', ''));
+            $orderId = trim($request->input('orderId', ''));
+
+            $search = $query ?: ($orderId ?: $phone);
+            if (!$search) {
+                return response()->json(['error' => 'অর্ডার নম্বর বা মোবাইল নম্বর প্রদান করুন।'], 400);
+            }
+
+            $cleanSearch = str_ireplace(['#', 'MR-', 'MR', ' '], '', $search);
+
+            $order = Order::with('orderItems')
+                ->where('id', $search)
+                ->orWhere('id', 'LIKE', '%' . $cleanSearch . '%')
+                ->orWhere('phone_number', 'LIKE', '%' . $search . '%')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if (!$order) {
+                return response()->json(['error' => 'কোনো অর্ডার পাওয়া যায়নি। সঠিক অর্ডার আইডি বা মোবাইল নম্বর দিন।'], 404);
+            }
+
+            $shortId = 'MR-' . strtoupper(substr(str_replace('-', '', $order->id), 0, 6));
+
+            return response()->json([
+                'success' => true,
+                'order' => array_merge($order->toArray(), ['shortId' => $shortId])
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

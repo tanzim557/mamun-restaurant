@@ -13,17 +13,33 @@
 
 <!-- Success View -->
 <div id="orderSuccess" class="hidden">
-    <div class="success-box" style="max-width:480px;margin:0 auto;background:#141418;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);box-shadow:var(--shadow-xl);margin-top:3rem;margin-bottom:3rem;padding:2.5rem;text-align:center;">
-        <div class="success-icon" style="color:#22c55e;margin-bottom:1rem;display:flex;justify-content:center;">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div class="success-box" style="max-width:520px;margin:0 auto;background:#14141a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;box-shadow:0 30px 60px rgba(0,0,0,0.9);margin-top:3rem;margin-bottom:3rem;padding:2.75rem 2rem;text-align:center;">
+        <div class="success-icon" style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #22c55e;color:#4ade80;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:0.5rem;">অর্ডার সফল হয়েছে!</h2>
-        <p class="text-muted mb-6">আপনার অর্ডার পাওয়া গেছে। শীঘ্রই আমাদের প্রতিনিধি কনফার্ম করবেন।</p>
-        <div style="background:#1e1e24;border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-sm);padding:1.25rem;text-align:left;margin-bottom:2rem;">
-            <p class="text-sm text-muted">অর্ডার ID</p>
-            <p id="successOrderId" style="font-family:monospace;font-size:0.85rem;color:#60a5fa;word-break:break-all;font-weight:700;margin-top:4px;"></p>
+        <h2 style="font-size:1.85rem;font-weight:900;color:#fff;margin-bottom:0.4rem;">অর্ডার সফল হয়েছে!</h2>
+        <p class="text-muted mb-6" style="font-size:0.95rem;">আপনার অর্ডারটি আমাদের কিচেনে পৌঁছে গেছে। খুব শীঘ্রই প্রতিনিধি কল করবেন।</p>
+        
+        <!-- Short Order ID Card with Copy Button -->
+        <div style="background:#1a1a24;border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:1.25rem;margin-bottom:1.75rem;">
+            <p style="font-size:0.78rem;color:#a1a1aa;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;margin-bottom:6px;">আপনার অর্ডার ট্র্যাকিং আইডি</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+                <span id="successOrderId" style="font-family:'Outfit',monospace;font-size:1.45rem;color:#f59e0b;font-weight:900;letter-spacing:0.06em;"></span>
+                <button type="button" onclick="copyOrderId()" class="btn-copy-id" id="copyIdBtn" title="আইডি কপি করুন">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span id="copyBtnText">কপি করুন</span>
+                </button>
+            </div>
+            <p style="font-size:0.75rem;color:#71717a;margin-top:8px;">(এই আইডি অথবা আপনার মোবাইল নম্বর দিয়ে অর্ডার ট্র্যাক করতে পারবেন)</p>
         </div>
-        <button class="btn btn-primary btn-block" onclick="resetOrder()">আরো অর্ডার করুন</button>
+
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <a id="successTrackLink" href="/track" class="btn btn-primary btn-block btn-lg" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>অর্ডার ট্র্যাক করুন</span>
+            </a>
+            <button class="btn btn-outline-secondary btn-block" onclick="resetOrder()">আরো খাবার অর্ডার করুন</button>
+        </div>
     </div>
 </div>
 

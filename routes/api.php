@@ -17,9 +17,10 @@ Route::get('/menu', [MenuController::class, 'index']);
 Route::get('/menu/items', [MenuController::class, 'items']);
 Route::get('/menu/categories', [MenuController::class, 'categories']);
 
-// Public orders
+// Public orders & tracking
 Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders/track', [OrderController::class, 'track']);
 
 // Contact / Reservation
 Route::post('/contact', [ReservationController::class, 'store']);

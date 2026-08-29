@@ -319,7 +319,21 @@ async function placeOrder() {
             saveCartToStorage();
             document.getElementById('orderCheckout').classList.add('hidden');
             document.getElementById('orderSuccess').classList.remove('hidden');
-            document.getElementById('successOrderId').innerText = data.order ? data.order.id : 'N/A';
+
+            const shortId = data.order.shortId || ('MR-' + (data.order.id ? data.order.id.substring(0, 6).toUpperCase() : ''));
+            const fullId = data.order ? data.order.id : '';
+            
+            const idEl = document.getElementById('successOrderId');
+            if (idEl) {
+                idEl.innerText = shortId;
+                idEl.dataset.fullId = fullId;
+            }
+
+            const trackLink = document.getElementById('successTrackLink');
+            if (trackLink) {
+                trackLink.href = `/track?id=${encodeURIComponent(shortId)}`;
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             err.innerText = data.error || 'অর্ডার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।';
@@ -332,6 +346,24 @@ async function placeOrder() {
         btn.disabled = false;
         btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>অর্ডার কনফার্ম করুন</span>`;
     }
+}
+
+function copyOrderId() {
+    const idEl = document.getElementById('successOrderId');
+    if (!idEl) return;
+    const textToCopy = idEl.innerText.trim();
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        if (btnText) {
+            btnText.innerText = 'কপি হয়েছে!';
+            setTimeout(() => {
+                btnText.innerText = 'কপি করুন';
+            }, 2500);
+        }
+    }).catch(() => {
+        alert('আইডি: ' + textToCopy);
+    });
 }
 
 async function getLiveLocation() {
