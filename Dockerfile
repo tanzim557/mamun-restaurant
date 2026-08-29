@@ -26,6 +26,9 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . /var/www/html
 
+# Ensure .env exists in container
+RUN cp -n .env.example .env || true
+
 # Set Apache DocumentRoot to Laravel public/
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
