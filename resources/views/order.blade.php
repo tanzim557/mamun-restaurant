@@ -95,13 +95,18 @@
     </section>
 </div>
 
-<!-- Floating Cart -->
+<!-- Floating Cart Button -->
 <div class="floating-cart hidden" id="floatingCart">
-    <button onclick="openCartDrawer()" style="display:flex;align-items:center;gap:10px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span id="cartCount">0</span> আইটেম
-        <span style="border-left:1px solid rgba(255,255,255,0.3);padding-left:1rem;" id="cartTotal">৳0</span>
-        <span>›</span>
+    <button onclick="openCartDrawer()" class="floating-cart-btn">
+        <div class="floating-cart-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span class="floating-cart-badge" id="cartCount">0</span>
+        </div>
+        <div class="floating-cart-info">
+            <span class="floating-cart-text">কার্ট দেখুন</span>
+            <span class="floating-cart-total" id="cartTotal">৳০</span>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
 </div>
 
@@ -109,16 +114,37 @@
 <div class="cart-drawer-overlay" id="cartOverlay" onclick="closeCartDrawer()"></div>
 <div class="cart-drawer" id="cartDrawer">
     <div class="cart-drawer-header">
-        <h3 class="font-bold text-lg flex items-center gap-2">🛒 আপনার কার্ট</h3>
-        <button onclick="closeCartDrawer()" style="font-size:1.5rem;color:var(--zinc-400);">&times;</button>
+        <div class="flex items-center gap-3">
+            <div class="cart-header-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            </div>
+            <div>
+                <h3 class="cart-header-title">আপনার কার্ট</h3>
+                <span class="cart-header-count" id="cartHeaderCount">০ টি আইটেম</span>
+            </div>
+        </div>
+        <button onclick="closeCartDrawer()" class="cart-close-btn" aria-label="Close cart">&times;</button>
     </div>
     <div class="cart-drawer-body" id="cartBody"></div>
     <div class="cart-drawer-footer" id="cartFooter" style="display:none;">
-        <div class="flex justify-between items-center mb-4">
-            <span class="font-bold text-lg">মোট</span>
-            <span class="font-bold text-xl text-primary" id="cartDrawerTotal">৳0</span>
+        <div class="cart-footer-summary">
+            <div class="flex justify-between items-center mb-1">
+                <span style="color:#a1a1aa;font-size:0.9rem;">খাবারের মোট মূল্য</span>
+                <span class="font-bold text-white text-base" id="cartDrawerSubtotal"></span>
+            </div>
+            <div class="flex justify-between items-center mb-3">
+                <span style="color:#a1a1aa;font-size:0.9rem;">ডেলিভারি এরিয়া</span>
+                <span style="color:#4ade80;font-size:0.85rem;font-weight:700;">সাতক্ষীরা সদর</span>
+            </div>
+            <div class="cart-footer-total-row">
+                <span class="cart-footer-total-label">সর্বমোট পরিশোধ:</span>
+                <span class="cart-footer-total-val" id="cartDrawerTotal">৳0</span>
+            </div>
         </div>
-        <button class="btn btn-primary btn-block btn-lg" onclick="goToCheckout()">অর্ডার করতে এগিয়ে যান ›</button>
+        <button class="btn-checkout-drawer" onclick="goToCheckout()">
+            <span>অর্ডার নিশ্চিত করতে এগিয়ে যান</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
     </div>
 </div>
 @endsection

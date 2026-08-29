@@ -58,6 +58,25 @@ function filterOrderCat(slug) {
     renderOrderGrid();
 }
 
+const foodPlaceholders = {
+    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    'নেহারী': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    'হাঁস': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
+    'মুরগী': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
+    'মাছ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
+    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=800&q=80',
+    'default': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80'
+};
+
+function getDishImage(item) {
+    if (item.image && item.image.trim() !== '') return item.image;
+    for (const [key, url] of Object.entries(foodPlaceholders)) {
+        if (item.name && item.name.includes(key)) return url;
+    }
+    return foodPlaceholders['default'];
+}
+
 function renderOrderGrid() {
     const grid = document.getElementById('orderGrid');
     if (!grid) return;
@@ -71,29 +90,29 @@ function renderOrderGrid() {
     grid.innerHTML = filtered.map(item => {
         const cartItem = cart.find(ci => ci.id === item.id);
         const qty = cartItem ? cartItem.qty : 0;
+        const imgUrl = getDishImage(item);
 
         return `
-            <div class="card animate-fade-up" style="display:flex;flex-direction:column;">
-                <div class="card-img" style="height:180px;">
-                    ${item.image 
-                        ? `<img src="${item.image}" alt="${item.name}">` 
-                        : `<div style="width:100%;height:100%;background:var(--zinc-100);display:flex;align-items:center;justify-content:center;font-size:2.5rem;">🍛</div>`}
-                    <div class="card-badge" style="font-size:0.8rem;padding:0.25rem 0.75rem;">৳${item.price}</div>
+            <div class="luxury-food-card animate-fade-up">
+                <div class="food-img-container" style="height:180px;">
+                    <img src="${imgUrl}" alt="${item.name}" loading="lazy">
+                    <div class="food-badge-price">৳${item.price}</div>
                 </div>
-                <div class="card-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:1rem;">
-                    <div>
-                        <h4 style="font-weight:700;font-size:1rem;margin-bottom:0.25rem;">${item.name}</h4>
-                        <p class="text-muted text-xs line-clamp-2" style="margin-bottom:0.75rem;">${item.description || ''}</p>
-                    </div>
+                <div class="food-card-content" style="padding:1.25rem;">
+                    <h4 style="font-weight:800;font-size:1.1rem;color:#fff;margin-bottom:0.35rem;">${item.name}</h4>
+                    <p class="text-muted text-xs line-clamp-2" style="margin-bottom:1rem;min-height:32px;">${item.description || 'সাতক্ষীরার খাঁটি মসলা ও চুইঝাল দিয়ে প্রস্তুত।'}</p>
                     <div>
                         ${qty === 0 ? `
-                            <button class="btn btn-primary btn-block btn-sm" onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.image || ''}')">
-                                ➕ যোগ করুন
+                            <button class="btn-order-card" style="padding:0.6rem 1rem;font-size:0.88rem;" onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${imgUrl}')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                <span>কার্টে যোগ করুন</span>
                             </button>
                         ` : `
-                            <div class="flex items-center justify-between bg-zinc-100" style="padding:0.25rem 0.5rem;border-radius:var(--radius-sm);">
-                                <button class="cart-qty-btn ${qty === 1 ? 'danger' : ''}" onclick="changeQty('${item.id}', -1)">${qty === 1 ? '🗑️' : '−'}</button>
-                                <span style="font-weight:700;font-size:0.9rem;">${qty}</span>
+                            <div class="order-grid-qty-box">
+                                <button class="cart-qty-btn ${qty === 1 ? 'danger' : ''}" onclick="changeQty('${item.id}', -1)">
+                                    ${qty === 1 ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' : '−'}
+                                </button>
+                                <span class="order-grid-qty-val">${qty} টি কার্টে</span>
                                 <button class="cart-qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
                             </div>
                         `}
@@ -113,6 +132,7 @@ function addToCart(id, name, price, image) {
     }
     saveCartToStorage();
     renderOrderGrid();
+    openCartDrawer(); // AUTOMATICALLY OPEN SIDE DRAWER ON ADD!
 }
 
 function changeQty(id, delta) {
@@ -152,15 +172,20 @@ function updateCartUI() {
 function renderCartDrawer() {
     const body = document.getElementById('cartBody');
     const footer = document.getElementById('cartFooter');
+    const headerCount = document.getElementById('cartHeaderCount');
     if (!body) return;
+
+    const totalCount = cart.reduce((acc, i) => acc + i.qty, 0);
+    if (headerCount) headerCount.innerText = `${totalCount} টি আইটেম`;
 
     if (cart.length === 0) {
         body.innerHTML = `
-            <div class="text-center" style="padding:4rem 1rem;color:var(--zinc-400);">
-                <div style="margin-bottom:0.75rem;opacity:0.4;display:flex;justify-content:center;">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <div class="cart-empty-state">
+                <div class="cart-empty-icon">
+                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 </div>
-                <p>আপনার কার্ট খালি। কিছু আইটেম যোগ করুন।</p>
+                <h4 style="font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:0.5rem;">আপনার কার্ট খালি</h4>
+                <p style="color:#71717a;font-size:0.9rem;">মেনু থেকে আপনার পছন্দের খাবার কার্টে যোগ করুন।</p>
             </div>
         `;
         if (footer) footer.style.display = 'none';
@@ -170,31 +195,39 @@ function renderCartDrawer() {
     if (footer) footer.style.display = 'block';
 
     body.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            ${item.image ? `<img src="${item.image}" class="cart-item-img" alt="${item.name}">` : `<div class="cart-item-img" style="background:var(--zinc-800);display:flex;align-items:center;justify-content:center;color:var(--zinc-400);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg></div>`}
-            <div style="flex:1;">
-                <h4 style="font-weight:700;font-size:0.9rem;">${item.name}</h4>
-                <p class="text-primary font-bold text-sm">৳${item.price} × ${item.qty} = ৳${item.price * item.qty}</p>
+        <div class="cart-item-card">
+            <img src="${item.image || foodPlaceholders['default']}" class="cart-item-thumbnail" alt="${item.name}">
+            <div class="cart-item-details">
+                <h4 class="cart-item-name">${item.name}</h4>
+                <div class="cart-item-price-row">
+                    <span class="cart-item-unit">৳${item.price}</span>
+                    <span class="cart-item-calc">× ${item.qty} =</span>
+                    <span class="cart-item-subtotal">৳${item.price * item.qty}</span>
+                </div>
             </div>
-            <div class="cart-qty-controls">
-                <button class="cart-qty-btn ${item.qty === 1 ? 'danger' : ''}" onclick="changeQty('${item.id}', -1)">
-                    ${item.qty === 1 ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' : '−'}
+            <div class="cart-qty-pill">
+                <button class="cart-qty-btn ${item.qty === 1 ? 'danger' : ''}" onclick="changeQty('${item.id}', -1)" title="${item.qty === 1 ? 'মুছে ফেলুন' : 'কমান'}">
+                    ${item.qty === 1 ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' : '−'}
                 </button>
-                <span style="font-weight:700;font-size:0.85rem;min-width:18px;text-align:center;">${item.qty}</span>
-                <button class="cart-qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+                <span class="cart-qty-number">${item.qty}</span>
+                <button class="cart-qty-btn" onclick="changeQty('${item.id}', 1)" title="বাড়ান">+</button>
             </div>
         </div>
     `).join('');
 }
 
 function openCartDrawer() {
-    document.getElementById('cartDrawer').classList.add('open');
-    document.getElementById('cartOverlay').classList.add('open');
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    if (drawer) drawer.classList.add('open');
+    if (overlay) overlay.classList.add('open');
 }
 
 function closeCartDrawer() {
-    document.getElementById('cartDrawer').classList.remove('open');
-    document.getElementById('cartOverlay').classList.remove('open');
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    if (drawer) drawer.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
 }
 
 function goToCheckout() {
@@ -206,9 +239,17 @@ function goToCheckout() {
     const summary = document.getElementById('checkoutSummary');
     if (summary) {
         summary.innerHTML = `
-            <div style="margin-bottom:0.75rem;font-weight:700;border-bottom:1px solid var(--zinc-200);padding-bottom:0.5rem;">অর্ডার সামারি (${cart.length} আইটেম):</div>
-            ${cart.map(i => `<div class="flex justify-between text-sm py-1"><span>${i.name} × ${i.qty}</span><span class="font-bold">৳${i.price * i.qty}</span></div>`).join('')}
-            <div class="flex justify-between text-base font-bold pt-2 border-t mt-2"><span>সর্বমোট:</span><span class="text-primary">৳${total}</span></div>
+            <div style="margin-bottom:0.75rem;font-weight:800;color:#fff;font-size:1.05rem;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;">অর্ডার সামারি (${cart.length} আইটেম):</div>
+            ${cart.map(i => `
+                <div class="flex justify-between text-sm py-1.5" style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <span style="color:#d4d4d8;">${i.name} × ${i.qty}</span>
+                    <span class="font-bold text-white">৳${i.price * i.qty}</span>
+                </div>
+            `).join('')}
+            <div class="flex justify-between text-lg font-bold pt-3 mt-2" style="border-top:1px solid rgba(255,255,255,0.1);color:#fff;">
+                <span>সর্বমোট:</span>
+                <span class="text-primary font-bold text-xl">৳${total}</span>
+            </div>
         `;
     }
 }
