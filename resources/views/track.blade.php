@@ -171,36 +171,53 @@ function handleTrackSubmit(e) {
     return false;
 }
 
-async function searchOrder(query) {
+let pollInterval = null;
+
+async function searchOrder(query, isAutoPoll = false) {
     const loading = document.getElementById('trackLoading');
     const result = document.getElementById('trackResult');
     const errorEl = document.getElementById('trackError');
     const btn = document.getElementById('trackBtn');
 
-    errorEl.classList.add('hidden');
-    result.classList.add('hidden');
-    loading.classList.remove('hidden');
-    btn.disabled = true;
+    if (!isAutoPoll) {
+        errorEl.classList.add('hidden');
+        result.classList.add('hidden');
+        loading.classList.remove('hidden');
+        btn.disabled = true;
+    }
 
     try {
         const res = await fetch(`/api/orders/track?query=${encodeURIComponent(query)}`);
         const data = await res.json();
 
-        loading.classList.add('hidden');
-        btn.disabled = false;
+        if (!isAutoPoll) {
+            loading.classList.add('hidden');
+            btn.disabled = false;
+        }
 
         if (res.ok && data.success && data.order) {
             renderTrackDetails(data.order);
             result.classList.remove('hidden');
+
+            // Setup real-time auto polling every 7 seconds if order is active
+            if (!pollInterval && data.order.status !== 'DELIVERED' && data.order.status !== 'CANCELLED') {
+                pollInterval = setInterval(() => {
+                    searchOrder(query, true);
+                }, 7000);
+            }
         } else {
-            errorEl.innerText = data.error || 'কোনো অর্ডার পাওয়া যায়নি। সঠিক আইডি বা ফোন নম্বর দিন।';
-            errorEl.classList.remove('hidden');
+            if (!isAutoPoll) {
+                errorEl.innerText = data.error || 'কোনো অর্ডার পাওয়া যায়নি। সঠিক আইডি বা ফোন নম্বর দিন।';
+                errorEl.classList.remove('hidden');
+            }
         }
     } catch(e) {
-        loading.classList.add('hidden');
-        btn.disabled = false;
-        errorEl.innerText = 'তথ্য লোড করতে সমস্যা হয়েছে। ইন্টারনেট চেক করুন।';
-        errorEl.classList.remove('hidden');
+        if (!isAutoPoll) {
+            loading.classList.add('hidden');
+            btn.disabled = false;
+            errorEl.innerText = 'তথ্য লোড করতে সমস্যা হয়েছে। ইন্টারনেট চেক করুন।';
+            errorEl.classList.remove('hidden');
+        }
     }
 }
 
@@ -211,7 +228,22 @@ function renderTrackDetails(order) {
 
     document.getElementById('resCustName').innerText = order.customerName || 'N/A';
     document.getElementById('resCustPhone').innerText = order.phoneNumber || 'N/A';
-    document.getElementById('resCustAddr').innerText = order.address || 'N/A';
+    
+    // Clean Address Format
+    let addrText = (order.address || '').trim();
+    const mapMatch = addrText.match(/(?:\[(?:ম্যাপ|ম্যাপ লিংক|Google Maps Pin|Google Maps|GPS)\s*:\s*)?(https:\/\/maps\.google\.com\/\?q=[^\]\s\n]+)\]?/i);
+    let mapUrl = mapMatch ? mapMatch[1] : null;
+    let cleanAddr = addrText.replace(/\[.*?(https:\/\/maps\.google\.com[^\s\]]+).*?\]/gi, '')
+                            .replace(/https:\/\/maps\.google\.com\/\?q=[^\s]+/gi, '')
+                            .replace(/\s+/g, ' ')
+                            .replace(/^[-,\s]+|[-,\s]+$/g, '');
+    
+    if (!cleanAddr) cleanAddr = 'লাইভ জিপিএস লোকেশন';
+    
+    document.getElementById('resCustAddr').innerHTML = `
+        <span>${cleanAddr}</span>
+        ${mapUrl ? `<div style="margin-top:4px;"><a href="${mapUrl}" target="_blank" style="color:#60a5fa;text-decoration:underline;font-size:0.8rem;display:inline-flex;align-items:center;gap:4px;">📍 গুগল ম্যাপে দেখুন ↗</a></div>` : ''}
+    `;
 
     if (order.note && order.note.trim() !== '') {
         document.getElementById('resCustNote').innerText = order.note;
@@ -238,7 +270,8 @@ function renderTrackDetails(order) {
         itemsContainer.innerHTML = '<p class="text-muted text-xs">আইটেমের বিবরণ পাওয়া যায়নি</p>';
     }
 
-    document.getElementById('resTotalAmount').innerText = '৳' + (order.totalAmount || 0);
+    const total = (parseFloat(order.totalAmount) > 0) ? parseFloat(order.totalAmount) : (order.items || []).reduce((acc, i) => acc + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
+    document.getElementById('resTotalAmount').innerText = '৳' + total;
 
     // Status Stepper & Badge
     updateStatusStepper(order.status);

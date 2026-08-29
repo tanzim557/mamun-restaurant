@@ -143,14 +143,22 @@ function renderOverview(container) {
                         </tr>
                     </thead>
                     <tbody>
-                        ${dataStore.orders.slice(0, 6).map(o => `
-                            <tr style="border-top:1px solid #27272a;">
-                                <td style="padding:0.85rem 1rem;"><strong style="color:#fff;">${o.customerName || 'N/A'}</strong></td>
-                                <td style="padding:0.85rem 1rem;color:#a1a1aa;font-size:0.8rem;">${o.phoneNumber || ''}<br><span style="color:#71717a;">${(o.address || '').split('\n').join(', ')}</span></td>
-                                <td style="padding:0.85rem 1rem;color:#ef4444;font-weight:700;">৳${o.totalAmount || 0}</td>
-                                <td style="padding:0.85rem 1rem;"><span style="padding:0.25rem 0.6rem;border-radius:9999px;font-size:0.75rem;font-weight:700;background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3);">${o.status || 'PENDING'}</span></td>
-                            </tr>
-                        `).join('')}
+                        ${dataStore.orders.slice(0, 6).map(o => {
+                            const total = (parseFloat(o.totalAmount) > 0) ? parseFloat(o.totalAmount) : (o.items || []).reduce((acc, i) => acc + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
+                            return `
+                                <tr style="border-top:1px solid #27272a;">
+                                    <td style="padding:0.85rem 1rem;"><strong style="color:#fff;">${o.customerName || 'N/A'}</strong></td>
+                                    <td style="padding:0.85rem 1rem;color:#a1a1aa;font-size:0.8rem;">
+                                        <span style="color:#fff;font-weight:600;">${o.phoneNumber || ''}</span>
+                                        ${formatAdminAddress(o.address)}
+                                    </td>
+                                    <td style="padding:0.85rem 1rem;color:#f59e0b;font-weight:800;font-family:'Outfit',sans-serif;">৳${total}</td>
+                                    <td style="padding:0.85rem 1rem;">
+                                        <span style="padding:0.3rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:800;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);">${o.status || 'PENDING'}</span>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
                         ${dataStore.orders.length === 0 ? '<tr><td colspan="4" style="padding:2rem;text-align:center;color:#71717a;">কোনো অর্ডার নেই।</td></tr>' : ''}
                     </tbody>
                 </table>
@@ -202,6 +210,38 @@ function renderMenuTab(container) {
     `;
 }
 
+function formatAdminAddress(rawAddr) {
+    if (!rawAddr) return '<span style="color:#71717a;">ঠিকানা নেই</span>';
+    let text = rawAddr.trim();
+    
+    // Extract map URL
+    const mapRegex = /(?:\[(?:ম্যাপ|ম্যাপ লিংক|Google Maps Pin|Google Maps|GPS)\s*:\s*)?(https:\/\/maps\.google\.com\/\?q=[^\]\s\n]+)\]?/i;
+    const match = text.match(mapRegex);
+    let mapUrl = match ? match[1] : null;
+    
+    // Clean text by stripping map url and bracketed part
+    let cleanText = text.replace(/\[.*?(https:\/\/maps\.google\.com[^\s\]]+).*?\]/gi, '')
+                        .replace(/https:\/\/maps\.google\.com\/\?q=[^\s]+/gi, '')
+                        .replace(/\s+/g, ' ')
+                        .replace(/^[-,\s]+|[-,\s]+$/g, '');
+    
+    if (!cleanText) cleanText = 'লাইভ জিপিএস লোকেশন';
+
+    return `
+        <div style="line-height:1.4;">
+            <span style="color:#cbd5e1;">${cleanText}</span>
+            ${mapUrl ? `
+                <div style="margin-top:6px;">
+                    <a href="${mapUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);padding:3px 8px;border-radius:6px;font-size:0.75rem;font-weight:700;text-decoration:none;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span>লাইভ ম্যাপ পিন ↗</span>
+                    </a>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
 // ── 3. Orders Tab ──
 function renderOrdersTab(container) {
     container.innerHTML = `
@@ -209,45 +249,61 @@ function renderOrdersTab(container) {
             <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.875rem;">
                 <thead style="background:#27272a;">
                     <tr>
+                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">Order ID</th>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">Customer</th>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">Phone & Address</th>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">Items</th>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">Total</th>
-                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">Status</th>
+                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">Live Status</th>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${dataStore.orders.map(o => {
-                        let addrHtml = (o.address || '').split('\n').join(', ');
-                        const mapMatch = addrHtml.match(/https:\/\/maps\.google\.com\/\?q=[^\]\s]+/);
-                        if (mapMatch) {
-                            const mapUrl = mapMatch[0];
-                            addrHtml = addrHtml.replace(`[ম্যাপ লিংক: ${mapUrl}]`, `<br><a href="${mapUrl}" target="_blank" style="display:inline-block;margin-top:4px;padding:2px 8px;background:rgba(59,130,246,0.2);color:#60a5fa;border-radius:4px;font-weight:600;font-size:0.75rem;">ম্যাপে লোকেশন দেখুন</a>`);
-                        }
+                        const shortId = o.shortId || ('MR-' + (o.id ? o.id.substring(0, 6).toUpperCase() : ''));
+                        const total = (parseFloat(o.totalAmount) > 0) ? parseFloat(o.totalAmount) : (o.items || []).reduce((acc, i) => acc + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
+                        const status = (o.status || 'PENDING').toUpperCase();
+
                         return `
                             <tr style="border-top:1px solid #27272a;">
-                                <td style="padding:0.85rem 1rem;"><strong style="color:#fff;">${o.customerName}</strong>${o.note ? `<p style="font-size:0.75rem;color:#71717a;">${o.note}</p>` : ''}</td>
-                                <td style="padding:0.85rem 1rem;font-size:0.8rem;color:#a1a1aa;">${o.phoneNumber}<br>${addrHtml}</td>
-                                <td style="padding:0.85rem 1rem;font-size:0.8rem;color:#e4e4e7;">${(o.items || []).map(i => `• ${i.name || i.menu_item_name} × ${i.quantity || i.qty}`).join('<br>')}</td>
-                                <td style="padding:0.85rem 1rem;color:#ef4444;font-weight:700;">৳${o.totalAmount}</td>
                                 <td style="padding:0.85rem 1rem;">
-                                    <select onchange="updateOrderStatus('${o.id}', this.value)" style="background:#27272a;color:#fff;border:1px solid #3f3f46;padding:0.25rem 0.5rem;border-radius:6px;font-size:0.8rem;">
-                                        <option value="PENDING" ${o.status === 'PENDING' ? 'selected' : ''}>PENDING</option>
-                                        <option value="CONFIRMED" ${o.status === 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
-                                        <option value="DELIVERED" ${o.status === 'DELIVERED' ? 'selected' : ''}>DELIVERED</option>
-                                        <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                                    <a href="/track?id=${shortId}" target="_blank" style="font-family:'Outfit',monospace;color:#f59e0b;font-weight:800;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:4px;" title="গ্রাহকের ট্র্যাকিং ভিউ দেখুন">
+                                        <span>${shortId}</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                    </a>
+                                </td>
+                                <td style="padding:0.85rem 1rem;">
+                                    <strong style="color:#fff;font-size:0.95rem;">${o.customerName || 'N/A'}</strong>
+                                    ${o.note ? `<p style="font-size:0.75rem;color:#f59e0b;margin-top:2px;">📝 ${o.note}</p>` : ''}
+                                </td>
+                                <td style="padding:0.85rem 1rem;font-size:0.82rem;color:#a1a1aa;max-width:260px;">
+                                    <div style="color:#fff;font-weight:700;margin-bottom:3px;">📞 ${o.phoneNumber || 'N/A'}</div>
+                                    ${formatAdminAddress(o.address)}
+                                </td>
+                                <td style="padding:0.85rem 1rem;font-size:0.8rem;color:#e4e4e7;">
+                                    ${(o.items || []).map(i => `<div style="margin-bottom:2px;">• <strong>${i.name || i.menu_item_name}</strong> × ${i.quantity || i.qty}</div>`).join('')}
+                                </td>
+                                <td style="padding:0.85rem 1rem;color:#f59e0b;font-weight:800;font-size:1.05rem;font-family:'Outfit',sans-serif;">
+                                    ৳${total}
+                                </td>
+                                <td style="padding:0.85rem 1rem;">
+                                    <select onchange="updateOrderStatus('${o.id}', this.value)" style="background:#27272a;color:#fff;border:1px solid #3f3f46;padding:0.4rem 0.6rem;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;">
+                                        <option value="PENDING" ${status === 'PENDING' ? 'selected' : ''}>⏳ অর্ডার গৃহীত (PENDING)</option>
+                                        <option value="PREPARING" ${status === 'PREPARING' || status === 'COOKING' ? 'selected' : ''}>👨‍🍳 রান্না চলছে (PREPARING)</option>
+                                        <option value="OUT_FOR_DELIVERY" ${status === 'OUT_FOR_DELIVERY' || status === 'SHIPPING' ? 'selected' : ''}>🛵 ডেলিভারিতে বের হয়েছে (ON THE WAY)</option>
+                                        <option value="DELIVERED" ${status === 'DELIVERED' ? 'selected' : ''}>✅ ডেলিভারি সম্পন্ন (DELIVERED)</option>
+                                        <option value="CANCELLED" ${status === 'CANCELLED' ? 'selected' : ''}>❌ বাতিল (CANCELLED)</option>
                                     </select>
                                 </td>
                                 <td style="padding:0.85rem 1rem;">
-                                    <button onclick="deleteOrder('${o.id}')" style="color:#ef4444;" title="Delete">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    <button onclick="deleteOrder('${o.id}')" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:0.35rem 0.6rem;border-radius:6px;cursor:pointer;" title="অর্ডার মুছুন">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                                     </button>
                                 </td>
                             </tr>
                         `;
                     }).join('')}
-                    ${dataStore.orders.length === 0 ? '<tr><td colspan="6" style="padding:2rem;text-align:center;color:#71717a;">কোনো অর্ডার নেই।</td></tr>' : ''}
+                    ${dataStore.orders.length === 0 ? '<tr><td colspan="7" style="padding:2.5rem;text-align:center;color:#71717a;">কোনো নতুন অর্ডার নেই।</td></tr>' : ''}
                 </tbody>
             </table>
         </div>

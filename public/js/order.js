@@ -392,14 +392,20 @@ async function getLiveLocation() {
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
                 const data = await res.json();
-                const displayName = data.display_name || `Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)}`;
                 
-                addrInput.value = `${displayName}\n[Google Maps Pin: ${mapsUrl}]`;
+                let road = data.address?.road || data.address?.neighbourhood || '';
+                let area = data.address?.suburb || data.address?.residential || data.address?.village || data.address?.town || '';
+                let city = data.address?.city || data.address?.county || data.address?.state_district || 'সাতক্ষীরা';
+
+                let parts = [road, area, city].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
+                let cleanAddr = parts.length > 0 ? parts.join(', ') : (data.display_name ? data.display_name.split(',').slice(0, 3).join(',') : 'লাইভ লোকেশন');
+
+                addrInput.value = `${cleanAddr} [ম্যাপ: ${mapsUrl}]`;
                 if (status) {
-                    status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;"><polyline points="20 6 9 17 4 12"/></svg><span style="color:#4ade80;font-weight:700;">লাইভ লোকেশন সফলভাবে বসানো হয়েছে!</span>`;
+                    status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;"><polyline points="20 6 9 17 4 12"/></svg><span style="color:#4ade80;font-weight:700;">লাইভ লোকেশন যুক্ত হয়েছে: ${cleanAddr}</span>`;
                 }
             } catch(e) {
-                addrInput.value = `লাইভ জিপিএস পিন [Google Maps: ${mapsUrl}]`;
+                addrInput.value = `লাইভ জিপিএস [ম্যাপ: ${mapsUrl}]`;
                 if (status) {
                     status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;"><polyline points="20 6 9 17 4 12"/></svg><span style="color:#4ade80;font-weight:700;">জিপিএস কোঅর্ডিনেট যুক্ত হয়েছে!</span>`;
                 }

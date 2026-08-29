@@ -12,6 +12,20 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with('orderItems')->orderBy('created_at', 'desc')->get();
+        
+        // Auto-fix any older orders where total_amount was saved as 0
+        foreach ($orders as $order) {
+            if ($order->total_amount <= 0 && $order->orderItems->count() > 0) {
+                $calcTotal = $order->orderItems->sum(function($item) {
+                    return ($item->price ?? 0) * ($item->quantity ?? 1);
+                });
+                if ($calcTotal > 0) {
+                    $order->update(['total_amount' => $calcTotal]);
+                    $order->total_amount = $calcTotal;
+                }
+            }
+        }
+
         return response()->json($orders);
     }
 
@@ -25,20 +39,27 @@ class OrderController extends Controller
                 'phone_number' => $data['phoneNumber'] ?? '',
                 'address' => $data['address'] ?? '',
                 'total_amount' => 0,
+                'status' => 'PENDING',
                 'note' => $data['note'] ?? '',
             ]);
 
+            $total = 0;
             $items = $data['items'] ?? [];
             foreach ($items as $item) {
+                $qty = (int)($item['qty'] ?? $item['quantity'] ?? 1);
+                $price = (float)($item['price'] ?? 0);
+                $total += ($qty * $price);
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'menu_item_name' => $item['name'] ?? '',
-                    'quantity' => $item['qty'] ?? $item['quantity'] ?? 1,
-                    'price' => $item['price'] ?? 0,
+                    'quantity' => $qty,
+                    'price' => $price,
                 ]);
             }
 
-            // Refresh to get trigger-updated total_amount
+            // Save the exact calculated total amount
+            $order->update(['total_amount' => $total]);
             $order->refresh();
             $order->load('orderItems');
 
