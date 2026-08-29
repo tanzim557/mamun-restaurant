@@ -29,52 +29,145 @@
 
 <!-- Checkout View -->
 <div id="orderCheckout" class="hidden">
-    <div class="section" style="padding-top:2rem;">
-        <div class="container" style="max-width:580px;margin:0 auto;">
-            <button onclick="showMenuView()" class="text-primary font-bold mb-4" style="font-size:0.95rem;display:flex;align-items:center;gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    <div class="checkout-page-section">
+        <!-- Ambient Glowing Background Spheres -->
+        <div class="ambient-glow glow-1" style="top:10%;left:5%;"></div>
+        <div class="ambient-glow glow-2" style="bottom:10%;right:5%;"></div>
+
+        <div class="container relative" style="max-width:640px;margin:0 auto;z-index:2;">
+            <button onclick="showMenuView()" class="btn-back-menu">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                 <span>মেনুতে ফিরে যান</span>
             </button>
-            <div style="background:#141418;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);box-shadow:var(--shadow-xl);padding:2.5rem;">
-                <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;text-align:center;">অর্ডার নিশ্চিত করুন</h2>
-                <div id="checkoutSummary" style="background:#1e1e24;border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-sm);padding:1.25rem;margin-bottom:1.5rem;"></div>
-                <div class="form-group"><label class="form-label">নাম *</label><input type="text" class="form-input" id="cName" placeholder="আপনার পুরো নাম"></div>
-                <div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="cPhone" placeholder="01XXXXXXXXX"></div>
-                
-                <div class="form-group">
-                    <label class="form-label">এলাকা নির্বাচন করুন *</label>
-                    <select class="form-select" id="cArea">
-                        <option value="" disabled selected>এলাকা নির্বাচন করুন</option>
-                        <option>সাতক্ষীরা সদর</option>
-                        <option>পলাশপোল</option>
-                        <option>কাটিয়া</option>
-                        <option>রসুলপুর</option>
-                        <option>ইটাগাছা</option>
-                        <option>আশাশুনি মোড়</option>
-                        <option>তুফান মোড়</option>
-                        <option>জজ কোর্ট / উকিলবার এলাকা</option>
-                        <option>অন্যান্য এলাকা</option>
-                    </select>
-                </div>
 
-                <div class="form-group">
-                    <div class="flex justify-between items-center mb-1">
-                        <label class="form-label" style="margin-bottom:0;">বিস্তারিত ঠিকানা *</label>
-                        <button type="button" onclick="getLiveLocation()" class="btn btn-sm btn-outline-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:flex;align-items:center;gap:6px;" id="gpsBtn">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
-                            <span>লাইভ লোকেশন নিন (GPS)</span>
-                        </button>
+            <!-- Stepper Progress Bar -->
+            <div class="checkout-stepper">
+                <div class="step completed">
+                    <span class="step-dot">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                    <span>খাবার পছন্দ</span>
+                </div>
+                <div class="step-connector active"></div>
+                <div class="step current">
+                    <span class="step-dot">২</span>
+                    <span>ঠিকানা ও কনফার্ম</span>
+                </div>
+            </div>
+
+            <!-- Main Luxury Checkout Card -->
+            <div class="checkout-glass-card">
+                <div class="checkout-card-header">
+                    <div class="checkout-header-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                     </div>
-                    <input type="text" class="form-input" id="cAddress" placeholder="বাড়ি/দোকান নং, রোড, ল্যান্ডমার্ক...">
-                    <p id="gpsStatus" class="text-xs text-muted mt-1" style="display:none;"></p>
+                    <div>
+                        <h2 class="checkout-title">ডেলিভারি তথ্য ও অর্ডার নিশ্চিতকরণ</h2>
+                        <p class="checkout-subtitle">সাতক্ষীরা শহরে দ্রুততম হোম ডেলিভারি</p>
+                    </div>
                 </div>
 
-                <div class="form-group"><label class="form-label">বিশেষ নির্দেশনা (ঐচ্ছিক)</label><input type="text" class="form-input" id="cNote" placeholder="যেমন: ঝাল বেশি, সাথে সালাদ দিবেন..."></div>
-                <div id="orderError" class="form-error hidden"></div>
-                <button class="btn btn-primary btn-block btn-lg mt-4" id="placeOrderBtn" onclick="placeOrder()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>অর্ডার কনফার্ম করুন</span>
-                </button>
+                <!-- Order Summary Glass Box -->
+                <div id="checkoutSummary" class="checkout-summary-box"></div>
+
+                <!-- Form Fields with Icons -->
+                <div class="checkout-form-body">
+                    <!-- Customer Name -->
+                    <div class="checkout-form-group">
+                        <label class="checkout-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span>আপনার নাম *</span>
+                        </label>
+                        <input type="text" class="checkout-input" id="cName" placeholder="যেমন: তানজিম আহমেদ">
+                    </div>
+
+                    <!-- Customer Phone -->
+                    <div class="checkout-form-group">
+                        <label class="checkout-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <span>মোবাইল নম্বর *</span>
+                        </label>
+                        <input type="tel" class="checkout-input" id="cPhone" placeholder="01XXXXXXXXX">
+                    </div>
+
+                    <!-- Delivery Area -->
+                    <div class="checkout-form-group">
+                        <label class="checkout-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                            <span>ডেলিভারি এরিয়া *</span>
+                        </label>
+                        <select class="checkout-select" id="cArea">
+                            <option value="" disabled selected>আপনার এলাকা নির্বাচন করুন</option>
+                            <option>সাতক্ষীরা সদর</option>
+                            <option>পলাশপোল</option>
+                            <option>কাটিয়া</option>
+                            <option>রসুলপুর</option>
+                            <option>ইটাগাছা</option>
+                            <option>আশাশুনি মোড়</option>
+                            <option>তুফান মোড়</option>
+                            <option>জজ কোর্ট / উকিলবার এলাকা</option>
+                            <option>অন্যান্য এলাকা</option>
+                        </select>
+                    </div>
+
+                    <!-- Address & GPS Autofill -->
+                    <div class="checkout-form-group">
+                        <label class="checkout-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>বিস্তারিত ঠিকানা *</span>
+                        </label>
+                        <textarea class="checkout-textarea" id="cAddress" rows="2" placeholder="বাড়ি/দোকান নং, রোড নং, ল্যান্ডমার্ক..."></textarea>
+                        
+                        <!-- High-End GPS Autofill Button -->
+                        <button type="button" onclick="getLiveLocation()" class="gps-autofill-btn" id="gpsBtn">
+                            <div class="gps-pulse-ring">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                            </div>
+                            <span>আমার বর্তমান লাইভ লোকেশন বসান (GPS)</span>
+                        </button>
+                        <p id="gpsStatus" class="gps-status-pill" style="display:none;"></p>
+                    </div>
+
+                    <!-- Special Note -->
+                    <div class="checkout-form-group">
+                        <label class="checkout-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            <span>বিশেষ নির্দেশনা (ঐচ্ছিক)</span>
+                        </label>
+                        <input type="text" class="checkout-input" id="cNote" placeholder="যেমন: ঝাল বেশি দিবেন, সাথে কাঁচা মরিচ ও সালাদ...">
+                    </div>
+
+                    <!-- Payment Method Card -->
+                    <div class="payment-method-card">
+                        <div class="flex items-center gap-3">
+                            <div class="payment-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">ক্যাশ অন ডেলিভারি (Cash on Delivery)</h4>
+                                <p class="text-muted text-xs">খাবার হাতে পেয়ে গরম ও তাজা চেক করে মূল্য পরিশোধ করুন।</p>
+                            </div>
+                        </div>
+                        <div class="payment-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>সিলেক্টেড</span>
+                        </div>
+                    </div>
+
+                    <div id="orderError" class="form-error hidden"></div>
+
+                    <!-- Confirm Order CTA -->
+                    <button class="btn-confirm-order" id="placeOrderBtn" onclick="placeOrder()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>অর্ডার কনফার্ম করুন</span>
+                    </button>
+
+                    <!-- Trust Guarantee -->
+                    <div class="checkout-guarantee">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>অর্ডার সম্পন্ন হওয়ার পর আমাদের প্রতিনিধি আপনাকে কল করে নিশ্চিত করবেন।</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

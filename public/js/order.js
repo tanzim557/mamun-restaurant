@@ -234,21 +234,39 @@ function goToCheckout() {
     closeCartDrawer();
     document.getElementById('orderMenu').classList.add('hidden');
     document.getElementById('orderCheckout').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
     const summary = document.getElementById('checkoutSummary');
     if (summary) {
         summary.innerHTML = `
-            <div style="margin-bottom:0.75rem;font-weight:800;color:#fff;font-size:1.05rem;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;">অর্ডার সামারি (${cart.length} আইটেম):</div>
-            ${cart.map(i => `
-                <div class="flex justify-between text-sm py-1.5" style="border-bottom:1px solid rgba(255,255,255,0.04);">
-                    <span style="color:#d4d4d8;">${i.name} × ${i.qty}</span>
-                    <span class="font-bold text-white">৳${i.price * i.qty}</span>
+            <div class="summary-header">
+                <div class="flex items-center gap-2">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b;"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span style="font-weight:800;color:#fff;font-size:1.05rem;">অর্ডার বিবরণী</span>
                 </div>
-            `).join('')}
-            <div class="flex justify-between text-lg font-bold pt-3 mt-2" style="border-top:1px solid rgba(255,255,255,0.1);color:#fff;">
-                <span>সর্বমোট:</span>
-                <span class="text-primary font-bold text-xl">৳${total}</span>
+                <span class="summary-badge">${cart.length} টি আইটেম</span>
+            </div>
+            <div class="summary-items-list">
+                ${cart.map(i => `
+                    <div class="summary-item-row">
+                        <div class="flex items-center gap-2">
+                            <span class="summary-item-qty">${i.qty}×</span>
+                            <span class="summary-item-name">${i.name}</span>
+                        </div>
+                        <span class="summary-item-price">৳${i.price * i.qty}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="summary-footer-box">
+                <div class="flex justify-between items-center text-xs text-muted mb-1">
+                    <span>ডেলিভারি চার্জ</span>
+                    <span style="color:#4ade80;font-weight:700;">ফ্রি (সাতক্ষীরা সদর)</span>
+                </div>
+                <div class="flex justify-between items-center pt-2" style="border-top:1px dashed rgba(255,255,255,0.1);">
+                    <span class="summary-total-label">সর্বমোট পরিশোধযোগ্য:</span>
+                    <span class="summary-total-val">৳${total}</span>
+                </div>
             </div>
         `;
     }
@@ -269,14 +287,14 @@ async function placeOrder() {
     const btn = document.getElementById('placeOrderBtn');
 
     if (!name || !phone || !area || !address) {
-        err.innerText = 'অনুগ্রহ করে সকল আবশ্যকীয় তথ্য (নাম, ফোন, এলাকা, ঠিকানা) পূরণ করুন।';
+        err.innerText = 'অনুগ্রহ করে আবশ্যকীয় তথ্যগুলো (নাম, মোবাইল নম্বর, এলাকা ও বিস্তারিত ঠিকানা) পূরণ করুন।';
         err.classList.remove('hidden');
         return;
     }
 
     err.classList.add('hidden');
     btn.disabled = true;
-    btn.innerText = 'অর্ডার প্রক্রিয়াধীন...';
+    btn.innerHTML = `<svg class="spinner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg><span>অর্ডার প্রক্রিয়াধীন...</span>`;
 
     try {
         const fullAddress = `${area} - ${address}`;
@@ -302,16 +320,17 @@ async function placeOrder() {
             document.getElementById('orderCheckout').classList.add('hidden');
             document.getElementById('orderSuccess').classList.remove('hidden');
             document.getElementById('successOrderId').innerText = data.order ? data.order.id : 'N/A';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             err.innerText = data.error || 'অর্ডার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।';
             err.classList.remove('hidden');
         }
     } catch(e) {
-        err.innerText = 'অর্ডার ব্যর্থ হয়েছে। নেটওয়ার্ক চেক করুন।';
+        err.innerText = 'অর্ডার প্রক্রিয়া ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ চেক করে পুনরায় চেষ্টা করুন।';
         err.classList.remove('hidden');
     } finally {
         btn.disabled = false;
-        btn.innerText = '📦 অর্ডার দিন';
+        btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>অর্ডার কনফার্ম করুন</span>`;
     }
 }
 
@@ -326,10 +345,10 @@ async function getLiveLocation() {
     }
 
     btn.disabled = true;
-    btn.innerText = '⏳ খোঁজা হচ্ছে...';
+    btn.innerHTML = `<div class="gps-pulse-ring"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg></div><span>লোকেশন নির্ণয় করা হচ্ছে...</span>`;
     if (status) {
-        status.style.display = 'block';
-        status.innerText = '📡 আপনার বর্তমান লোকেশন নির্ণয় করা হচ্ছে...';
+        status.style.display = 'inline-flex';
+        status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>স্যাটেলাইট থেকে লোকেশন কোঅর্ডিনেট স্ক্যান হচ্ছে...</span>`;
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -339,31 +358,30 @@ async function getLiveLocation() {
             const mapsUrl = `https://maps.google.com/?q=${lat},${lon}`;
 
             try {
-                // Reverse geocode using OpenStreetMap Nominatim
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
                 const data = await res.json();
                 const displayName = data.display_name || `Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)}`;
                 
-                addrInput.value = `${displayName} [ম্যাপ লিংক: ${mapsUrl}]`;
+                addrInput.value = `${displayName}\n[Google Maps Pin: ${mapsUrl}]`;
                 if (status) {
-                    status.innerHTML = `<span style="color:#22c55e;">✅ লোকেশন পাওয়া গেছে!</span> <a href="${mapsUrl}" target="_blank" style="color:#3b82f6;text-decoration:underline;">ম্যাপে দেখুন</a>`;
+                    status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;"><polyline points="20 6 9 17 4 12"/></svg><span style="color:#4ade80;font-weight:700;">লাইভ লোকেশন সফলভাবে বসানো হয়েছে!</span>`;
                 }
             } catch(e) {
-                addrInput.value = `লাইভ পিন [ম্যাপ লিংক: ${mapsUrl}]`;
+                addrInput.value = `লাইভ জিপিএস পিন [Google Maps: ${mapsUrl}]`;
                 if (status) {
-                    status.innerHTML = `<span style="color:#22c55e;">✅ জিপিএস কোঅর্ডিনেট সেট হয়েছে!</span>`;
+                    status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;"><polyline points="20 6 9 17 4 12"/></svg><span style="color:#4ade80;font-weight:700;">জিপিএস কোঅর্ডিনেট যুক্ত হয়েছে!</span>`;
                 }
             } finally {
                 btn.disabled = false;
-                btn.innerText = '🎯 লাইভ লোকেশন নিন (GPS)';
+                btn.innerHTML = `<div class="gps-pulse-ring"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div><span>আমার বর্তমান লাইভ লোকেশন বসান (GPS)</span>`;
             }
         },
         (error) => {
             btn.disabled = false;
-            btn.innerText = '🎯 লাইভ লোকেশন নিন (GPS)';
+            btn.innerHTML = `<div class="gps-pulse-ring"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div><span>আমার বর্তমান লাইভ লোকেশন বসান (GPS)</span>`;
             if (status) {
-                status.style.display = 'block';
-                status.innerHTML = `<span style="color:#ef4444;">❌ লোকেশন অনুমতি পাওয়া যায়নি (${error.message})। দয়া করে ম্যানুয়ালি লিখুন।</span>`;
+                status.style.display = 'inline-flex';
+                status.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f87171;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span style="color:#f87171;">লোকেশন অ্যাক্সেস পাওয়া যায়নি। অনুগ্রহ করে ম্যানুয়ালি লিখুন।</span>`;
             }
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
