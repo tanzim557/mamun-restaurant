@@ -98,29 +98,40 @@ function renderOverview(container) {
     container.innerHTML = `
         <div class="grid grid-4 mb-6">
             <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:0.75rem;background:rgba(59,130,246,0.15);color:#60a5fa;">🍽️</div>
+                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(59,130,246,0.15);color:#60a5fa;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                </div>
                 <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">${dataStore.menu.length}</h2>
                 <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Menu Items</p>
             </div>
             <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:0.75rem;background:rgba(234,179,8,0.15);color:#facc15;">⏳</div>
+                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(234,179,8,0.15);color:#facc15;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
                 <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">${pending}</h2>
                 <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Pending Orders</p>
             </div>
             <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:0.75rem;background:rgba(249,115,22,0.15);color:#fb923c;">💵</div>
+                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(249,115,22,0.15);color:#fb923c;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
                 <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">৳${Math.round(totalSalaryDue).toLocaleString()}</h2>
                 <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Salary Due (Total)</p>
             </div>
             <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:0.75rem;background:rgba(239,68,68,0.15);color:#f87171;">💳</div>
+                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(239,68,68,0.15);color:#f87171;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                </div>
                 <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">৳${Math.round(totalCustomerDue).toLocaleString()}</h2>
                 <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Customer Due (Total)</p>
             </div>
         </div>
 
         <div class="stat-box mb-6" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.5rem;">
-            <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1rem;color:#fff;">🛒 Recent Orders</h3>
+            <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1rem;color:#fff;display:flex;align-items:center;gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                <span>Recent Orders</span>
+            </h3>
             <div class="table-wrap" style="border:1px solid #27272a;border-radius:0.75rem;overflow:hidden;">
                 <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.875rem;">
                     <thead>
@@ -153,7 +164,10 @@ function renderMenuTab(container) {
     container.innerHTML = `
         <div class="flex justify-between items-center mb-4">
             <p style="color:#a1a1aa;font-size:0.875rem;">${dataStore.menu.length} টি মেনু আইটেম</p>
-            <button class="btn btn-sm btn-primary" onclick="openAddMenuModal()">➕ নতুন আইটেম যোগ</button>
+            <button class="btn btn-sm btn-primary" onclick="openAddMenuModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>নতুন আইটেম যোগ</span>
+            </button>
         </div>
         <div class="table-wrap" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;overflow:hidden;">
             <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.875rem;">
@@ -170,13 +184,15 @@ function renderMenuTab(container) {
                 <tbody>
                     ${dataStore.menu.map(item => `
                         <tr style="border-top:1px solid #27272a;">
-                            <td style="padding:0.75rem 1rem;">${item.image ? `<img src="${item.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">` : '🍲'}</td>
-                            <td style="padding:0.75rem 1rem;"><strong style="color:#fff;">${item.name}</strong> ${item.isFeatured ? '<span style="color:#facc15;font-size:0.75rem;">⭐ Featured</span>' : ''}</td>
+                            <td style="padding:0.75rem 1rem;">${item.image ? `<img src="${item.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">` : '<span style="color:#71717a;">No Image</span>'}</td>
+                            <td style="padding:0.75rem 1rem;"><strong style="color:#fff;">${item.name}</strong> ${item.isFeatured ? '<span style="color:#facc15;font-size:0.75rem;">★ Featured</span>' : ''}</td>
                             <td style="padding:0.75rem 1rem;"><span style="background:#27272a;padding:0.2rem 0.5rem;border-radius:6px;font-size:0.75rem;color:#a1a1aa;">${item.category ? item.category.name : 'N/A'}</span></td>
                             <td style="padding:0.75rem 1rem;color:#ef4444;font-weight:700;">৳${item.price}</td>
                             <td style="padding:0.75rem 1rem;"><button onclick="toggleMenuAvailability('${item.id}', ${item.isAvailable})" style="background:${item.isAvailable ? '#22c55e' : '#52525b'};color:#fff;padding:0.25rem 0.6rem;border-radius:9999px;font-size:0.75rem;">${item.isAvailable ? 'Active' : 'Off'}</button></td>
                             <td style="padding:0.75rem 1rem;">
-                                <button onclick="deleteMenuItem('${item.id}')" style="color:#ef4444;padding:0.25rem 0.5rem;">🗑️</button>
+                                <button onclick="deleteMenuItem('${item.id}')" style="color:#ef4444;padding:0.25rem 0.5rem;" title="Delete">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
                             </td>
                         </tr>
                     `).join('')}
@@ -207,7 +223,7 @@ function renderOrdersTab(container) {
                         const mapMatch = addrHtml.match(/https:\/\/maps\.google\.com\/\?q=[^\]\s]+/);
                         if (mapMatch) {
                             const mapUrl = mapMatch[0];
-                            addrHtml = addrHtml.replace(`[ম্যাপ লিংক: ${mapUrl}]`, `<br><a href="${mapUrl}" target="_blank" style="display:inline-block;margin-top:4px;padding:2px 8px;background:rgba(59,130,246,0.2);color:#60a5fa;border-radius:4px;font-weight:600;font-size:0.75rem;">📍 ম্যাপে লোকেশন দেখুন</a>`);
+                            addrHtml = addrHtml.replace(`[ম্যাপ লিংক: ${mapUrl}]`, `<br><a href="${mapUrl}" target="_blank" style="display:inline-block;margin-top:4px;padding:2px 8px;background:rgba(59,130,246,0.2);color:#60a5fa;border-radius:4px;font-weight:600;font-size:0.75rem;">ম্যাপে লোকেশন দেখুন</a>`);
                         }
                         return `
                             <tr style="border-top:1px solid #27272a;">
@@ -223,7 +239,11 @@ function renderOrdersTab(container) {
                                         <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
                                     </select>
                                 </td>
-                                <td style="padding:0.85rem 1rem;"><button onclick="deleteOrder('${o.id}')" style="color:#ef4444;">🗑️</button></td>
+                                <td style="padding:0.85rem 1rem;">
+                                    <button onclick="deleteOrder('${o.id}')" style="color:#ef4444;" title="Delete">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    </button>
+                                </td>
                             </tr>
                         `;
                     }).join('')}
@@ -239,16 +259,21 @@ function renderEmployeesTab(container) {
     container.innerHTML = `
         <div class="flex justify-between items-center mb-4">
             <p style="color:#a1a1aa;font-size:0.875rem;">${dataStore.employees.length} জন কর্মী</p>
-            <button class="btn btn-sm btn-primary" onclick="openAddEmployeeModal()">➕ নতুন কর্মী যোগ</button>
+            <button class="btn btn-sm btn-primary" onclick="openAddEmployeeModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>নতুন কর্মী যোগ</span>
+            </button>
         </div>
         <div class="grid grid-3">
             ${dataStore.employees.map(e => `
                 <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
                     <div class="flex justify-between items-center mb-2">
                         <h4 style="font-weight:700;font-size:1.1rem;color:#fff;">${e.name}</h4>
-                        <button onclick="deleteEmployee('${e.id}')" style="color:#ef4444;font-size:0.85rem;">🗑️</button>
+                        <button onclick="deleteEmployee('${e.id}')" style="color:#ef4444;font-size:0.85rem;" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
                     </div>
-                    <p style="color:#a1a1aa;font-size:0.75rem;margin-bottom:0.75rem;">👔 ${e.position} • 📞 ${e.phone || 'N/A'}</p>
+                    <p style="color:#a1a1aa;font-size:0.75rem;margin-bottom:0.75rem;">${e.position} • ${e.phone || 'N/A'}</p>
                     <div class="flex justify-between" style="background:#27272a;padding:0.75rem;border-radius:8px;font-size:0.85rem;">
                         <span>বেতন: <strong style="color:#fff;">৳${e.salary}</strong></span>
                         <span style="color:${e.salaryDue > 0 ? '#f87171' : '#4ade80'};">বাকি: <strong>৳${e.salaryDue}</strong></span>
@@ -265,7 +290,10 @@ function renderDuesTab(container) {
     container.innerHTML = `
         <div class="flex justify-between items-center mb-4">
             <p style="color:#a1a1aa;font-size:0.875rem;">${dataStore.dues.length} জন কাস্টমার ডিউ</p>
-            <button class="btn btn-sm btn-primary" onclick="openAddDueModal()">➕ নতুন ডিউ যোগ</button>
+            <button class="btn btn-sm btn-primary" onclick="openAddDueModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>নতুন ডিউ যোগ</span>
+            </button>
         </div>
         <div class="grid grid-3">
             ${dataStore.dues.map(d => {
@@ -274,15 +302,17 @@ function renderDuesTab(container) {
                     <div class="stat-box" style="background:#18181b;border:1px solid ${rem > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)'};border-radius:1rem;padding:1.25rem;">
                         <div class="flex justify-between items-center mb-2">
                             <h4 style="font-weight:700;color:#fff;">${d.name}</h4>
-                            <button onclick="deleteDue('${d.id}')" style="color:#ef4444;">🗑️</button>
+                            <button onclick="deleteDue('${d.id}')" style="color:#ef4444;" title="Delete">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
                         </div>
-                        <p style="color:#a1a1aa;font-size:0.75rem;margin-bottom:0.75rem;">📍 ${(d.address || d.phone || 'N/A').split('\n').join(', ')}</p>
+                        <p style="color:#a1a1aa;font-size:0.75rem;margin-bottom:0.75rem;">${(d.address || d.phone || 'N/A').split('\n').join(', ')}</p>
                         <div class="flex justify-between" style="font-size:0.75rem;color:#a1a1aa;margin-bottom:0.5rem;">
                             <span>মোট: ৳${Math.round(d.totalDue)}</span>
                             <span>পরিশোধ: ৳${Math.round(d.paidAmount)}</span>
                         </div>
                         <p style="font-weight:700;font-size:0.875rem;color:${rem > 0 ? '#f87171' : '#4ade80'};text-align:right;">
-                            ${rem > 0 ? `বাকি: ৳${Math.round(rem)}` : '✅ পরিশোধ সম্পন্ন'}
+                            ${rem > 0 ? `বাকি: ৳${Math.round(rem)}` : 'পরিশোধ সম্পন্ন'}
                         </p>
                     </div>
                 `;
@@ -302,7 +332,10 @@ function renderLedgerTab(container) {
                 <p style="color:#a1a1aa;font-size:0.75rem;">সর্বমোট নিট লাভ/লোকসান:</p>
                 <h2 style="font-size:1.5rem;font-weight:800;color:${totalProfit >= 0 ? '#4ade80' : '#f87171'};">৳${Math.round(totalProfit).toLocaleString()}</h2>
             </div>
-            <button class="btn btn-sm btn-primary" onclick="openAddLedgerModal()">➕ নতুন দৈনিক হিসাব</button>
+            <button class="btn btn-sm btn-primary" onclick="openAddLedgerModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>নতুন দৈনিক হিসাব</span>
+            </button>
         </div>
         <div class="table-wrap" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;overflow:hidden;">
             <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.875rem;">
@@ -322,7 +355,11 @@ function renderLedgerTab(container) {
                             <td style="padding:0.75rem 1rem;color:#4ade80;font-weight:700;">৳${Math.round(l.totalIncome || 0)}</td>
                             <td style="padding:0.75rem 1rem;color:#f87171;font-weight:700;">৳${Math.round(l.totalExpense || 0)}</td>
                             <td style="padding:0.75rem 1rem;font-weight:800;color:${l.netProfit >= 0 ? '#4ade80' : '#f87171'};">৳${Math.round(l.netProfit || 0)}</td>
-                            <td style="padding:0.75rem 1rem;"><button onclick="deleteLedger('${l.id}')" style="color:#ef4444;">🗑️</button></td>
+                            <td style="padding:0.75rem 1rem;">
+                                <button onclick="deleteLedger('${l.id}')" style="color:#ef4444;" title="Delete">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </td>
                         </tr>
                     `).join('')}
                     ${dataStore.ledger.length === 0 ? '<tr><td colspan="5" style="padding:2rem;text-align:center;color:#71717a;">কোনো হিসাব পাওয়া যায়নি।</td></tr>' : ''}
@@ -342,7 +379,10 @@ function renderStockTab(container) {
                 <p style="color:#a1a1aa;font-size:0.75rem;">স্টকের আনুমানিক মোট মূল্য:</p>
                 <h2 style="font-size:1.5rem;font-weight:800;color:#60a5fa;">৳${Math.round(totalVal).toLocaleString()}</h2>
             </div>
-            <button class="btn btn-sm btn-primary" onclick="openAddStockModal()">➕ নতুন স্টক যোগ</button>
+            <button class="btn btn-sm btn-primary" onclick="openAddStockModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>নতুন স্টক যোগ</span>
+            </button>
         </div>
         <div class="table-wrap" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;overflow:hidden;">
             <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.875rem;">
@@ -358,11 +398,15 @@ function renderStockTab(container) {
                 <tbody>
                     ${dataStore.stock.map(s => `
                         <tr style="border-top:1px solid #27272a;">
-                            <td style="padding:0.75rem 1rem;"><strong style="color:#fff;">${s.name}</strong> ${s.isLowStock ? '<span style="color:#f87171;font-size:0.75rem;">⚠️ Low</span>' : ''}</td>
+                            <td style="padding:0.75rem 1rem;"><strong style="color:#fff;">${s.name}</strong> ${s.isLowStock ? '<span style="color:#f87171;font-size:0.75rem;">[Low Stock]</span>' : ''}</td>
                             <td style="padding:0.75rem 1rem;font-weight:700;color:${s.isLowStock ? '#f87171' : '#4ade80'};">${s.quantity} ${s.unit}</td>
                             <td style="padding:0.75rem 1rem;color:#71717a;">${s.minQuantity} ${s.unit}</td>
                             <td style="padding:0.75rem 1rem;color:#ef4444;font-weight:700;">৳${s.lastPrice}</td>
-                            <td style="padding:0.75rem 1rem;"><button onclick="deleteStock('${s.id}')" style="color:#ef4444;">🗑️</button></td>
+                            <td style="padding:0.75rem 1rem;">
+                                <button onclick="deleteStock('${s.id}')" style="color:#ef4444;" title="Delete">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </td>
                         </tr>
                     `).join('')}
                     ${dataStore.stock.length === 0 ? '<tr><td colspan="5" style="padding:2rem;text-align:center;color:#71717a;">কোনো স্টক আইটেম নেই।</td></tr>' : ''}

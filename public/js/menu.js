@@ -76,13 +76,13 @@ function renderMenuItems() {
             <div class="card-img">
                 ${item.image 
                     ? `<img src="${item.image}" alt="${item.name}">`
-                    : `<div style="width:100%;height:100%;background:var(--zinc-100);display:flex;align-items:center;justify-content:center;font-size:3rem;">🍲</div>`}
+                    : `<div style="width:100%;height:100%;background:var(--zinc-800);display:flex;align-items:center;justify-content:center;color:var(--zinc-500);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg></div>`}
                 <div class="card-badge">৳${item.price}</div>
             </div>
             <div class="card-body">
                 <div class="flex items-center justify-between mb-2">
                     <h3 style="font-size:1.3rem;font-weight:800;">${item.name}</h3>
-                    ${item.isFeatured ? '<span class="text-xs text-secondary font-bold">⭐ Featured</span>' : ''}
+                    ${item.isFeatured ? '<span class="text-xs text-secondary font-bold">★ Featured</span>' : ''}
                 </div>
                 <p class="text-muted text-sm line-clamp-2" style="margin-bottom:1.25rem;">${item.description || ''}</p>
                 <div class="flex items-center justify-between">

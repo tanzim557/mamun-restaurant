@@ -33,11 +33,11 @@
             <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-xl);padding:2rem;">
                 <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem;">অর্ডার নিশ্চিত করুন</h2>
                 <div id="checkoutSummary" style="background:var(--zinc-50);border-radius:var(--radius-sm);padding:1.25rem;margin-bottom:1.5rem;"></div>
-                <div class="form-group"><label class="form-label">👤 নাম *</label><input type="text" class="form-input" id="cName" placeholder="আপনার পুরো নাম"></div>
-                <div class="form-group"><label class="form-label">📞 ফোন নম্বর *</label><input type="tel" class="form-input" id="cPhone" placeholder="01XXXXXXXXX"></div>
+                <div class="form-group"><label class="form-label">নাম *</label><input type="text" class="form-input" id="cName" placeholder="আপনার পুরো নাম"></div>
+                <div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="cPhone" placeholder="01XXXXXXXXX"></div>
                 
                 <div class="form-group">
-                    <label class="form-label">📍 এলাকা নির্বাচন করুন *</label>
+                    <label class="form-label">এলাকা নির্বাচন করুন *</label>
                     <select class="form-select" id="cArea">
                         <option value="" disabled selected>এলাকা নির্বাচন করুন</option>
                         <option>সাতক্ষীরা সদর</option>
@@ -54,9 +54,10 @@
 
                 <div class="form-group">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="form-label" style="margin-bottom:0;">📍 বিস্তারিত ঠিকানা *</label>
-                        <button type="button" onclick="getLiveLocation()" class="btn btn-sm btn-outline-primary" style="padding:0.25rem 0.75rem;font-size:0.75rem;" id="gpsBtn">
-                            🎯 লাইভ লোকেশন নিন (GPS)
+                        <label class="form-label" style="margin-bottom:0;">বিস্তারিত ঠিকানা *</label>
+                        <button type="button" onclick="getLiveLocation()" class="btn btn-sm btn-outline-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:flex;align-items:center;gap:6px;" id="gpsBtn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                            <span>লাইভ লোকেশন নিন (GPS)</span>
                         </button>
                     </div>
                     <input type="text" class="form-input" id="cAddress" placeholder="বাড়ি/দোকান নং, রোড, ল্যান্ডমার্ক...">
@@ -65,7 +66,10 @@
 
                 <div class="form-group"><label class="form-label">বিশেষ নির্দেশনা (ঐচ্ছিক)</label><input type="text" class="form-input" id="cNote" placeholder="যেমন: ঝাল বেশি, সাথে সালাদ দিবেন..."></div>
                 <div id="orderError" class="form-error hidden"></div>
-                <button class="btn btn-primary btn-block btn-lg mt-4" id="placeOrderBtn" onclick="placeOrder()">📦 অর্ডার দিন</button>
+                <button class="btn btn-primary btn-block btn-lg mt-4" id="placeOrderBtn" onclick="placeOrder()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>অর্ডার কনফার্ম করুন</span>
+                </button>
             </div>
         </div>
     </div>
@@ -88,8 +92,8 @@
 
 <!-- Floating Cart -->
 <div class="floating-cart hidden" id="floatingCart">
-    <button onclick="openCartDrawer()">
-        <span>🛒</span>
+    <button onclick="openCartDrawer()" style="display:flex;align-items:center;gap:10px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span id="cartCount">0</span> আইটেম
         <span style="border-left:1px solid rgba(255,255,255,0.3);padding-left:1rem;" id="cartTotal">৳0</span>
         <span>›</span>

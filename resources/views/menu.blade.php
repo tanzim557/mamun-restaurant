@@ -12,9 +12,11 @@
 
 <div class="filter-bar">
     <div class="container flex items-center justify-between gap-4" style="flex-wrap:wrap;">
-        <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="menuSearch" placeholder="Search dishes...">
+        <div class="search-box" style="display:flex;align-items:center;position:relative;">
+            <span class="search-icon" style="position:absolute;left:14px;color:var(--zinc-400);display:flex;align-items:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <input type="text" id="menuSearch" placeholder="Search dishes..." style="padding-left:2.5rem;">
         </div>
         <div class="filter-tabs" id="categoryTabs"></div>
     </div>
@@ -24,7 +26,9 @@
     <div class="container">
         <div class="grid grid-3" id="menuGrid"></div>
         <div id="menuEmpty" class="hidden text-center" style="padding:4rem 0;color:var(--zinc-400);">
-            <div style="font-size:3rem;margin-bottom:1rem;opacity:0.3;">🍽️</div>
+            <div style="margin-bottom:1rem;opacity:0.3;display:flex;justify-content:center;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+            </div>
             <p style="font-size:1.2rem;">No dishes found. Try a different filter.</p>
         </div>
         <div id="menuLoading"><div class="grid grid-3"><div class="skeleton" style="height:380px;"></div><div class="skeleton" style="height:380px;"></div><div class="skeleton" style="height:380px;"></div></div></div>

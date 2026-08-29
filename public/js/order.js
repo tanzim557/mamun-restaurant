@@ -157,7 +157,9 @@ function renderCartDrawer() {
     if (cart.length === 0) {
         body.innerHTML = `
             <div class="text-center" style="padding:4rem 1rem;color:var(--zinc-400);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;opacity:0.3;">🛒</div>
+                <div style="margin-bottom:0.75rem;opacity:0.4;display:flex;justify-content:center;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                </div>
                 <p>আপনার কার্ট খালি। কিছু আইটেম যোগ করুন।</p>
             </div>
         `;
@@ -169,13 +171,15 @@ function renderCartDrawer() {
 
     body.innerHTML = cart.map(item => `
         <div class="cart-item">
-            ${item.image ? `<img src="${item.image}" class="cart-item-img" alt="${item.name}">` : `<div class="cart-item-img" style="background:var(--zinc-200);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🍲</div>`}
+            ${item.image ? `<img src="${item.image}" class="cart-item-img" alt="${item.name}">` : `<div class="cart-item-img" style="background:var(--zinc-800);display:flex;align-items:center;justify-content:center;color:var(--zinc-400);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg></div>`}
             <div style="flex:1;">
                 <h4 style="font-weight:700;font-size:0.9rem;">${item.name}</h4>
                 <p class="text-primary font-bold text-sm">৳${item.price} × ${item.qty} = ৳${item.price * item.qty}</p>
             </div>
             <div class="cart-qty-controls">
-                <button class="cart-qty-btn ${item.qty === 1 ? 'danger' : ''}" onclick="changeQty('${item.id}', -1)">${item.qty === 1 ? '🗑️' : '−'}</button>
+                <button class="cart-qty-btn ${item.qty === 1 ? 'danger' : ''}" onclick="changeQty('${item.id}', -1)">
+                    ${item.qty === 1 ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' : '−'}
+                </button>
                 <span style="font-weight:700;font-size:0.85rem;min-width:18px;text-align:center;">${item.qty}</span>
                 <button class="cart-qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
             </div>
