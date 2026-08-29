@@ -5,7 +5,7 @@
 <section class="hero hero-short" style="margin-top:-64px;">
     <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=80');"></div>
     <div class="hero-content">
-        <span class="text-secondary font-bold uppercase tracking-wide text-sm" style="display:block;margin-bottom:0.75rem;">🚀 দ্রুত ডেলিভারি</span>
+        <span class="text-secondary font-bold uppercase tracking-wide text-sm" style="display:inline-block;margin-bottom:0.75rem;background:rgba(245,158,11,0.15);padding:4px 14px;border-radius:9999px;border:1px solid rgba(245,158,11,0.3);">দ্রুত ডেলিভারি</span>
         <h1>অনলাইন অর্ডার</h1>
         <p style="color:rgba(255,255,255,0.7);margin-top:0.5rem;font-size:1.1rem;">আপনার পছন্দের খাবার ঘরে বসেই অর্ডার করুন</p>
     </div>
@@ -13,13 +13,15 @@
 
 <!-- Success View -->
 <div id="orderSuccess" class="hidden">
-    <div class="success-box" style="max-width:480px;margin:0 auto;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-xl);margin-top:3rem;margin-bottom:3rem;">
-        <div class="success-icon">✅</div>
-        <h2>অর্ডার হয়েছে! 🎉</h2>
-        <p class="text-muted mb-6">আপনার অর্ডার পাওয়া গেছে। শীঘ্রই আমরা কনফার্ম করব।</p>
-        <div style="background:var(--zinc-50);border-radius:var(--radius-sm);padding:1.25rem;text-align:left;margin-bottom:2rem;">
+    <div class="success-box" style="max-width:480px;margin:0 auto;background:#141418;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);box-shadow:var(--shadow-xl);margin-top:3rem;margin-bottom:3rem;padding:2.5rem;text-align:center;">
+        <div class="success-icon" style="color:#22c55e;margin-bottom:1rem;display:flex;justify-content:center;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:0.5rem;">অর্ডার সফল হয়েছে!</h2>
+        <p class="text-muted mb-6">আপনার অর্ডার পাওয়া গেছে। শীঘ্রই আমাদের প্রতিনিধি কনফার্ম করবেন।</p>
+        <div style="background:#1e1e24;border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-sm);padding:1.25rem;text-align:left;margin-bottom:2rem;">
             <p class="text-sm text-muted">অর্ডার ID</p>
-            <p id="successOrderId" style="font-family:monospace;font-size:0.75rem;word-break:break-all;"></p>
+            <p id="successOrderId" style="font-family:monospace;font-size:0.85rem;color:#60a5fa;word-break:break-all;font-weight:700;margin-top:4px;"></p>
         </div>
         <button class="btn btn-primary btn-block" onclick="resetOrder()">আরো অর্ডার করুন</button>
     </div>
@@ -28,11 +30,14 @@
 <!-- Checkout View -->
 <div id="orderCheckout" class="hidden">
     <div class="section" style="padding-top:2rem;">
-        <div class="container" style="max-width:560px;">
-            <button onclick="showMenuView()" class="text-primary font-bold mb-4" style="font-size:0.95rem;">← মেনুতে ফিরে যাও</button>
-            <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-xl);padding:2rem;">
-                <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem;">অর্ডার নিশ্চিত করুন</h2>
-                <div id="checkoutSummary" style="background:var(--zinc-50);border-radius:var(--radius-sm);padding:1.25rem;margin-bottom:1.5rem;"></div>
+        <div class="container" style="max-width:580px;margin:0 auto;">
+            <button onclick="showMenuView()" class="text-primary font-bold mb-4" style="font-size:0.95rem;display:flex;align-items:center;gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>মেনুতে ফিরে যান</span>
+            </button>
+            <div style="background:#141418;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);box-shadow:var(--shadow-xl);padding:2.5rem;">
+                <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:1.5rem;text-align:center;">অর্ডার নিশ্চিত করুন</h2>
+                <div id="checkoutSummary" style="background:#1e1e24;border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-sm);padding:1.25rem;margin-bottom:1.5rem;"></div>
                 <div class="form-group"><label class="form-label">নাম *</label><input type="text" class="form-input" id="cName" placeholder="আপনার পুরো নাম"></div>
                 <div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="cPhone" placeholder="01XXXXXXXXX"></div>
                 

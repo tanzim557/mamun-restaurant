@@ -6,7 +6,7 @@
     <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1920&q=80');"></div>
     <div class="hero-content"><span class="text-secondary font-bold uppercase tracking-wide text-sm" style="display:block;margin-bottom:0.75rem;">A Feast for the Eyes</span><h1>Gallery</h1></div>
 </section>
-<section style="padding:2rem 0;border-bottom:1px solid var(--zinc-200);">
+<section style="padding:2rem 0;border-bottom:1px solid rgba(255,255,255,0.08);">
     <div class="container flex justify-center gap-3" style="flex-wrap:wrap;" id="albumTabs"></div>
 </section>
 <section class="section" style="padding-top:3rem;">
