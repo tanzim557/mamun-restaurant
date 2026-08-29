@@ -20,11 +20,16 @@ fi
 touch /var/www/html/database/database.sqlite
 chmod 777 /var/www/html/database/database.sqlite
 
-# Clear cache and run migrations
+# Clear cache, run migrations, then cache for high performance
 php artisan config:clear || true
 php artisan view:clear || true
 php artisan route:clear || true
 php artisan migrate --force || true
 php artisan db:seed --force || true
+
+# Production optimization caches
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
 
 exec apache2-foreground

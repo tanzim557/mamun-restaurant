@@ -32,11 +32,13 @@
         .badge-confirmed { background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
         .badge-delivered { background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
         .badge-cancelled { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
-        .modal-overlay { display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem; }
-        .modal-overlay.open { display:flex; }
-        .modal-card { background:#18181b; border:1px solid #3f3f46; border-radius:1rem; width:100%; max-width:520px; box-shadow:0 25px 50px rgba(0,0,0,0.6); max-height:90vh; overflow-y:auto; }
-        .modal-header { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem; border-bottom:1px solid #27272a; }
+        .modal-overlay { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1rem; }
+        .modal-overlay.open { display:flex; animation:fadeIn 0.2s ease; }
+        .modal-card { background:#14141a; border:1px solid rgba(255,255,255,0.12); border-radius:1.5rem; width:100%; max-width:540px; box-shadow:0 30px 60px rgba(0,0,0,0.9); max-height:90vh; overflow-y:auto; animation:slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-header { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem; border-bottom:1px solid rgba(255,255,255,0.08); background:#181822; }
         .modal-body { padding:1.5rem; }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes slideUp { from { opacity:0; transform:translateY(20px) scale(0.98); } to { opacity:1; transform:translateY(0) scale(1); } }
     </style>
 </head>
 <body>

@@ -1,7 +1,7 @@
-// Admin Dashboard Logic: Robust, pure Vanilla JS for all 7 tabs & CRUD operations
 let currentTab = 'overview';
 let dataStore = {
     menu: [],
+    categories: [],
     orders: [],
     employees: [],
     dues: [],
@@ -15,8 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchAllData() {
     try {
-        const [menuRes, orderRes, empRes, dueRes, ledgRes, stockRes] = await Promise.all([
+        const [menuRes, catRes, orderRes, empRes, dueRes, ledgRes, stockRes] = await Promise.all([
             fetch('/api/menu/items').then(r => r.json()).catch(() => []),
+            fetch('/api/menu/categories').then(r => r.json()).catch(() => []),
             fetch('/api/orders').then(r => r.json()).catch(() => []),
             fetch('/api/admin/employees').then(r => r.json()).catch(() => []),
             fetch('/api/admin/customer-dues').then(r => r.json()).catch(() => []),
@@ -25,6 +26,7 @@ async function fetchAllData() {
         ]);
 
         dataStore.menu = Array.isArray(menuRes) ? menuRes : [];
+        dataStore.categories = Array.isArray(catRes) ? catRes : [];
         dataStore.orders = Array.isArray(orderRes) ? orderRes : [];
         dataStore.employees = Array.isArray(empRes) ? empRes : [];
         dataStore.dues = Array.isArray(dueRes) ? dueRes : [];
@@ -580,6 +582,14 @@ function openEditMenuModal(id) {
     const img = getAdminDishImage(item);
     const isAvail = (item.isAvailable === true || item.is_available === true || item.isAvailable === 1 || item.is_available === 1);
     const isFeat = (item.isFeatured === true || item.is_featured === true || item.isFeatured === 1 || item.is_featured === 1);
+    const categories = Array.isArray(dataStore.categories) && dataStore.categories.length > 0 
+        ? dataStore.categories 
+        : [
+            { id: 'cat-1', name: 'ভাত ও তরকারি' },
+            { id: 'cat-2', name: 'মাছ' },
+            { id: 'cat-3', name: 'মুরগি' },
+            { id: 'cat-4', name: 'নাস্তা ও পানীয়' }
+        ];
 
     openModal('খাবারের তথ্য ও মূল্য এডিট', `
         <div class="form-group mb-3">
@@ -595,7 +605,7 @@ function openEditMenuModal(id) {
             <div class="form-group">
                 <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ক্যাটাগরি</label>
                 <select id="mEditCat" class="form-input" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
-                    ${dataStore.categories.map(c => `
+                    ${categories.map(c => `
                         <option value="${c.id}" ${(item.categoryId === c.id || (item.category && item.category.id === c.id)) ? 'selected' : ''}>${c.name}</option>
                     `).join('')}
                 </select>
@@ -660,6 +670,15 @@ async function saveEditMenuItem(id) {
 }
 
 function openAddMenuModal() {
+    const categories = Array.isArray(dataStore.categories) && dataStore.categories.length > 0 
+        ? dataStore.categories 
+        : [
+            { id: 'cat-1', name: 'ভাত ও তরকারি' },
+            { id: 'cat-2', name: 'মাছ' },
+            { id: 'cat-3', name: 'মুরগি' },
+            { id: 'cat-4', name: 'নাস্তা ও পানীয়' }
+        ];
+
     openModal('নতুন মেনু আইটেম যোগ', `
         <div class="form-group mb-3">
             <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">খাবারের নাম *</label>
@@ -673,7 +692,7 @@ function openAddMenuModal() {
             <div class="form-group">
                 <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ক্যাটাগরি</label>
                 <select id="mCat" class="form-input" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
-                    ${dataStore.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                    ${categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
                 </select>
             </div>
         </div>
