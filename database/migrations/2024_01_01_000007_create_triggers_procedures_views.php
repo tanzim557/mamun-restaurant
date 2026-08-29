@@ -7,6 +7,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // MySQL Trigger: auto-calculate order total_amount
         DB::unprepared('DROP TRIGGER IF EXISTS after_order_item_insert');
         DB::unprepared('
