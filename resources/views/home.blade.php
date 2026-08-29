@@ -26,19 +26,28 @@
     </div>
 </section>
 
-<!-- Featured Dishes -->
-<section class="section">
-    <div class="container">
+<!-- Featured Dishes (Luxury Showcase) -->
+<section class="section featured-dishes-section">
+    <div class="ambient-glow glow-1" style="top:20%;right:-10%;"></div>
+    <div class="ambient-glow glow-2" style="bottom:10%;left:-10%;"></div>
+
+    <div class="container relative" style="z-index:2;">
         <div class="section-header">
-            <span class="overline">Culinary Masterpieces</span>
-            <h2>Featured Dishes</h2>
+            <span class="overline">সাতক্ষীরার সেরা স্বাদ</span>
+            <h2>জনপ্রিয় স্পেশাল খাবার</h2>
+            <p style="color:#a1a1aa;margin-top:0.5rem;">আমাদের সবচেয়ে জনপ্রিয় ও প্রশংসিত স্পেশাল ঐতিহ্যবাহী পদসমূহ</p>
             <div class="divider"></div>
         </div>
+
         <div class="grid grid-3" id="featuredDishes">
-            <!-- JS will populate -->
+            <!-- JS will populate with luxury cards -->
         </div>
+
         <div class="text-center mt-8">
-            <a href="/menu" class="text-primary font-bold" style="font-size:1rem;">View Full Menu →</a>
+            <a href="/menu" class="btn btn-secondary btn-lg" style="display:inline-flex;align-items:center;gap:8px;">
+                <span>সম্পূর্ণ মেনু দেখুন</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
         </div>
     </div>
 </section>
@@ -121,30 +130,31 @@
     </div>
 </section>
 
-<!-- Info Section -->
+<!-- Info Section (Luxury Glass Cards) -->
 <section class="section section-dark">
     <div class="container">
-        <div class="grid grid-2" style="gap:2rem;">
-            <div class="glass-card animate-fade-up" style="background:#141418;border:1px solid rgba(255,255,255,0.08);padding:2rem;border-radius:16px;">
-                <div style="color:var(--secondary);margin-bottom:1rem;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="grid grid-2" style="gap:2.5rem;">
+            <div class="glass-card animate-fade-up" style="background:rgba(20,20,25,0.7);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);padding:2.5rem;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+                <div style="width:52px;height:52px;border-radius:14px;background:rgba(245,158,11,0.15);color:#f59e0b;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
-                <h3 style="font-size:1.75rem;font-weight:800;margin-bottom:1.5rem;">Opening Hours</h3>
-                <ul style="list-style:none;font-size:1.1rem;color:var(--zinc-300);">
-                    <li style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.75rem;margin-bottom:0.75rem;"><span>Sun - Thu</span><span>5:00 AM - 10:00 PM</span></li>
-                    <li style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.75rem;margin-bottom:0.75rem;color:var(--red);"><span>Friday</span><span>বন্ধ</span></li>
-                    <li style="display:flex;justify-content:space-between;color:var(--red);"><span>Saturday</span><span>বন্ধ</span></li>
+                <h3 style="font-size:1.75rem;font-weight:800;margin-bottom:1.5rem;">খোলার সময়সূচী</h3>
+                <ul style="list-style:none;font-size:1.05rem;color:var(--zinc-300);">
+                    <li style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.85rem;margin-bottom:0.85rem;"><span>রবিবার - বৃহস্পতিবার</span><span style="color:#4ade80;font-weight:700;">ভোর ৫:০০ - রাত ১০:০০</span></li>
+                    <li style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.85rem;margin-bottom:0.85rem;color:var(--red);"><span>শুক্রবার</span><span>সাপ্তাহিক বন্ধ</span></li>
+                    <li style="display:flex;justify-content:space-between;color:var(--red);"><span>শনিবার</span><span>সাপ্তাহিক বন্ধ</span></li>
                 </ul>
             </div>
-            <div class="glass-card animate-fade-up" style="background:#141418;border:1px solid rgba(255,255,255,0.08);padding:2rem;border-radius:16px;">
-                <div style="color:var(--primary);margin-bottom:1rem;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+
+            <div class="glass-card animate-fade-up" style="background:rgba(20,20,25,0.7);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);padding:2.5rem;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+                <div style="width:52px;height:52px;border-radius:14px;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </div>
-                <h3 style="font-size:1.75rem;font-weight:800;margin-bottom:1.5rem;">Find Us</h3>
-                <p style="font-size:1.2rem;color:var(--zinc-300);margin-bottom:0.5rem;">Satkhira, Bangladesh</p>
-                <p style="color:var(--zinc-400);margin-bottom:0.25rem;display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 01988976269</p>
-                <p style="color:var(--zinc-400);margin-bottom:2rem;display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> tanzim2713n@gmail.com</p>
-                <a href="/contact" class="btn btn-outline-primary">Get Directions</a>
+                <h3 style="font-size:1.75rem;font-weight:800;margin-bottom:1rem;">যোগাযোগ ও ঠিকানা</h3>
+                <p style="font-size:1.15rem;color:#fff;font-weight:700;margin-bottom:0.4rem;">উকিলবার পকেট গেটের বাহিরে, সাতক্ষীরা</p>
+                <p style="color:var(--zinc-400);margin-bottom:0.4rem;display:flex;align-items:center;gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ০১৯৮৮-৯৭৬২৬৯</p>
+                <p style="color:var(--zinc-400);margin-bottom:1.75rem;display:flex;align-items:center;gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#60a5fa;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> tanzim2713n@gmail.com</p>
+                <a href="/contact" class="btn btn-primary" style="padding:0.65rem 1.5rem;font-size:0.9rem;">সরাসরি ম্যাপে দেখুন →</a>
             </div>
         </div>
     </div>
@@ -154,28 +164,61 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const foodPlaceholders = {
+        'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+        'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+        'নেহারী': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+        'হাঁস': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
+        'মুরগী': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
+        'মাছ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
+        'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=800&q=80',
+        'ডাল': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+        'default': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80'
+    };
+
+    function getDishImage(dish) {
+        if (dish.image && dish.image.trim() !== '') return dish.image;
+        for (const [key, url] of Object.entries(foodPlaceholders)) {
+            if (dish.name && dish.name.includes(key)) return url;
+        }
+        return foodPlaceholders['default'];
+    }
+
     // Load featured dishes from API
     fetch('/api/menu/items')
         .then(r => r.json())
         .then(items => {
             const featured = items.filter(i => i.isFeatured).slice(0, 3);
             const fallback = items.slice(0, 3);
-            const display = featured.length >= 3 ? featured : fallback;
+            const display = featured.length >= 3 ? featured : (featured.length > 0 ? featured.concat(fallback.filter(f => !featured.some(fe => fe.id === f.id))).slice(0, 3) : fallback);
             const container = document.getElementById('featuredDishes');
-            container.innerHTML = display.map((dish, i) => `
-                <div class="card animate-fade-up" style="animation-delay:${i * 0.15}s;">
-                    <div class="card-img">
-                        ${dish.image
-                            ? `<img src="${dish.image}" alt="${dish.name}">`
-                            : `<div style="width:100%;height:100%;background:var(--zinc-100);display:flex;align-items:center;justify-content:center;font-size:3rem;">🍽️</div>`}
-                        <div class="card-badge">৳${dish.price}</div>
+            if (!container) return;
+
+            container.innerHTML = display.map((dish, i) => {
+                const imgUrl = getDishImage(dish);
+                return `
+                    <div class="luxury-food-card animate-fade-up" style="animation-delay:${i * 0.15}s;">
+                        <div class="food-img-container">
+                            <img src="${imgUrl}" alt="${dish.name}" loading="lazy">
+                            <div class="food-badge-price">৳${dish.price}</div>
+                            <div class="food-badge-rating">★ স্পেশাল</div>
+                        </div>
+                        <div class="food-card-content">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="food-category-tag">${dish.category ? dish.category.name : 'ঐতিহ্যবাহী পদ'}</span>
+                            </div>
+                            <h3 class="food-card-title">${dish.name}</h3>
+                            <p class="food-card-desc">${dish.description || 'সাতক্ষীরার খাঁটি মসলা ও চুইঝালের অনন্য স্পেশাল স্বাদে প্রস্তুত।'}</p>
+                            <div class="food-card-action">
+                                <a href="/order" class="btn-order-card">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                    <span>অর্ডার করুন</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:0.75rem;">${dish.name}</h3>
-                        <p class="text-muted" style="line-height:1.7;">${dish.description || ''}</p>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         })
         .catch(() => {});
 });
