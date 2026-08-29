@@ -43,42 +43,77 @@
     </div>
 </section>
 
-<!-- Why Choose Us -->
-<section class="section section-alt">
-    <div class="container">
-        <div class="grid grid-2" style="align-items:center;gap:4rem;">
-            <div class="text-center animate-fade">
-                <div class="owner-photo">
-                    <img src="/images/owner.jpg" alt="মামুন হোটেল মালিক">
+<!-- Why Choose Us / Philosophy (Luxury Showcase) -->
+<section class="section philosophy-section">
+    <!-- Ambient Animated Background Lights -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="container relative" style="z-index:2;">
+        <div class="philosophy-glass-box">
+            <div class="grid grid-2" style="align-items:center;gap:4rem;">
+                <!-- Owner Showcase -->
+                <div class="text-center animate-fade owner-showcase">
+                    <div class="owner-portrait-wrapper">
+                        <div class="owner-aura-ring"></div>
+                        <div class="owner-aura-ring-2"></div>
+                        <div class="owner-photo">
+                            <img src="/images/owner.jpg" alt="মামুন হোটেল প্রতিষ্ঠাতা ও স্বত্বাধিকারী">
+                        </div>
+                        <div class="owner-badge-floating">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>মাস্টার শেফ & ওনার</span>
+                        </div>
+                    </div>
+                    <h3 class="owner-name">প্রোঃ আল-মামুন</h3>
+                    <p class="owner-role">প্রতিষ্ঠাতা ও প্রধান কারিগর</p>
+                    <p class="owner-loc">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span>সাতক্ষীরা, বাংলাদেশ</span>
+                    </p>
                 </div>
-                <h3 style="margin-top:1.5rem;font-size:1.5rem;">মামুন হোটেল</h3>
-                <p class="text-secondary font-bold tracking-wide mt-2">প্রতিষ্ঠাতা ও স্বত্বাধিকারী</p>
-                <p class="text-muted text-sm mt-2">Satkhira, Bangladesh</p>
-            </div>
-            <div>
-                <span class="text-secondary font-bold uppercase tracking-wide text-sm">Our Philosophy</span>
-                <h2 style="font-size:2.25rem;margin-top:0.5rem;margin-bottom:1.5rem;">Artistry on Every Plate</h2>
-                <p class="text-muted text-lg" style="margin-bottom:2rem;line-height:1.8;">
-                    At Mamun Restaurant, we believe dining is more than just eating—it is an experience. Our master chefs combine traditional techniques with modern innovation to create dishes that delight all your senses.
-                </p>
-                <div class="flex flex-col gap-4">
-                    <div class="feature-item">
-                        <div class="feature-icon" style="display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.15);color:#ef4444;width:44px;height:44px;border-radius:12px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
-                        </div>
-                        <div><h4 class="font-bold text-lg">Master Chefs</h4><p class="text-muted">Expertly trained culinary professionals with years of experience.</p></div>
+
+                <!-- Philosophy Content -->
+                <div>
+                    <div class="section-tag-gold">
+                        <span class="pulse-dot-gold"></span>
+                        <span>ঐতিহ্য ও মান</span>
                     </div>
-                    <div class="feature-item">
-                        <div class="feature-icon" style="display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);color:#f59e0b;width:44px;height:44px;border-radius:12px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <h2 class="philosophy-title">খাবারের প্রতিটি পদে <span class="text-gradient-fire">খাঁটি স্বাদ</span> ও ভালোবাসা</h2>
+                    <p class="philosophy-desc">
+                        মামুন হোটেলে প্রতিটি রান্না শুধু খাবার নয়, এটি একটি পারিবারিক ঐতিহ্য। আমাদের অভিজ্ঞ বাবুর্চিরা নিজস্ব মসলা ও খাঁটি চুইঝালের সমন্বয়ে প্রস্তুত করেন অনন্য স্বাদের অতুলনীয় সব খাবার।
+                    </p>
+                    <div class="flex flex-col gap-3">
+                        <div class="feature-glass-card">
+                            <div class="feature-icon-wrap icon-red">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-white">অভিজ্ঞ মাস্টার শেফ</h4>
+                                <p class="text-muted text-sm mt-1">বছরের পর বছর ধরে সাতক্ষীরার ঐতিহ্যবাহী রান্নার বিশ্বস্ত হাত।</p>
+                            </div>
                         </div>
-                        <div><h4 class="font-bold text-lg">Premium Ingredients</h4><p class="text-muted">We source only the freshest, highest quality local and imported ingredients.</p></div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon" style="display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,0.15);color:#3b82f6;width:44px;height:44px;border-radius:12px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+
+                        <div class="feature-glass-card">
+                            <div class="feature-icon-wrap icon-gold">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-white">১০০% তাজা ও হালাল উপকরণ</h4>
+                                <p class="text-muted text-sm mt-1">প্রতিদিন সকালের বাছাইকৃত তাজা মাংস ও দেশি চুইঝাল ব্যবহার করা হয়।</p>
+                            </div>
                         </div>
-                        <div><h4 class="font-bold text-lg">Impeccable Service</h4><p class="text-muted">Dedicated staff ensuring your dining experience is flawless from start to finish.</p></div>
+
+                        <div class="feature-glass-card">
+                            <div class="feature-icon-wrap icon-blue">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-white">পরিষ্কার ও দ্রুত পরিবেশন</h4>
+                                <p class="text-muted text-sm mt-1">সুন্দর, স্বাস্থ্যকর ও পারিবারিক পরিবেশে আন্তরিক আপ্যায়ন।</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
