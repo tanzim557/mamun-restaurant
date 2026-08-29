@@ -55,7 +55,7 @@
                 <div class="admin-brand-icon" style="background:var(--primary);color:#fff;border-radius:10px;padding:6px;display:flex;align-items:center;justify-content:center;">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
                 </div>
-                <div><h3 style="font-size:1rem;font-weight:800;letter-spacing:0.05em;">MAMUN</h3><p style="font-size:0.75rem;color:#71717a;">Admin Panel</p></div>
+                <div><h3 style="font-size:0.9rem;font-weight:800;letter-spacing:0.02em;color:#fff;">নজরুল হোটেল</h3><p style="font-size:0.72rem;color:#71717a;">শ্যামনগর, সাতক্ষীরা</p></div>
             </div>
             <nav class="admin-nav">
                 <button class="admin-nav-item active" onclick="switchTab('overview', this)">
@@ -101,7 +101,7 @@
             <header class="admin-header">
                 <div>
                     <h1 id="tabTitle" style="font-size:1.25rem;font-weight:800;color:#fff;">Overview</h1>
-                    <p style="font-size:0.75rem;color:#71717a;">Mamun Restaurant Management</p>
+                    <p style="font-size:0.75rem;color:#71717a;">শ্যামনগর নজরুল হোটেল ম্যানেজমেন্ট</p>
                 </div>
                 <div style="display:flex;align-items:center;gap:0.75rem;">
                     <button onclick="fetchAllData()" class="btn btn-sm btn-outline" style="border-color:#3f3f46;color:#a1a1aa;">🔄 Refresh</button>

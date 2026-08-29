@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'অনলাইন অর্ডার — মামুন হোটেল')
+@section('title', 'অনলাইন খাবার অর্ডার — শ্যামনগর নজরুল হোটেল')
 
 @section('content')
 <section class="hero hero-short" style="margin-top:-64px;">

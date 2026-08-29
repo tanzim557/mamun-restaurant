@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'মামুন হোটেল — শ্যামনগর নজরুল হোটেল')
+@section('title', 'শ্যামনগর নজরুল হোটেল — সেরা চুইঝালের স্বাদ')
 
 @section('content')
 <!-- Hero -->
@@ -68,7 +68,7 @@
                         <div class="owner-aura-ring"></div>
                         <div class="owner-aura-ring-2"></div>
                         <div class="owner-photo">
-                            <img src="/images/owner.jpg" alt="মামুন হোটেল প্রতিষ্ঠাতা ও স্বত্বাধিকারী">
+                            <img src="/images/owner.jpg" alt="শ্যামনগর নজরুল হোটেল প্রতিষ্ঠাতা ও স্বত্বাধিকারী">
                         </div>
                         <div class="owner-badge-floating">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -91,7 +91,7 @@
                     </div>
                     <h2 class="philosophy-title">খাবারের প্রতিটি পদে <span class="text-gradient-fire">খাঁটি স্বাদ</span> ও ভালোবাসা</h2>
                     <p class="philosophy-desc">
-                        মামুন হোটেলে প্রতিটি রান্না শুধু খাবার নয়, এটি একটি পারিবারিক ঐতিহ্য। আমাদের অভিজ্ঞ বাবুর্চিরা নিজস্ব মসলা ও খাঁটি চুইঝালের সমন্বয়ে প্রস্তুত করেন অনন্য স্বাদের অতুলনীয় সব খাবার।
+                        শ্যামনগর নজরুল হোটেলে প্রতিটি রান্না শুধু খাবার নয়, এটি একটি পারিবারিক ঐতিহ্য। আমাদের অভিজ্ঞ বাবুর্চিরা নিজস্ব মসলা ও খাঁটি চুইঝালের সমন্বয়ে প্রস্তুত করেন অনন্য স্বাদের অতুলনীয় সব খাবার।
                     </p>
                     <div class="flex flex-col gap-3">
                         <div class="feature-glass-card">

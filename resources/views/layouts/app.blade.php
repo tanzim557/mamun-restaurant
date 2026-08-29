@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="শ্যামনগর নজরুল হোটেল — সাতক্ষীরার ঐতিহ্যবাহী চুইঝালের খাবারের ঘর।">
-    <title>@yield('title', 'মামুন হোটেল ও রেস্টুরেন্ট — সাতক্ষীরা')</title>
+    <title>@yield('title', 'শ্যামনগর নজরুল হোটেল — সাতক্ষীরা')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -18,11 +18,10 @@
         <div class="navbar-inner container">
             <a href="/" class="navbar-brand">
                 <div class="logo-wrapper">
-                    <img src="/images/logo.jpg" alt="Mamun Hotel Logo" class="brand-logo">
+                    <img src="/images/logo.jpg" alt="শ্যামনগর নজরুল হোটেল" class="brand-logo">
                 </div>
                 <div class="brand-text">
-                    <span class="brand-title">মামুন হোটেল</span>
-                    <span class="brand-subtitle">শ্যামনগর নজরুল হোটেল</span>
+                    <span class="brand-title">শ্যামনগর নজরুল হোটেল</span>
                 </div>
             </a>
             <nav class="navbar-links" id="navLinks">
@@ -38,13 +37,13 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                     <span>অর্ডার</span>
                 </a>
-                <a href="/track" class="nav-link {{ request()->is('track') ? 'active' : '' }}">
+                <a href="/track" class="nav-link {{ request()->is('track*') ? 'active' : '' }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     <span>অর্ডার ট্র্যাক</span>
                 </a>
                 <a href="/about" class="nav-link {{ request()->is('about') ? 'active' : '' }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                    <span>আমাদের কথা</span>
+                    <span>সম্পর্কে</span>
                 </a>
                 <a href="/contact" class="nav-link {{ request()->is('contact') ? 'active' : '' }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -52,10 +51,7 @@
                 </a>
             </nav>
             <div class="navbar-actions">
-                <a href="/order" class="btn-nav-cta">
-                    <span class="pulse-dot"></span>
-                    <span>অনলাইন অর্ডার</span>
-                </a>
+                <a href="/order" class="btn btn-sm btn-primary">অর্ডার করুন</a>
                 <button class="navbar-toggle" id="navToggle" aria-label="Toggle menu">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 </button>
@@ -93,11 +89,10 @@
                 <div class="footer-col-brand">
                     <div class="footer-logo-wrap">
                         <div class="footer-logo-img">
-                            <img src="/images/logo.jpg" alt="মামুন হোটেল">
+                            <img src="/images/logo.jpg" alt="শ্যামনগর নজরুল হোটেল">
                         </div>
                         <div>
-                            <h3 class="footer-brand-title">মামুন হোটেল</h3>
-                            <p class="footer-brand-sub">শ্যামনগর নজরুল হোটেল</p>
+                            <h3 class="footer-brand-title">শ্যামনগর নজরুল হোটেল</h3>
                         </div>
                     </div>
                     <p class="footer-brand-desc">
@@ -189,7 +184,7 @@
 
             <!-- Footer Bottom -->
             <div class="footer-bottom">
-                <p>&copy; {{ date('Y') }} <strong>মামুন হোটেল</strong> — শ্যামনগর নজরুল হোটেল। সর্বস্বত্ব সংরক্ষিত।</p>
+                <p>&copy; {{ date('Y') }} <strong>শ্যামনগর নজরুল হোটেল</strong>। সর্বস্বত্ব সংরক্ষিত।</p>
                 <div class="footer-admin-link">
                     <a href="/admin">অ্যাডমিন প্যানেল</a>
                 </div>

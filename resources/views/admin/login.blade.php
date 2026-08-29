@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login — মামুন হোটেল</title>
+    <title>Admin Login — শ্যামনগর নজরুল হোটেল</title>
     <link rel="stylesheet" href="/css/style.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
@@ -36,7 +36,7 @@
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4zm0 2a2 2 0 0 1 2 2v1h-4V6a2 2 0 0 1 2-2z"/></svg>
                 </div>
                 <h1 style="font-size:1.875rem;font-weight:800;color:#fff;">Admin Portal</h1>
-                <p style="color:#a1a1aa;margin-top:0.5rem;font-size:0.875rem;">মামুন হোটেল অ্যাডমিন ম্যানেজমেন্ট</p>
+                <p style="color:#a1a1aa;margin-top:0.5rem;font-size:0.875rem;">শ্যামনগর নজরুল হোটেল অ্যাডমিন ম্যানেজমেন্ট</p>
             </div>
             <form id="loginForm" onsubmit="return handleLogin(event)">
                 <div class="login-input-wrap">

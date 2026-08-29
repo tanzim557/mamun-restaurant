@@ -120,7 +120,7 @@ function renderOverview(container) {
                 <div>
                     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);padding:4px 12px;border-radius:9999px;font-size:0.78rem;font-weight:700;color:#4ade80;margin-bottom:0.75rem;">
                         <span class="pulse-beacon"></span>
-                        <span>মামুন হোটেল • লাইভ কিচেন ও ডেলিভারি সিস্টেম সক্রিয়</span>
+                        <span>শ্যামনগর নজরুল হোটেল • লাইভ কিচেন ও ডেলিভারি সিস্টেম সক্রিয়</span>
                     </div>
                     <h2 style="font-size:1.6rem;font-weight:900;color:#fff;margin:0 0 0.4rem 0;letter-spacing:-0.02em;">স্বাগতম, অ্যাডমিন ড্যাশবোর্ড 👑</h2>
                     <p style="color:#a1a1aa;font-size:0.85rem;margin:0;">রিয়েল-টাইম অর্ডার ট্র্যাকিং, মেনু আপডেট, হিসাব ও কর্মী পরিচালনা নিয়ন্ত্রণ কেন্দ্র।</p>

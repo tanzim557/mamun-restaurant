@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'আমাদের সম্পর্কে — মামুন হোটেল')
+@section('title', 'আমাদের সম্পর্কে — শ্যামনগর নজরুল হোটেল')
 
 @section('content')
 <section class="hero hero-mid" style="margin-top:-64px;">
@@ -25,7 +25,7 @@
     <div>
         <span class="text-primary font-bold uppercase tracking-wide text-sm">প্রতিষ্ঠাকাল ২০১৪</span>
         <h2 style="font-size:2.5rem;margin-top:0.5rem;margin-bottom:2rem;line-height:1.3;">ভালোবাসার রান্না,<br>আপনার জন্য</h2>
-        <p class="text-muted text-lg" style="line-height:1.8;margin-bottom:1.5rem;">মামুন হোটেল সাতক্ষীরার একটি বিশ্বস্ত খাবারের ঘর। প্রোঃ আল-মামুনের হাত ধরে শুরু হওয়া এই হোটেলটি আজ স্থানীয় মানুষের হৃদয়ে জায়গা করে নিয়েছে।</p>
+        <p class="text-muted text-lg" style="line-height:1.8;margin-bottom:1.5rem;">শ্যামনগর নজরুল হোটেল সাতক্ষীরার একটি বিশ্বস্ত খাবারের ঘর। প্রোঃ আল-মামুনের হাত ধরে শুরু হওয়া এই হোটেলটি আজ স্থানীয় মানুষের হৃদয়ে জায়গা করে নিয়েছে।</p>
         <p class="text-muted text-lg" style="line-height:1.8;margin-bottom:2rem;">চুই ঝালের গরু ও হাঁসের গোশত আমাদের বিশেষত্ব — যা খেলে আপনি বারবার ফিরে আসবেন।</p>
         <a href="/menu" class="btn btn-primary">মেনু দেখুন</a>
     </div>
@@ -80,7 +80,7 @@
 <!-- CTA -->
 <section class="section section-primary text-center"><div class="container">
     <h2 style="font-size:2.5rem;margin-bottom:1rem;">আসুন, স্বাদ নিন আমাদের</h2>
-    <p style="font-size:1.2rem;opacity:0.9;margin-bottom:2.5rem;max-width:560px;margin-left:auto;margin-right:auto;">মামুন হোটেলের প্রতিটি খাবার একটি অনন্য অভিজ্ঞতা।</p>
+    <p style="font-size:1.2rem;opacity:0.9;margin-bottom:2.5rem;max-width:560px;margin-left:auto;margin-right:auto;">শ্যামনগর নজরুল হোটেলের প্রতিটি খাবার একটি অনন্য অভিজ্ঞতা।</p>
     <a href="/order" class="btn" style="background:var(--white);color:var(--primary);font-weight:800;font-size:1.1rem;">এখনই অর্ডার করুন</a>
 </div></section>
 @endsection
