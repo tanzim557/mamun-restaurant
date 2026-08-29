@@ -79,8 +79,9 @@ class AdminController extends Controller
             if (isset($data['description'])) $item->description = $data['description'];
             if (isset($data['price'])) $item->price = floatval($data['price']);
             if (isset($data['image'])) $item->image = $data['image'];
-            if (isset($data['isFeatured'])) $item->is_featured = $data['isFeatured'];
-            if (isset($data['isAvailable'])) $item->is_available = $data['isAvailable'];
+            if (isset($data['categoryId'])) $item->category_id = $data['categoryId'];
+            if (isset($data['isFeatured'])) $item->is_featured = filter_var($data['isFeatured'], FILTER_VALIDATE_BOOLEAN);
+            if (isset($data['isAvailable'])) $item->is_available = filter_var($data['isAvailable'], FILTER_VALIDATE_BOOLEAN);
             $item->save();
             $item->load('category');
             return response()->json($item);

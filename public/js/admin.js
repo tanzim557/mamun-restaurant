@@ -167,13 +167,38 @@ function renderOverview(container) {
     `;
 }
 
+const adminFoodImages = {
+    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80',
+    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80',
+    'নেহারী': 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=400&q=80',
+    'হাঁস': 'https://images.unsplash.com/photo-1514944298352-7b0078907869?auto=format&fit=crop&w=400&q=80',
+    'মুরগী': 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80',
+    'মাছ': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=400&q=80',
+    'ইলিশ': 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=400&q=80',
+    'রুই': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=400&q=80',
+    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=400&q=80',
+    'চা': 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=400&q=80'
+};
+
+function getAdminDishImage(item) {
+    if (item.image && item.image.trim() !== '') return item.image;
+    const name = item.name || '';
+    for (const [kw, url] of Object.entries(adminFoodImages)) {
+        if (name.includes(kw)) return url;
+    }
+    return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80';
+}
+
 // ── 2. Menu Tab ──
 function renderMenuTab(container) {
     container.innerHTML = `
         <div class="flex justify-between items-center mb-4">
-            <p style="color:#a1a1aa;font-size:0.875rem;">${dataStore.menu.length} টি মেনু আইটেম</p>
-            <button class="btn btn-sm btn-primary" onclick="openAddMenuModal()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <div>
+                <h3 style="font-size:1.15rem;font-weight:800;color:#fff;">মেনু তালিকা ও মূল্য ব্যবস্থাপনা</h3>
+                <p style="color:#a1a1aa;font-size:0.8rem;">মোট ${dataStore.menu.length} টি মেনু আইটেম (মূল্য, ছবি বা স্টক পরিবর্তন করতে "এডিট" চাপুন)</p>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="openAddMenuModal()" style="display:inline-flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 <span>নতুন আইটেম যোগ</span>
             </button>
         </div>
@@ -182,28 +207,55 @@ function renderMenuTab(container) {
                 <thead style="background:#27272a;">
                     <tr>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">ছবি</th>
-                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">নাম</th>
+                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">খাবারের নাম</th>
                         <th style="padding:0.75rem 1rem;color:#a1a1aa;">ক্যাটাগরি</th>
-                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">মূল্য</th>
-                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">Available</th>
-                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">Actions</th>
+                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">মূল্য (৳)</th>
+                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">স্টক স্ট্যাটাস</th>
+                        <th style="padding:0.75rem 1rem;color:#a1a1aa;">অ্যাকশন</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${dataStore.menu.map(item => `
-                        <tr style="border-top:1px solid #27272a;">
-                            <td style="padding:0.75rem 1rem;">${item.image ? `<img src="${item.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">` : '<span style="color:#71717a;">No Image</span>'}</td>
-                            <td style="padding:0.75rem 1rem;"><strong style="color:#fff;">${item.name}</strong> ${item.isFeatured ? '<span style="color:#facc15;font-size:0.75rem;">★ Featured</span>' : ''}</td>
-                            <td style="padding:0.75rem 1rem;"><span style="background:#27272a;padding:0.2rem 0.5rem;border-radius:6px;font-size:0.75rem;color:#a1a1aa;">${item.category ? item.category.name : 'N/A'}</span></td>
-                            <td style="padding:0.75rem 1rem;color:#ef4444;font-weight:700;">৳${item.price}</td>
-                            <td style="padding:0.75rem 1rem;"><button onclick="toggleMenuAvailability('${item.id}', ${item.isAvailable})" style="background:${item.isAvailable ? '#22c55e' : '#52525b'};color:#fff;padding:0.25rem 0.6rem;border-radius:9999px;font-size:0.75rem;">${item.isAvailable ? 'Active' : 'Off'}</button></td>
-                            <td style="padding:0.75rem 1rem;">
-                                <button onclick="deleteMenuItem('${item.id}')" style="color:#ef4444;padding:0.25rem 0.5rem;" title="Delete">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('')}
+                    ${dataStore.menu.map(item => {
+                        const img = getAdminDishImage(item);
+                        const isAvail = (item.isAvailable === true || item.is_available === true || item.isAvailable === 1 || item.is_available === 1);
+                        const isFeat = (item.isFeatured === true || item.is_featured === true || item.isFeatured === 1 || item.is_featured === 1);
+
+                        return `
+                            <tr style="border-top:1px solid #27272a;">
+                                <td style="padding:0.75rem 1rem;">
+                                    <img src="${img}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.1);" alt="${item.name}">
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    <strong style="color:#fff;font-size:0.95rem;">${item.name}</strong> 
+                                    ${isFeat ? '<span style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:800;margin-left:4px;">★ Featured</span>' : ''}
+                                    ${item.description ? `<p style="font-size:0.75rem;color:#71717a;margin-top:2px;">${item.description}</p>` : ''}
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    <span style="background:#27272a;border:1px solid #3f3f46;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.75rem;color:#cbd5e1;font-weight:600;">${item.category ? item.category.name : 'সাধারণ'}</span>
+                                </td>
+                                <td style="padding:0.75rem 1rem;color:#f59e0b;font-weight:900;font-size:1.05rem;font-family:'Outfit',sans-serif;">
+                                    ৳${item.price}
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    <button onclick="toggleMenuAvailability('${item.id}', ${isAvail})" style="background:${isAvail ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'};color:${isAvail ? '#4ade80' : '#f87171'};border:1px solid ${isAvail ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'};padding:0.35rem 0.8rem;border-radius:9999px;font-size:0.78rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;" title="ক্লিক করে স্টক অন/অফ করুন">
+                                        <span>${isAvail ? '🟢 Active' : '🔴 স্টক শেষ'}</span>
+                                    </button>
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <button onclick="openEditMenuModal('${item.id}')" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.35);color:#60a5fa;padding:0.4rem 0.75rem;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;" title="এডিট করুন">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            <span>এডিট</span>
+                                        </button>
+                                        <button onclick="deleteMenuItem('${item.id}')" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.35);color:#f87171;padding:0.4rem 0.6rem;border-radius:8px;cursor:pointer;" title="মুছে ফেলুন">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                    ${dataStore.menu.length === 0 ? '<tr><td colspan="6" style="padding:2.5rem;text-align:center;color:#71717a;">কোনো মেনু আইটেম পাওয়া যায়নি।</td></tr>' : ''}
                 </tbody>
             </table>
         </div>
@@ -514,28 +566,159 @@ function closeModal() {
     document.getElementById('adminModal').classList.remove('open');
 }
 
+function previewModalImage(url) {
+    const el = document.getElementById('imgPreviewEl');
+    if (el && url && url.trim() !== '') {
+        el.src = url.trim();
+    }
+}
+
+function openEditMenuModal(id) {
+    const item = dataStore.menu.find(m => m.id === id);
+    if (!item) return;
+
+    const img = getAdminDishImage(item);
+    const isAvail = (item.isAvailable === true || item.is_available === true || item.isAvailable === 1 || item.is_available === 1);
+    const isFeat = (item.isFeatured === true || item.is_featured === true || item.isFeatured === 1 || item.is_featured === 1);
+
+    openModal('খাবারের তথ্য ও মূল্য এডিট', `
+        <div class="form-group mb-3">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">খাবারের নাম *</label>
+            <input type="text" id="mEditName" class="form-input" value="${item.name || ''}" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;" required>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div class="form-group">
+                <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">মূল্য (৳) *</label>
+                <input type="number" id="mEditPrice" class="form-input" value="${item.price || 0}" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ক্যাটাগরি</label>
+                <select id="mEditCat" class="form-input" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
+                    ${dataStore.categories.map(c => `
+                        <option value="${c.id}" ${(item.categoryId === c.id || (item.category && item.category.id === c.id)) ? 'selected' : ''}>${c.name}</option>
+                    `).join('')}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ছবির লিংক (Image URL)</label>
+            <input type="text" id="mEditImage" class="form-input" value="${item.image || ''}" placeholder="https://images.unsplash.com/..." oninput="previewModalImage(this.value)" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
+            <div style="margin-top:8px;display:flex;align-items:center;gap:10px;">
+                <img id="imgPreviewEl" src="${img}" style="width:80px;height:55px;border-radius:8px;object-fit:cover;border:1px solid #3f3f46;" alt="Preview">
+                <span style="font-size:0.75rem;color:#71717a;">খাবারের ছবি প্রিভিউ</span>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">খাবারের বিবরণ (Description)</label>
+            <textarea id="mEditDesc" class="form-input" rows="2" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;resize:vertical;">${item.description || ''}</textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;background:#27272a;padding:0.85rem 1rem;border-radius:10px;border:1px solid #3f3f46;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;font-weight:700;color:#fff;">
+                <input type="checkbox" id="mEditAvail" ${isAvail ? 'checked' : ''} style="width:18px;height:18px;">
+                <span>🟢 সহজলভ্য (Available)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;font-weight:700;color:#facc15;">
+                <input type="checkbox" id="mEditFeatured" ${isFeat ? 'checked' : ''} style="width:18px;height:18px;">
+                <span>★ স্পেশাল (Featured)</span>
+            </label>
+        </div>
+
+        <button class="btn btn-primary btn-block" style="width:100%;padding:0.9rem;border-radius:10px;font-size:1rem;font-weight:800;" onclick="saveEditMenuItem('${item.id}')">পরিবর্তন সংরক্ষণ করুন</button>
+    `);
+}
+
+async function saveEditMenuItem(id) {
+    const name = document.getElementById('mEditName').value.trim();
+    const price = document.getElementById('mEditPrice').value;
+    const categoryId = document.getElementById('mEditCat').value;
+    const image = document.getElementById('mEditImage').value.trim();
+    const description = document.getElementById('mEditDesc').value.trim();
+    const isAvailable = document.getElementById('mEditAvail').checked;
+    const isFeatured = document.getElementById('mEditFeatured').checked;
+
+    if (!name || !price) return alert('অনুগ্রহ করে খাবারের নাম ও মূল্য দিন');
+
+    try {
+        const res = await fetch(`/api/admin/menu/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ name, price, categoryId, image, description, isAvailable, isFeatured })
+        });
+        if (res.ok) {
+            closeModal();
+            fetchAllData();
+        } else {
+            alert('সংরক্ষণ ব্যর্থ হয়েছে।');
+        }
+    } catch(e) {
+        alert('নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।');
+    }
+}
+
 function openAddMenuModal() {
     openModal('নতুন মেনু আইটেম যোগ', `
-        <div class="form-group"><label class="form-label">নাম</label><input type="text" id="mName" class="form-input"></div>
-        <div class="form-group"><label class="form-label">মূল্য (৳)</label><input type="number" id="mPrice" class="form-input"></div>
-        <div class="form-group"><label class="form-label">বিবরণ</label><input type="text" id="mDesc" class="form-input"></div>
-        <button class="btn btn-primary btn-block mt-4" onclick="saveNewMenuItem()">সংরক্ষণ করুন</button>
+        <div class="form-group mb-3">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">খাবারের নাম *</label>
+            <input type="text" id="mName" class="form-input" placeholder="যেমন: চুইঝালের খাসি" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;" required>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div class="form-group">
+                <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">মূল্য (৳) *</label>
+                <input type="number" id="mPrice" class="form-input" placeholder="যেমন: 350" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ক্যাটাগরি</label>
+                <select id="mCat" class="form-input" style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
+                    ${dataStore.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">ছবির লিংক (Image URL - ঐচ্ছিক)</label>
+            <input type="text" id="mImage" class="form-input" placeholder="https://..." style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;">
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" style="font-weight:700;color:#cbd5e1;margin-bottom:4px;display:block;">বিবরণ</label>
+            <textarea id="mDesc" class="form-input" rows="2" placeholder="খাবারের বিশেষত্ব..." style="width:100%;padding:0.75rem 1rem;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fff;resize:vertical;"></textarea>
+        </div>
+        <div class="form-group mb-4" style="background:#27272a;padding:0.75rem 1rem;border-radius:10px;border:1px solid #3f3f46;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;font-weight:700;color:#facc15;">
+                <input type="checkbox" id="mFeatured" style="width:18px;height:18px;">
+                <span>★ স্পেশাল মেনু হিসেবে ফিচার করুন (Featured)</span>
+            </label>
+        </div>
+        <button class="btn btn-primary btn-block" style="width:100%;padding:0.9rem;border-radius:10px;font-size:1rem;font-weight:800;" onclick="saveNewMenuItem()">সংরক্ষণ করুন</button>
     `);
 }
 
 async function saveNewMenuItem() {
-    const name = document.getElementById('mName').value;
+    const name = document.getElementById('mName').value.trim();
     const price = document.getElementById('mPrice').value;
-    const desc = document.getElementById('mDesc').value;
+    const categoryId = document.getElementById('mCat').value;
+    const image = document.getElementById('mImage').value.trim();
+    const desc = document.getElementById('mDesc').value.trim();
+    const isFeatured = document.getElementById('mFeatured').checked;
     if (!name || !price) return alert('নাম ও মূল্য আবশ্যক');
 
-    await fetch('/api/admin/menu', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-        body: JSON.stringify({ name, price, description: desc })
-    });
-    closeModal();
-    fetchAllData();
+    try {
+        const res = await fetch('/api/admin/menu', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ name, price, categoryId, image, description: desc, isFeatured, isAvailable: true })
+        });
+        if (res.ok) {
+            closeModal();
+            fetchAllData();
+        } else {
+            alert('মেনু যোগ করা সম্ভব হয়নি।');
+        }
+    } catch(e) {
+        alert('নেটওয়ার্ক সমস্যা।');
+    }
 }
 
 function openAddEmployeeModal() {

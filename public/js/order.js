@@ -82,7 +82,6 @@ function renderOrderGrid() {
     if (!grid) return;
 
     let filtered = menuList.filter(item => {
-        if (!item.isAvailable) return false;
         if (selectedCat === 'all') return true;
         return (item.category && item.category.slug === selectedCat) || (item.categoryId === selectedCat);
     });
@@ -91,18 +90,24 @@ function renderOrderGrid() {
         const cartItem = cart.find(ci => ci.id === item.id);
         const qty = cartItem ? cartItem.qty : 0;
         const imgUrl = getDishImage(item);
+        const isAvail = (item.isAvailable === true || item.is_available === true || item.isAvailable === 1 || item.is_available === 1 || item.isAvailable === undefined);
 
         return `
-            <div class="luxury-food-card animate-fade-up">
-                <div class="food-img-container" style="height:180px;">
+            <div class="luxury-food-card animate-fade-up ${!isAvail ? 'opacity-70' : ''}">
+                <div class="food-img-container" style="height:180px;position:relative;">
                     <img src="${imgUrl}" alt="${item.name}" loading="lazy">
                     <div class="food-badge-price">৳${item.price}</div>
+                    ${!isAvail ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;"><span style="background:#ef4444;color:#fff;padding:4px 12px;border-radius:9999px;font-size:0.8rem;font-weight:800;">স্টক শেষ</span></div>' : ''}
                 </div>
                 <div class="food-card-content" style="padding:1.25rem;">
                     <h4 style="font-weight:800;font-size:1.1rem;color:#fff;margin-bottom:0.35rem;">${item.name}</h4>
                     <p class="text-muted text-xs line-clamp-2" style="margin-bottom:1rem;min-height:32px;">${item.description || 'সাতক্ষীরার খাঁটি মসলা ও চুইঝাল দিয়ে প্রস্তুত।'}</p>
                     <div>
-                        ${qty === 0 ? `
+                        ${!isAvail ? `
+                            <button class="btn-order-card" style="padding:0.6rem 1rem;font-size:0.88rem;background:#27272a;color:#71717a;border:1px solid #3f3f46;cursor:not-allowed;" disabled>
+                                <span>স্টক শেষ</span>
+                            </button>
+                        ` : (qty === 0 ? `
                             <button class="btn-order-card" style="padding:0.6rem 1rem;font-size:0.88rem;" onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${imgUrl}')">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                                 <span>কার্টে যোগ করুন</span>
@@ -115,7 +120,7 @@ function renderOrderGrid() {
                                 <span class="order-grid-qty-val">${qty} টি কার্টে</span>
                                 <button class="cart-qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
                             </div>
-                        `}
+                        `)}
                     </div>
                 </div>
             </div>
