@@ -79,36 +79,115 @@
         @yield('content')
     </main>
 
-    <!-- Footer -->
+    <!-- Luxury Footer -->
     <footer class="footer">
+        <div class="footer-glow-line"></div>
         <div class="container">
             <div class="footer-inner">
-                <div>
-                    <h4>মামুন হোটেল</h4>
-                    <p style="color:var(--zinc-500);font-size:0.9rem;line-height:1.7;">শ্যামনগর নজরুল হোটেল — সাতক্ষীরার বিশ্বস্ত খাবারের ঘর। চুইঝালের গরু ও হাঁসের গোশত আমাদের বিশেষত্ব।</p>
+                <!-- Brand & Bio Column -->
+                <div class="footer-col-brand">
+                    <div class="footer-logo-wrap">
+                        <div class="footer-logo-img">
+                            <img src="/images/logo.jpg" alt="মামুন হোটেল">
+                        </div>
+                        <div>
+                            <h3 class="footer-brand-title">মামুন হোটেল</h3>
+                            <p class="footer-brand-sub">শ্যামনগর নজরুল হোটেল</p>
+                        </div>
+                    </div>
+                    <p class="footer-brand-desc">
+                        সাতক্ষীরার চুইঝাল দিয়ে রান্না করা ঐতিহ্যবাহী গরু ও হাঁসের গোশতের নির্ভরযোগ্য ঠিকানা। পারিবারিক ও পরিচ্ছন্ন পরিবেশে খাবারের সুব্যবস্থা।
+                    </p>
+                    <a href="https://wa.me/8801988976269" target="_blank" class="footer-wa-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>হোয়াটসঅ্যাপে যোগাযোগ</span>
+                    </a>
                 </div>
+
+                <!-- Quick Links Column -->
                 <div>
-                    <h4>Quick Links</h4>
-                    <a href="/menu">Menu</a>
-                    <a href="/order">Order Online</a>
-                    <a href="/about">About Us</a>
-                    <a href="/contact">Contact</a>
+                    <h4 class="footer-heading">কুইক মেনু</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> হোম পেজ</a></li>
+                        <li><a href="/menu"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> খাবারের মেনু</a></li>
+                        <li><a href="/order"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> অনলাইন অর্ডার</a></li>
+                        <li><a href="/about"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> আমাদের কথা</a></li>
+                        <li><a href="/contact"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> যোগাযোগ ও লোকেশন</a></li>
+                    </ul>
                 </div>
+
+                <!-- Contact Info Column -->
                 <div>
-                    <h4>Contact</h4>
-                    <p style="display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--secondary);flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> উকিলবার পকেট গেটের বাহিরে, সাতক্ষীরা</p>
-                    <p style="display:flex;align-items:center;gap:8px;margin-top:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ০১৯৮৮-৯৭৬২৬৯</p>
-                    <p style="display:flex;align-items:center;gap:8px;margin-top:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue);flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> tanzim2713n@gmail.com</p>
+                    <h4 class="footer-heading">ঠিকানা ও যোগাযোগ</h4>
+                    <div class="footer-contact-cards">
+                        <div class="footer-contact-item">
+                            <div class="footer-contact-icon icon-loc">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div>
+                                <p class="footer-contact-label">লোকেশন</p>
+                                <p class="footer-contact-val">উকিলবার পকেট গেটের বাহিরে, সাতক্ষীরা</p>
+                            </div>
+                        </div>
+
+                        <a href="tel:01988976269" class="footer-contact-item">
+                            <div class="footer-contact-icon icon-phone">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            </div>
+                            <div>
+                                <p class="footer-contact-label">ফোন নম্বর</p>
+                                <p class="footer-contact-val text-primary font-bold">০১৯৮৮-৯৭৬২৬৯</p>
+                            </div>
+                        </a>
+
+                        <a href="mailto:tanzim2713n@gmail.com" class="footer-contact-item">
+                            <div class="footer-contact-icon icon-mail">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            </div>
+                            <div>
+                                <p class="footer-contact-label">ইমেইল</p>
+                                <p class="footer-contact-val">tanzim2713n@gmail.com</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Opening Hours & Badges Column -->
                 <div>
-                    <h4>Opening Hours</h4>
-                    <p>Sun - Thu: 5:00 AM - 10:00 PM</p>
-                    <p style="color:var(--red);">Friday: বন্ধ</p>
-                    <p style="color:var(--red);">Saturday: বন্ধ</p>
+                    <h4 class="footer-heading">খোলার সময়সূচী</h4>
+                    <div class="footer-hours-box">
+                        <div class="hours-row">
+                            <span class="hours-day">রবিবার - বৃহস্পতিবার</span>
+                            <span class="hours-badge open"><span class="pulse-dot-sm"></span> ৫:০০ AM - ১০:০০ PM</span>
+                        </div>
+                        <div class="hours-row">
+                            <span class="hours-day">শুক্রবার</span>
+                            <span class="hours-badge closed">সাপ্তাহিক বন্ধ</span>
+                        </div>
+                        <div class="hours-row">
+                            <span class="hours-day">শনিবার</span>
+                            <span class="hours-badge closed">সাপ্তাহিক বন্ধ</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-trust-badge">
+                        <div class="trust-badge-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <div>
+                            <p class="trust-badge-title">১০০% হালাল ও সুস্বাদু</p>
+                            <p class="trust-badge-sub">সাতক্ষীরার খাঁটি চুইঝাল স্পেশাল</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Footer Bottom -->
             <div class="footer-bottom">
-                <p>&copy; {{ date('Y') }} মামুন হোটেল। All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} <strong>মামুন হোটেল</strong> — শ্যামনগর নজরুল হোটেল। সর্বস্বত্ব সংরক্ষিত।</p>
+                <div class="footer-admin-link">
+                    <a href="/admin">অ্যাডমিন প্যানেল</a>
+                </div>
             </div>
         </div>
     </footer>
