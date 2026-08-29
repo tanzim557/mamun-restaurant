@@ -32,25 +32,33 @@
         <div class="login-bg2"></div>
         <div class="login-card animate-fade-up">
             <div class="text-center" style="margin-bottom:2.5rem;">
-                <div class="login-logo">👨‍🍳</div>
-                <h1 style="font-size:1.875rem;font-weight:700;color:#fff;">Admin Portal</h1>
-                <p style="color:#71717a;margin-top:0.5rem;font-size:0.875rem;">Mamun Restaurant Management</p>
+                <div class="login-logo">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4zm0 2a2 2 0 0 1 2 2v1h-4V6a2 2 0 0 1 2-2z"/></svg>
+                </div>
+                <h1 style="font-size:1.875rem;font-weight:800;color:#fff;">Admin Portal</h1>
+                <p style="color:#a1a1aa;margin-top:0.5rem;font-size:0.875rem;">মামুন হোটেল অ্যাডমিন ম্যানেজমেন্ট</p>
             </div>
             <form id="loginForm" onsubmit="return handleLogin(event)">
                 <div class="login-input-wrap">
-                    <span class="login-input-icon">✉️</span>
+                    <span class="login-input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </span>
                     <input type="email" class="login-input" id="loginEmail" required placeholder="admin@mamun.com">
                 </div>
                 <div class="login-input-wrap">
-                    <span class="login-input-icon">🔒</span>
+                    <span class="login-input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
                     <input type="password" class="login-input" id="loginPassword" required placeholder="••••••••" style="padding-right:3rem;">
-                    <span class="login-toggle" onclick="togglePassword()">👁️</span>
+                    <span class="login-toggle" onclick="togglePassword()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </span>
                 </div>
                 <div class="login-error" id="loginError"></div>
-                <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+                <button type="submit" class="login-btn" id="loginBtn">সাইন ইন করুন</button>
             </form>
-            <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid #27272a;text-align:center;">
-                <p style="color:#52525b;font-size:0.75rem;">Demo credentials: admin@mamun.com / admin</p>
+            <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #27272a;text-align:center;">
+                <p style="color:#71717a;font-size:0.8rem;">ডিফল্ট লগইন: <span style="color:#f59e0b;font-weight:700;">admin@mamun.com</span> / পাসওয়ার্ড: <span style="color:#f59e0b;font-weight:700;">admin</span></p>
             </div>
         </div>
     </div>
