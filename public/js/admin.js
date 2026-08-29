@@ -96,74 +96,229 @@ function renderOverview(container) {
     const pending = dataStore.orders.filter(o => (o.status || '').toUpperCase() === 'PENDING').length;
     const totalSalaryDue = dataStore.employees.reduce((acc, e) => acc + (parseFloat(e.salaryDue) || 0), 0);
     const totalCustomerDue = dataStore.dues.reduce((acc, d) => acc + ((parseFloat(d.totalDue) || 0) - (parseFloat(d.paidAmount) || 0)), 0);
+    
+    // Calculate total online sales
+    const totalSales = dataStore.orders.reduce((acc, o) => {
+        const amt = (parseFloat(o.totalAmount) > 0) ? parseFloat(o.totalAmount) : (o.items || []).reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
+        return acc + amt;
+    }, 0);
+
+    // Calculate Ledger Income/Expense
+    const totalIncome = dataStore.ledger.filter(l => l.type === 'INCOME' || l.type === 'DEPOSIT').reduce((acc, l) => acc + (parseFloat(l.amount) || 0), 0);
+    const totalExpense = dataStore.ledger.filter(l => l.type === 'EXPENSE' || l.type === 'WITHDRAW').reduce((acc, l) => acc + (parseFloat(l.amount) || 0), 0);
+    const netBalance = totalIncome - totalExpense;
+
+    // Check low stock
+    const lowStockItems = dataStore.stock.filter(s => parseFloat(s.quantity) <= parseFloat(s.minQuantity));
 
     container.innerHTML = `
-        <div class="grid grid-4 mb-6">
-            <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(59,130,246,0.15);color:#60a5fa;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+        <!-- Atmospheric Ambient Welcome Banner -->
+        <div style="background:linear-gradient(135deg, rgba(220,38,38,0.14) 0%, rgba(245,158,11,0.08) 50%, rgba(20,20,28,0.95) 100%);border:1px solid rgba(245,158,11,0.25);border-radius:1.5rem;padding:1.6rem 1.8rem;margin-bottom:1.75rem;position:relative;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
+            <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 70%);border-radius:50%;pointer-events:none;"></div>
+            
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;position:relative;z-index:2;">
+                <div>
+                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);padding:4px 12px;border-radius:9999px;font-size:0.78rem;font-weight:700;color:#4ade80;margin-bottom:0.75rem;">
+                        <span class="pulse-beacon"></span>
+                        <span>মামুন হোটেল • লাইভ কিচেন ও ডেলিভারি সিস্টেম সক্রিয়</span>
+                    </div>
+                    <h2 style="font-size:1.6rem;font-weight:900;color:#fff;margin:0 0 0.4rem 0;letter-spacing:-0.02em;">স্বাগতম, অ্যাডমিন ড্যাশবোর্ড 👑</h2>
+                    <p style="color:#a1a1aa;font-size:0.85rem;margin:0;">রিয়েল-টাইম অর্ডার ট্র্যাকিং, মেনু আপডেট, হিসাব ও কর্মী পরিচালনা নিয়ন্ত্রণ কেন্দ্র।</p>
                 </div>
-                <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">${dataStore.menu.length}</h2>
-                <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Menu Items</p>
-            </div>
-            <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(234,179,8,0.15);color:#facc15;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <button onclick="openAddMenuModal()" class="quick-action-btn primary">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span>নতুন খাবার যোগ</span>
+                    </button>
+                    <button onclick="switchTab('orders', document.querySelectorAll('.admin-nav-item')[2])" class="quick-action-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        <span>অর্ডার তালিকা</span>
+                    </button>
+                    <button onclick="openAddEmployeeModal()" class="quick-action-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                        <span>কর্মী যোগ</span>
+                    </button>
                 </div>
-                <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">${pending}</h2>
-                <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Pending Orders</p>
-            </div>
-            <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(249,115,22,0.15);color:#fb923c;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                </div>
-                <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">৳${Math.round(totalSalaryDue).toLocaleString()}</h2>
-                <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Salary Due (Total)</p>
-            </div>
-            <div class="stat-box" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.25rem;">
-                <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;background:rgba(239,68,68,0.15);color:#f87171;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                </div>
-                <h2 style="font-size:1.75rem;font-weight:800;color:#fff;">৳${Math.round(totalCustomerDue).toLocaleString()}</h2>
-                <p style="color:#a1a1aa;font-size:0.75rem;margin-top:0.25rem;">Customer Due (Total)</p>
             </div>
         </div>
 
-        <div class="stat-box mb-6" style="background:#18181b;border:1px solid #27272a;border-radius:1rem;padding:1.5rem;">
-            <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1rem;color:#fff;display:flex;align-items:center;gap:8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                <span>Recent Orders</span>
-            </h3>
-            <div class="table-wrap" style="border:1px solid #27272a;border-radius:0.75rem;overflow:hidden;">
-                <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.875rem;">
-                    <thead>
-                        <tr style="background:#27272a;">
-                            <th style="padding:0.75rem 1rem;color:#a1a1aa;">Customer</th>
-                            <th style="padding:0.75rem 1rem;color:#a1a1aa;">Phone & Address</th>
-                            <th style="padding:0.75rem 1rem;color:#a1a1aa;">Total</th>
-                            <th style="padding:0.75rem 1rem;color:#a1a1aa;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${dataStore.orders.slice(0, 6).map(o => {
-                            const total = (parseFloat(o.totalAmount) > 0) ? parseFloat(o.totalAmount) : (o.items || []).reduce((acc, i) => acc + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
-                            return `
-                                <tr style="border-top:1px solid #27272a;">
-                                    <td style="padding:0.85rem 1rem;"><strong style="color:#fff;">${o.customerName || 'N/A'}</strong></td>
-                                    <td style="padding:0.85rem 1rem;color:#a1a1aa;font-size:0.8rem;">
-                                        <span style="color:#fff;font-weight:600;">${o.phoneNumber || ''}</span>
-                                        ${formatAdminAddress(o.address)}
-                                    </td>
-                                    <td style="padding:0.85rem 1rem;color:#f59e0b;font-weight:800;font-family:'Outfit',sans-serif;">৳${total}</td>
-                                    <td style="padding:0.85rem 1rem;">
-                                        <span style="padding:0.3rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:800;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);">${o.status || 'PENDING'}</span>
-                                    </td>
-                                </tr>
-                            `;
-                        }).join('')}
-                        ${dataStore.orders.length === 0 ? '<tr><td colspan="4" style="padding:2rem;text-align:center;color:#71717a;">কোনো অর্ডার নেই।</td></tr>' : ''}
-                    </tbody>
-                </table>
+        <!-- 4 Animated KPI / Stat Cards -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:1.25rem;margin-bottom:1.75rem;">
+            <!-- KPI 1: Menu Items -->
+            <div class="stat-box" onclick="switchTab('menu', document.querySelectorAll('.admin-nav-item')[1])" style="cursor:pointer;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                    <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+                    </div>
+                    <span style="font-size:0.72rem;font-weight:700;color:#60a5fa;background:rgba(59,130,246,0.1);padding:3px 8px;border-radius:6px;">মেনু লিস্ট</span>
+                </div>
+                <h3 style="font-size:1.85rem;font-weight:900;color:#fff;margin:0 0 4px 0;font-family:'Outfit',sans-serif;">${dataStore.menu.length} <span style="font-size:1rem;color:#a1a1aa;font-weight:600;">টি পদ</span></h3>
+                <p style="color:#71717a;font-size:0.78rem;margin:0;">${dataStore.menu.filter(m => m.isAvailable !== false).length} টি সক্রিয় স্টকে আছে</p>
+            </div>
+
+            <!-- KPI 2: Pending Orders -->
+            <div class="stat-box" onclick="switchTab('orders', document.querySelectorAll('.admin-nav-item')[2])" style="cursor:pointer;${pending > 0 ? 'border-color:rgba(245,158,11,0.4);background:linear-gradient(180deg, rgba(245,158,11,0.06) 0%, #15151c 100%);' : ''}">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                    <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    ${pending > 0 
+                        ? '<span style="font-size:0.72rem;font-weight:800;color:#facc15;background:rgba(234,179,8,0.2);border:1px solid rgba(234,179,8,0.4);padding:3px 8px;border-radius:6px;animation:beaconPulse 1.5s infinite;">🚨 অ্যাকশন দিন</span>'
+                        : '<span style="font-size:0.72rem;font-weight:700;color:#4ade80;background:rgba(34,197,94,0.1);padding:3px 8px;border-radius:6px;">সব ক্লিয়ার</span>'
+                    }
+                </div>
+                <h3 style="font-size:1.85rem;font-weight:900;color:#facc15;margin:0 0 4px 0;font-family:'Outfit',sans-serif;">${pending} <span style="font-size:1rem;color:#a1a1aa;font-weight:600;">টি পেন্ডিং</span></h3>
+                <p style="color:#71717a;font-size:0.78rem;margin:0;">অনলাইন অর্ডার দ্রুত কিচেনে পাঠান</p>
+            </div>
+
+            <!-- KPI 3: Total Online Sales -->
+            <div class="stat-box" style="cursor:pointer;" onclick="switchTab('orders', document.querySelectorAll('.admin-nav-item')[2])">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                    <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <span style="font-size:0.72rem;font-weight:700;color:#4ade80;background:rgba(34,197,94,0.1);padding:3px 8px;border-radius:6px;">বিক্রয়</span>
+                </div>
+                <h3 style="font-size:1.85rem;font-weight:900;color:#4ade80;margin:0 0 4px 0;font-family:'Outfit',sans-serif;">৳${Math.round(totalSales).toLocaleString()}</h3>
+                <p style="color:#71717a;font-size:0.78rem;margin:0;">মোট ${dataStore.orders.length} টি অর্ডার থেকে আয়</p>
+            </div>
+
+            <!-- KPI 4: Total Dues -->
+            <div class="stat-box" onclick="switchTab('dues', document.querySelectorAll('.admin-nav-item')[4])" style="cursor:pointer;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                    <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    </div>
+                    <span style="font-size:0.72rem;font-weight:700;color:#f87171;background:rgba(239,68,68,0.1);padding:3px 8px;border-radius:6px;">বাকি ও বেতন</span>
+                </div>
+                <h3 style="font-size:1.85rem;font-weight:900;color:#f87171;margin:0 0 4px 0;font-family:'Outfit',sans-serif;">৳${Math.round(totalCustomerDue + totalSalaryDue).toLocaleString()}</h3>
+                <p style="color:#71717a;font-size:0.78rem;margin:0;">কাস্টমার বাকি: ৳${Math.round(totalCustomerDue)} | বেতন: ৳${Math.round(totalSalaryDue)}</p>
+            </div>
+        </div>
+
+        <!-- 2-Column Section: Orders & Financial Widgets -->
+        <div style="display:grid;grid-template-columns:2.1fr 1fr;gap:1.5rem;align-items:start;">
+            <!-- Left: Recent Online Orders -->
+            <div class="stat-box" style="padding:1.5rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                    <h3 style="font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;margin:0;">
+                        <div style="width:34px;height:34px;border-radius:8px;background:rgba(220,38,38,0.2);display:flex;align-items:center;justify-content:center;color:#ef4444;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        </div>
+                        <span>সাম্প্রতিক অনলাইন অর্ডারসমূহ</span>
+                    </h3>
+                    <button onclick="switchTab('orders', document.querySelectorAll('.admin-nav-item')[2])" style="background:transparent;border:none;color:#60a5fa;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                        <span>সব অর্ডার দেখুন ↗</span>
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>অর্ডার ও কাস্টমার</th>
+                                <th>ঠিকানা ও জিপিএস</th>
+                                <th>মোট টাকা</th>
+                                <th>স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${dataStore.orders.slice(0, 5).map(o => {
+                                const total = (parseFloat(o.totalAmount) > 0) ? parseFloat(o.totalAmount) : (o.items || []).reduce((acc, i) => acc + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
+                                const shortId = o.shortId || ('MR-' + (o.id || '').substring(0, 6).toUpperCase());
+                                const st = (o.status || 'PENDING').toUpperCase();
+
+                                let badgeColor = 'rgba(234,179,8,0.15)';
+                                let textColor = '#facc15';
+                                let borderC = 'rgba(234,179,8,0.3)';
+
+                                if (st === 'PREPARING') { badgeColor = 'rgba(59,130,246,0.15)'; textColor = '#60a5fa'; borderC = 'rgba(59,130,246,0.3)'; }
+                                else if (st === 'OUT_FOR_DELIVERY') { badgeColor = 'rgba(168,85,247,0.15)'; textColor = '#c084fc'; borderC = 'rgba(168,85,247,0.3)'; }
+                                else if (st === 'DELIVERED') { badgeColor = 'rgba(34,197,94,0.15)'; textColor = '#4ade80'; borderC = 'rgba(34,197,94,0.3)'; }
+                                else if (st === 'CANCELLED') { badgeColor = 'rgba(239,68,68,0.15)'; textColor = '#f87171'; borderC = 'rgba(239,68,68,0.3)'; }
+
+                                return `
+                                    <tr>
+                                        <td>
+                                            <a href="/track?id=${shortId}" target="_blank" style="color:#60a5fa;font-family:'Outfit',sans-serif;font-weight:800;font-size:0.8rem;text-decoration:none;display:inline-block;margin-bottom:2px;">${shortId} ↗</a>
+                                            <div style="color:#fff;font-weight:700;font-size:0.92rem;">${o.customerName || 'N/A'}</div>
+                                            <div style="color:#a1a1aa;font-size:0.78rem;">${o.phoneNumber || ''}</div>
+                                        </td>
+                                        <td>
+                                            ${formatAdminAddress(o.address)}
+                                        </td>
+                                        <td style="color:#f59e0b;font-weight:900;font-size:1rem;font-family:'Outfit',sans-serif;">
+                                            ৳${total}
+                                        </td>
+                                        <td>
+                                            <span style="padding:0.35rem 0.8rem;border-radius:9999px;font-size:0.75rem;font-weight:800;background:${badgeColor};color:${textColor};border:1px solid ${borderC};white-space:nowrap;">
+                                                ${st}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                            ${dataStore.orders.length === 0 ? '<tr><td colspan="4" style="padding:2.5rem;text-align:center;color:#71717a;">এখনও কোনো অনলাইন অর্ডার আসেনি।</td></tr>' : ''}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Column: Quick Financials & Inventory Alerts -->
+            <div style="display:flex;flex-direction:column;gap:1.5rem;">
+                <!-- Financial Overview Widget -->
+                <div class="stat-box" style="padding:1.4rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <h4 style="font-size:1rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <span>হিসাব-নিকাশ সারসংক্ষেপ</span>
+                        </h4>
+                        <button onclick="switchTab('ledger', document.querySelectorAll('.admin-nav-item')[5])" style="background:none;border:none;color:#60a5fa;font-size:0.75rem;font-weight:700;cursor:pointer;">বিস্তারিত ↗</button>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;background:#1c1c24;padding:0.75rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+                            <span style="color:#a1a1aa;font-size:0.82rem;">মোট জমা / আয়</span>
+                            <strong style="color:#4ade80;font-family:'Outfit',sans-serif;font-size:0.95rem;">+৳${totalIncome.toLocaleString()}</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;background:#1c1c24;padding:0.75rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+                            <span style="color:#a1a1aa;font-size:0.82rem;">মোট খরচ / ব্যয়</span>
+                            <strong style="color:#f87171;font-family:'Outfit',sans-serif;font-size:0.95rem;">-৳${totalExpense.toLocaleString()}</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(245,158,11,0.08);padding:0.85rem 1rem;border-radius:10px;border:1px solid rgba(245,158,11,0.25);">
+                            <span style="color:#fbbf24;font-size:0.85rem;font-weight:700;">ক্যাশ ব্যালেন্স (নিট)</span>
+                            <strong style="color:#fbbf24;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:900;">৳${netBalance.toLocaleString()}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Inventory Health Widget -->
+                <div class="stat-box" style="padding:1.4rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <h4 style="font-size:1rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                            <span>স্টক সতর্কতা (Inventory)</span>
+                        </h4>
+                        <button onclick="switchTab('stock', document.querySelectorAll('.admin-nav-item')[6])" style="background:none;border:none;color:#60a5fa;font-size:0.75rem;font-weight:700;cursor:pointer;">স্টক দেখুন ↗</button>
+                    </div>
+
+                    ${lowStockItems.length > 0 ? `
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            ${lowStockItems.slice(0, 3).map(s => `
+                                <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(239,68,68,0.1);padding:0.6rem 0.85rem;border-radius:8px;border:1px solid rgba(239,68,68,0.25);">
+                                    <span style="color:#fca5a5;font-weight:700;font-size:0.85rem;">${s.name}</span>
+                                    <span style="color:#f87171;font-size:0.78rem;font-weight:800;">বাকি: ${s.quantity} ${s.unit}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:1rem;text-align:center;">
+                            <div style="font-size:1.2rem;margin-bottom:4px;">✨</div>
+                            <p style="color:#4ade80;font-size:0.82rem;font-weight:700;margin:0;">সব কাঁচামাল পর্যাপ্ত পরিমাণে স্টকে রয়েছে!</p>
+                        </div>
+                    `}
+                </div>
             </div>
         </div>
     `;

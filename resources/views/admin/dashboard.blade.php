@@ -20,13 +20,19 @@
         .admin-main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
         .admin-header { background:rgba(24,24,27,0.8); backdrop-filter:blur(10px); border-bottom:1px solid #27272a; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
         .admin-content { flex:1; overflow-y:auto; padding:1.5rem; }
-        .stat-box { background:#18181b; border:1px solid #27272a; border-radius:1rem; padding:1.25rem; }
-        .stat-icon-wrap { width:44px; height:44px; border-radius:0.75rem; display:flex; align-items:center; justify-content:center; font-size:1.25rem; margin-bottom:0.75rem; }
-        .table-wrap { background:#18181b; border:1px solid #27272a; border-radius:1rem; overflow:hidden; }
+        .stat-box { background:#15151c; border:1px solid rgba(255,255,255,0.08); border-radius:1.25rem; padding:1.35rem; transition:all 0.3s cubic-bezier(0.16,1,0.3,1); position:relative; overflow:hidden; }
+        .stat-box:hover { transform:translateY(-4px); border-color:rgba(245,158,11,0.3); box-shadow:0 16px 32px rgba(0,0,0,0.5), 0 0 20px rgba(245,158,11,0.08); }
+        .pulse-beacon { width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 0 rgba(34,197,94,0.7); animation:beaconPulse 1.8s infinite; }
+        @keyframes beaconPulse { 0% { transform:scale(0.95); box-shadow:0 0 0 0 rgba(34,197,94,0.7); } 70% { transform:scale(1); box-shadow:0 0 0 8px rgba(34,197,94,0); } 100% { transform:scale(0.95); box-shadow:0 0 0 0 rgba(34,197,94,0); } }
+        .quick-action-btn { display:inline-flex; align-items:center; gap:8px; padding:0.6rem 1.1rem; border-radius:10px; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.2s ease; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:#fff; text-decoration:none; }
+        .quick-action-btn:hover { background:rgba(255,255,255,0.14); transform:translateY(-2px); border-color:rgba(255,255,255,0.3); }
+        .quick-action-btn.primary { background:linear-gradient(135deg, #dc2626, #b91c1c); border-color:rgba(239,68,68,0.5); box-shadow:0 4px 15px rgba(220,38,38,0.35); }
+        .quick-action-btn.primary:hover { box-shadow:0 6px 20px rgba(220,38,38,0.5); }
+        .table-wrap { background:#15151c; border:1px solid rgba(255,255,255,0.08); border-radius:1rem; overflow:hidden; }
         table { width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem; }
-        th { background:#27272a; color:#a1a1aa; padding:0.75rem 1rem; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
-        td { padding:0.875rem 1rem; border-top:1px solid #27272a; }
-        tr:hover td { background:rgba(255,255,255,0.02); }
+        th { background:#1c1c24; color:#a1a1aa; padding:0.85rem 1rem; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; font-weight:700; }
+        td { padding:0.95rem 1rem; border-top:1px solid rgba(255,255,255,0.06); }
+        tr:hover td { background:rgba(255,255,255,0.03); }
         .badge { padding:0.25rem 0.625rem; border-radius:9999px; font-size:0.75rem; font-weight:700; }
         .badge-pending { background:rgba(234,179,8,0.15); color:#facc15; border:1px solid rgba(234,179,8,0.3); }
         .badge-confirmed { background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
