@@ -1,4 +1,7 @@
 let currentTab = 'overview';
+let lastOrderCount = null;
+let deferredPrompt = null;
+
 let dataStore = {
     menu: [],
     categories: [],
@@ -9,8 +12,118 @@ let dataStore = {
     stock: []
 };
 
+// ── PWA & Service Worker Setup ──
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration error:', err));
+    });
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const headerBtn = document.getElementById('pwaInstallHeaderBtn');
+    const sidebarBtn = document.getElementById('pwaInstallSidebarBtn');
+    if (headerBtn) headerBtn.style.display = 'inline-flex';
+    if (sidebarBtn) sidebarBtn.style.display = 'flex';
+});
+
+function promptInstallApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User installed the Admin App');
+            }
+            deferredPrompt = null;
+        });
+    } else {
+        alert('📲 আপনার ফোনের ব্রাউজার মেনু (থ্রি-ডট ⋮) থেকে "Add to Home screen" বা "Install app" এ চাপ দিয়ে অ্যাপ হিসেবে হোম স্ক্রিনে যোগ করে নিন!');
+    }
+}
+
+// ── Audio Chime for New Orders ──
+function playOrderChime() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        
+        const now = ctx.currentTime;
+        // Tone 1: 587.33 Hz (D5)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(587.33, now);
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.35);
+
+        // Tone 2: 880 Hz (A5)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(880, now + 0.2);
+        gain2.gain.setValueAtTime(0.4, now + 0.2);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.2);
+        osc2.stop(now + 0.7);
+    } catch(e) {
+        console.warn('Audio alert error:', e);
+    }
+}
+
+// ── Notification Toast ──
+function showNewOrderToast(order) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 99999;
+        background: linear-gradient(135deg, #181822 0%, #15151c 100%);
+        border: 2px solid #eab308;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px rgba(234,179,8,0.3);
+        border-radius: 1rem;
+        padding: 1.1rem 1.4rem;
+        color: #fff;
+        max-width: 360px;
+        animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    `;
+
+    toast.innerHTML = `
+        <div style="width:38px;height:38px;border-radius:10px;background:rgba(234,179,8,0.2);display:flex;align-items:center;justify-content:center;color:#facc15;font-size:1.3rem;flex-shrink:0;">
+            🔔
+        </div>
+        <div style="flex:1;">
+            <div style="font-weight:800;font-size:0.95rem;color:#facc15;margin-bottom:2px;">🚨 নতুন অর্ডার এসেছে!</div>
+            <div style="font-size:0.85rem;color:#fff;font-weight:700;">${order.customerName || 'কাস্টমার'} (${order.phoneNumber || ''})</div>
+            <div style="font-size:0.78rem;color:#a1a1aa;margin-top:2px;">মোট: ৳${order.totalAmount || 0}</div>
+            <div style="margin-top:8px;display:flex;gap:8px;">
+                <button onclick="switchTab('orders', document.querySelectorAll('.admin-nav-item')[2]);this.parentElement.parentElement.parentElement.remove();" style="background:#eab308;color:#000;border:none;padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:800;cursor:pointer;">অর্ডার দেখুন</button>
+                <button onclick="this.parentElement.parentElement.parentElement.remove();" style="background:rgba(255,255,255,0.1);color:#a1a1aa;border:none;padding:4px 8px;border-radius:6px;font-size:0.75rem;cursor:pointer;">বন্ধ করুন</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        if (toast.parentElement) toast.remove();
+    }, 12000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchAllData();
+    // Auto-poll new orders every 20 seconds for live alert
+    setInterval(fetchAllData, 20000);
 });
 
 async function fetchAllData() {
@@ -25,9 +138,20 @@ async function fetchAllData() {
             fetch('/api/stock').then(r => r.json()).catch(() => [])
         ]);
 
+        const prevOrderCount = dataStore.orders.length;
+        const newOrders = Array.isArray(orderRes) ? orderRes : [];
+
+        // Check if new order arrived while dashboard is open
+        if (lastOrderCount !== null && newOrders.length > lastOrderCount) {
+            playOrderChime();
+            const latest = newOrders[0] || {};
+            showNewOrderToast(latest);
+        }
+        lastOrderCount = newOrders.length;
+
         dataStore.menu = Array.isArray(menuRes) ? menuRes : [];
         dataStore.categories = Array.isArray(catRes) ? catRes : [];
-        dataStore.orders = Array.isArray(orderRes) ? orderRes : [];
+        dataStore.orders = newOrders;
         dataStore.employees = Array.isArray(empRes) ? empRes : [];
         dataStore.dues = Array.isArray(dueRes) ? dueRes : [];
         dataStore.ledger = Array.isArray(ledgRes) ? ledgRes : [];

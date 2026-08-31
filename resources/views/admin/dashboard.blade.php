@@ -2,9 +2,15 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — মামুন হোটেল</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Dashboard — শ্যামনগর নজরুল হোটেল</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#dc2626">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="নজরুল হোটেল">
+    <link rel="apple-touch-icon" href="/images/logo.jpg">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         body { background:#0f0f0f; color:#fff; font-family:'Inter',sans-serif; margin:0; }
@@ -88,7 +94,11 @@
                     <span>Stock Items</span>
                 </button>
             </nav>
-            <div style="padding:0.75rem;border-top:1px solid #27272a;">
+            <div style="padding:0.75rem;border-top:1px solid #27272a;display:flex;flex-direction:column;gap:6px;">
+                <button id="pwaInstallSidebarBtn" onclick="promptInstallApp()" class="admin-nav-item" style="background:rgba(220,38,38,0.15);color:#fca5a5;border:1px solid rgba(220,38,38,0.3);font-weight:700;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                    <span>📲 অ্যাপ ইনস্টল করুন</span>
+                </button>
                 <button onclick="handleLogout()" class="admin-nav-item" style="color:#71717a;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#ef4444;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                     <span>Sign Out</span>
@@ -103,7 +113,10 @@
                     <h1 id="tabTitle" style="font-size:1.25rem;font-weight:800;color:#fff;">Overview</h1>
                     <p style="font-size:0.75rem;color:#71717a;">শ্যামনগর নজরুল হোটেল ম্যানেজমেন্ট</p>
                 </div>
-                <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+                    <button id="pwaInstallHeaderBtn" onclick="promptInstallApp()" class="btn btn-sm btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+                        <span>📲 মোবাইল অ্যাপ</span>
+                    </button>
                     <button onclick="fetchAllData()" class="btn btn-sm btn-outline" style="border-color:#3f3f46;color:#a1a1aa;">🔄 Refresh</button>
                     <a href="/" target="_blank" class="btn btn-sm btn-outline-primary">🌐 View Site</a>
                 </div>
