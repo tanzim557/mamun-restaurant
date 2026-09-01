@@ -4,24 +4,45 @@ let catalogCategories = [];
 let selectedCategory = 'all';
 let menuSearchKeyword = '';
 
-const foodPlaceholders = {
-    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
-    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
-    'নেহারী': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
-    'হাঁস': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
-    'মুরগী': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
-    'মাছ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
-    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=800&q=80',
-    'ডাল': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
-    'default': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80'
+const CURATED_FOOD_IMAGES_MAP = {
+    'চুইঝাল': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'হাঁস': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80',
+    'মুরগি': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80',
+    'মুরগী': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80',
+    'ইলিশ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
+    'রুই': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
+    'মাছ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
+    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=600&q=80',
+    'নেহারী': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'tikka': 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=600&q=80',
+    'biryani': 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80',
+    'চা': 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80',
+    'lassi': 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80',
+    'default': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80'
 };
 
 function getCatalogImg(dish) {
-    if (dish.image && dish.image.trim() !== '') return dish.image;
-    for (const [k, url] of Object.entries(foodPlaceholders)) {
-        if (dish.name && dish.name.includes(k)) return url;
+    if (dish.image && dish.image.startsWith('http') && !dish.image.includes('error') && dish.image.length > 25) {
+        if (!dish.image.includes('?')) return dish.image + '?auto=format&fit=crop&w=600&q=80';
+        return dish.image;
     }
-    return foodPlaceholders['default'];
+    if (dish.image && dish.image.startsWith('/storage/')) return dish.image;
+
+    const n = (dish.name || '').toLowerCase();
+    if (n.includes('চুইঝাল') || n.includes('গরু') || n.includes('কালাভুনা')) return CURATED_FOOD_IMAGES_MAP['কালাভুনা'];
+    if (n.includes('হাঁস') || n.includes('duck')) return CURATED_FOOD_IMAGES_MAP['হাঁস'];
+    if (n.includes('মুরগী') || n.includes('মুরগি') || n.includes('chicken')) return CURATED_FOOD_IMAGES_MAP['মুরগি'];
+    if (n.includes('ইলিশ')) return CURATED_FOOD_IMAGES_MAP['ইলিশ'];
+    if (n.includes('রুই') || n.includes('মাছ')) return CURATED_FOOD_IMAGES_MAP['মাছ'];
+    if (n.includes('ভাত') || n.includes('rice')) return CURATED_FOOD_IMAGES_MAP['ভাত'];
+    if (n.includes('নেহারী')) return CURATED_FOOD_IMAGES_MAP['নেহারী'];
+    if (n.includes('tikka')) return CURATED_FOOD_IMAGES_MAP['tikka'];
+    if (n.includes('biryani') || n.includes('বিরিয়ানি')) return CURATED_FOOD_IMAGES_MAP['biryani'];
+    if (n.includes('চা') || n.includes('tea')) return CURATED_FOOD_IMAGES_MAP['চা'];
+    if (n.includes('lassi') || n.includes('লাচ্ছি')) return CURATED_FOOD_IMAGES_MAP['lassi'];
+    return CURATED_FOOD_IMAGES_MAP['default'];
 }
 
 let lastCatalogHash = '';
@@ -132,7 +153,7 @@ function renderMenuGrid() {
         return `
             <div class="food-app-card ${!isAvail ? 'opacity-70' : ''}">
                 <div class="food-app-img-wrap" onclick="addToAppCart('${dish.id}', '${dish.name.replace(/'/g, "\\'")}', ${dish.price}, '${img}', '${dish.category?.name || ''}')">
-                    <img src="${img}" alt="${dish.name}" loading="lazy">
+                    <img src="${img}" alt="${dish.name}" loading="lazy" onerror="this.src='${CURATED_FOOD_IMAGES_MAP['default']}';">
                     ${isSpicy ? '<span class="food-app-tag-spicy">🌶️ চুইঝাল</span>' : ''}
                     <span class="food-app-rating">★ ৪.৯</span>
                 </div>

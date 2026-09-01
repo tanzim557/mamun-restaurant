@@ -33,7 +33,7 @@
         </div>
 
         <div class="hero-cta-buttons">
-            <a href="/order" class="btn-hero-order-now">
+            <a href="#allDishesSection" class="btn-hero-order-now">
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 <span>Order Now</span>
             </a>
@@ -47,9 +47,9 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════
-     2. MAIN CONTENT CONTAINER (Grid & Mobile Feeds)
+     2. MAIN CONTENT CONTAINER (Interactive Dynamic Feeds)
      ═══════════════════════════════════════════════════════ -->
-<div class="app-container">
+<div class="app-container" style="margin-top:2rem;">
     <!-- In-App Search Bar (Mobile screen) -->
     <section class="app-search-section">
         <div class="app-search-box">
@@ -61,67 +61,8 @@
         </div>
     </section>
 
-    <!-- Category Stories (Mobile screen) -->
-    <section class="app-stories-section">
-        <div class="app-stories-scroll" id="homeCategoryStories">
-            <div class="story-circle-item active" onclick="selectStoryCategory('all', this)">
-                <div class="story-circle-avatar">
-                    <div class="story-circle-img-wrap">
-                        <span>🔥</span>
-                    </div>
-                </div>
-                <span class="story-circle-title">সব খাবার</span>
-            </div>
-
-            <div class="story-circle-item" onclick="selectStoryCategory('গরু', this)">
-                <div class="story-circle-avatar">
-                    <div class="story-circle-img-wrap">
-                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=150&q=80" alt="গরুর গোশত">
-                    </div>
-                </div>
-                <span class="story-circle-title">গরুর গোশত</span>
-            </div>
-
-            <div class="story-circle-item" onclick="selectStoryCategory('হাঁস', this)">
-                <div class="story-circle-avatar">
-                    <div class="story-circle-img-wrap">
-                        <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=150&q=80" alt="হাঁসের গোশত">
-                    </div>
-                </div>
-                <span class="story-circle-title">হাঁসের মাংস</span>
-            </div>
-
-            <div class="story-circle-item" onclick="selectStoryCategory('মুরগী', this)">
-                <div class="story-circle-avatar">
-                    <div class="story-circle-img-wrap">
-                        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=150&q=80" alt="মুরগীর গোশত">
-                    </div>
-                </div>
-                <span class="story-circle-title">দেশি মুরগী</span>
-            </div>
-
-            <div class="story-circle-item" onclick="selectStoryCategory('মাছ', this)">
-                <div class="story-circle-avatar">
-                    <div class="story-circle-img-wrap">
-                        <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=150&q=80" alt="তাজা মাছ">
-                    </div>
-                </div>
-                <span class="story-circle-title">তাজা মাছ</span>
-            </div>
-
-            <div class="story-circle-item" onclick="selectStoryCategory('ভাত', this)">
-                <div class="story-circle-avatar">
-                    <div class="story-circle-img-wrap">
-                        <img src="https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=150&q=80" alt="ভাত ও ডাল">
-                    </div>
-                </div>
-                <span class="story-circle-title">ভাত ও ডাল</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Popular Bestsellers Section -->
-    <section class="mb-4" id="bestsellerSection" style="margin-top:2rem;">
+    <!-- Popular Bestsellers Section (Top Featured Cards) -->
+    <section class="mb-4" id="bestsellerSection">
         <div class="app-section-header">
             <div class="app-section-title-wrap">
                 <span class="app-section-icon">🔥</span>
@@ -132,15 +73,42 @@
             </a>
         </div>
 
-        <div class="app-rail-scroll" id="homeBestsellerRail">
-            <div class="skeleton" style="width:170px;height:180px;flex-shrink:0;"></div>
-            <div class="skeleton" style="width:170px;height:180px;flex-shrink:0;"></div>
-            <div class="skeleton" style="width:170px;height:180px;flex-shrink:0;"></div>
+        <div class="bestseller-grid" id="homeBestsellerRail">
+            <div class="skeleton" style="height:320px;"></div>
+            <div class="skeleton" style="height:320px;"></div>
+            <div class="skeleton" style="height:320px;"></div>
+        </div>
+    </section>
+
+    <!-- Category Filter Bar (Interactive Category Selector) -->
+    <section id="categoryFilterSection" style="margin-top:2.5rem;">
+        <div class="category-filter-bar" id="categoryFilterTabs">
+            <button type="button" class="category-filter-chip active" onclick="selectFilterTab('all', this)">
+                <span>🔥</span> <span>সকল খাবার</span>
+            </button>
+            <button type="button" class="category-filter-chip" onclick="selectFilterTab('গরু', this)">
+                <span>🥩</span> <span>চুইঝাল গরু ও কালাভুনা</span>
+            </button>
+            <button type="button" class="category-filter-chip" onclick="selectFilterTab('হাঁস', this)">
+                <span>🦆</span> <span>চুইঝাল হাঁসের গোশত</span>
+            </button>
+            <button type="button" class="category-filter-chip" onclick="selectFilterTab('মুরগী', this)">
+                <span>🍗</span> <span>দেশি মুরগী ভুনা</span>
+            </button>
+            <button type="button" class="category-filter-chip" onclick="selectFilterTab('মাছ', this)">
+                <span>🐟</span> <span>তাজা মাছ ভাজা</span>
+            </button>
+            <button type="button" class="category-filter-chip" onclick="selectFilterTab('ভাত', this)">
+                <span>🍚</span> <span>ভাত ও ডাল</span>
+            </button>
+            <button type="button" class="category-filter-chip" onclick="selectFilterTab('নাস্তা', this)">
+                <span>☕</span> <span>নেহারী ও চা</span>
+            </button>
         </div>
     </section>
 
     <!-- Full Food Menu Grid -->
-    <section class="mb-4" id="allDishesSection" style="margin-top:2.5rem;">
+    <section class="mb-4" id="allDishesSection">
         <div class="app-section-header">
             <div class="app-section-title-wrap">
                 <span class="app-section-icon">🍽️</span>
@@ -149,12 +117,12 @@
             <span class="text-muted" style="font-size:0.85rem;" id="foodGridCount">লোড হচ্ছে...</span>
         </div>
 
-        <!-- Food Cards Grid (1-2 cols on mobile, 4 cols on desktop) -->
+        <!-- Food Cards Grid -->
         <div class="food-app-grid" id="homeFoodGrid">
-            <div class="skeleton" style="height:240px;"></div>
-            <div class="skeleton" style="height:240px;"></div>
-            <div class="skeleton" style="height:240px;"></div>
-            <div class="skeleton" style="height:240px;"></div>
+            <div class="skeleton" style="height:280px;"></div>
+            <div class="skeleton" style="height:280px;"></div>
+            <div class="skeleton" style="height:280px;"></div>
+            <div class="skeleton" style="height:280px;"></div>
         </div>
 
         <!-- Empty search state -->
@@ -166,28 +134,28 @@
     </section>
 
     <!-- Restaurant Story & Master Chef Profile -->
-    <section class="mb-4" style="margin-top:3rem;">
+    <section class="mb-4" style="margin-top:4rem;">
         <div class="restaurant-app-card">
             <div class="chef-badge-app">
                 <img src="/images/owner.jpg" alt="প্রোঃ আল-মামুন" class="chef-avatar-app">
                 <div>
                     <span class="promo-badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);margin-bottom:2px;">মাস্টার বাবুর্চি & কর্ণধার</span>
-                    <h3 style="font-size:1.25rem;font-weight:900;color:#fff;line-height:1.2;">প্রোঃ আল-মামুন</h3>
+                    <h3 style="font-size:1.35rem;font-weight:900;color:#fff;line-height:1.2;">প্রোঃ আল-মামুন</h3>
                     <p class="text-muted text-xs">শ্যামনগর নজরুল হোটেল, সাতক্ষীরা</p>
                 </div>
             </div>
 
-            <p style="font-size:0.9rem;color:var(--zinc-300);margin-top:1rem;line-height:1.6;">
+            <p style="font-size:0.92rem;color:var(--zinc-300);margin-top:1.25rem;line-height:1.65;">
                 সাতক্ষীরার ঐতিহ্যবাহী খাঁটি চুইঝাল দিয়ে রান্না করা সুস্বাদু গরু ও হাঁসের গোশতের নির্ভরযোগ্য প্রতিষ্ঠান। আমাদের প্রতিটি খাবার শতভাগ তাজা ও স্বাস্থ্যসম্মত পরিবেশে প্রস্তুত করা হয়।
             </p>
 
             <div class="quick-action-pills">
                 <a href="tel:01918976269" class="btn-app-action">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     <span>সরাসরি কল দিন</span>
                 </a>
                 <a href="https://wa.me/8801918976269" target="_blank" class="btn-app-action whatsapp">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     <span>হোয়াটসঅ্যাপ অর্ডার</span>
                 </a>
             </div>
@@ -201,6 +169,25 @@
 let allMenuItems = [];
 let filteredDishes = [];
 let activeCategoryFilter = 'all';
+
+const CURATED_FOOD_IMAGES = {
+    'চুইঝাল': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'হাঁস': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80',
+    'মুরগি': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80',
+    'মুরগী': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80',
+    'ইলিশ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
+    'রুই': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
+    'মাছ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
+    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=600&q=80',
+    'নেহারী': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    'tikka': 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=600&q=80',
+    'biryani': 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80',
+    'চা': 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80',
+    'lassi': 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80',
+    'default': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80'
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     loadHomeMenuData();
@@ -218,6 +205,32 @@ async function loadHomeMenuData() {
     } catch (err) {
         console.error('Error fetching home menu:', err);
     }
+}
+
+function resolveHighResFoodImage(dishName, rawImage) {
+    if (rawImage && rawImage.startsWith('http') && !rawImage.includes('error') && rawImage.length > 25) {
+        if (!rawImage.includes('?')) {
+            return rawImage + '?auto=format&fit=crop&w=600&q=80';
+        }
+        return rawImage;
+    }
+    if (rawImage && rawImage.startsWith('/storage/')) {
+        return rawImage;
+    }
+
+    const n = (dishName || '').toLowerCase();
+    if (n.includes('চুইঝাল') || n.includes('গরু') || n.includes('কালাভুনা')) return CURATED_FOOD_IMAGES['কালাভুনা'];
+    if (n.includes('হাঁস') || n.includes('duck')) return CURATED_FOOD_IMAGES['হাঁস'];
+    if (n.includes('মুরগী') || n.includes('মুরগি') || n.includes('chicken')) return CURATED_FOOD_IMAGES['মুরগি'];
+    if (n.includes('ইলিশ')) return CURATED_FOOD_IMAGES['ইলিশ'];
+    if (n.includes('রুই') || n.includes('মাছ')) return CURATED_FOOD_IMAGES['মাছ'];
+    if (n.includes('ভাত') || n.includes('rice')) return CURATED_FOOD_IMAGES['ভাত'];
+    if (n.includes('নেহারী')) return CURATED_FOOD_IMAGES['নেহারী'];
+    if (n.includes('tikka')) return CURATED_FOOD_IMAGES['tikka'];
+    if (n.includes('biryani') || n.includes('বিরিয়ানি')) return CURATED_FOOD_IMAGES['biryani'];
+    if (n.includes('চা') || n.includes('tea')) return CURATED_FOOD_IMAGES['চা'];
+    if (n.includes('lassi') || n.includes('লাচ্ছি')) return CURATED_FOOD_IMAGES['lassi'];
+    return CURATED_FOOD_IMAGES['default'];
 }
 
 function handleHomeSearch(query) {
@@ -251,20 +264,20 @@ function clearHomeSearch() {
     handleHomeSearch('');
 }
 
-function selectStoryCategory(cat, el) {
-    document.querySelectorAll('.story-circle-item').forEach(c => c.classList.remove('active'));
-    if (el) el.classList.add('active');
+function selectFilterTab(cat, btn) {
+    document.querySelectorAll('.category-filter-chip').forEach(c => c.classList.remove('active'));
+    if (btn) btn.classList.add('active');
     activeCategoryFilter = cat;
 
     if (cat === 'all') {
         filteredDishes = [...allMenuItems];
-        document.getElementById('foodGridTitle').innerText = 'আমাদের সকল খাবার';
+        document.getElementById('foodGridTitle').innerText = 'আমাদের সকল খাবারের তালিকা';
     } else {
         filteredDishes = allMenuItems.filter(i => {
             const text = (i.name + ' ' + (i.description || '') + ' ' + (i.category ? i.category.name : '')).toLowerCase();
             return text.includes(cat.toLowerCase());
         });
-        document.getElementById('foodGridTitle').innerText = `${cat} সমৃদ্ধ খাবার`;
+        document.getElementById('foodGridTitle').innerText = `${cat} সমৃদ্ধ স্পেশাল পদ`;
     }
     renderFoodGrid();
 }
@@ -274,26 +287,30 @@ function renderBestsellers() {
     if (!rail) return;
 
     const featured = allMenuItems.filter(i => i.isFeatured);
-    const displayItems = featured.length > 0 ? featured : allMenuItems.slice(0, 4);
+    const displayItems = featured.length > 0 ? featured.slice(0, 4) : allMenuItems.slice(0, 4);
 
     if (displayItems.length === 0) {
-        rail.innerHTML = '<p class="text-muted text-xs">কোনো খাবার লোড হয়নি</p>';
+        rail.innerHTML = '<p class="text-muted text-xs">কোনো খাবার পাওয়া যায়নি</p>';
         return;
     }
 
     rail.innerHTML = displayItems.map(item => {
-        const imgUrl = item.image ? (item.image.startsWith('http') ? item.image : '/storage/' + item.image) : getDefaultFoodImage(item.name);
+        const imgUrl = resolveHighResFoodImage(item.name, item.image);
         return `
             <div class="bestseller-card">
                 <div class="bestseller-img-wrap">
-                    <img src="${imgUrl}" alt="${item.name}" loading="lazy">
-                    <span class="bestseller-pill">জনপ্রিয়</span>
+                    <img src="${imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='${CURATED_FOOD_IMAGES['default']}'">
+                    <span class="bestseller-pill">🔥 স্পেশাল পদ</span>
+                    <span class="bestseller-rating">⭐ ৪.৯ (১২০+)</span>
                 </div>
                 <div class="bestseller-info">
                     <h4 class="bestseller-title">${item.name}</h4>
+                    <p class="bestseller-desc">${item.description || 'সাতক্ষীরার ঐতিহ্যবাহী খাঁটি চুইঝাল দিয়ে তৈরি সেরা স্বাদের খাবার।'}</p>
                     <div class="bestseller-bottom">
                         <span class="bestseller-price">৳${item.price}</span>
-                        <button type="button" class="bestseller-add-btn" onclick="addToCartDirect('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})" title="অর্ডার করুন">+</button>
+                        <button type="button" class="bestseller-add-btn" onclick="addToCartDirect('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})">
+                            <span>+ যোগ করুন</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -319,14 +336,14 @@ function renderFoodGrid() {
     if (countEl) countEl.innerText = `${filteredDishes.length} টি খাবার পাওয়া গেছে`;
 
     grid.innerHTML = filteredDishes.map(item => {
-        const imgUrl = item.image ? (item.image.startsWith('http') ? item.image : '/storage/' + item.image) : getDefaultFoodImage(item.name);
+        const imgUrl = resolveHighResFoodImage(item.name, item.image);
         const isAvail = item.isAvailable !== false && item.is_available !== 0;
 
         return `
             <div class="food-app-card ${!isAvail ? 'opacity-50' : ''}">
                 <div class="food-card-img-box">
-                    <img src="${imgUrl}" alt="${item.name}" loading="lazy">
-                    ${item.isFeatured ? '<span class="food-card-badge">স্পেশাল</span>' : ''}
+                    <img src="${imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='${CURATED_FOOD_IMAGES['default']}'">
+                    ${item.isFeatured ? '<span class="food-card-badge">🔥 স্পেশাল</span>' : ''}
                     ${!isAvail ? '<span class="food-card-badge" style="background:#ef4444;color:#fff;">শেষ হয়ে গেছে</span>' : ''}
                 </div>
                 <div class="food-card-content">
@@ -339,30 +356,13 @@ function renderFoodGrid() {
                                 <span>+ যোগ করুন</span>
                             </button>
                         ` : `
-                            <span style="font-size:0.75rem;color:#f87171;font-weight:700;">স্টক নেই</span>
+                            <span style="font-size:0.78rem;color:#f87171;font-weight:700;">স্টক নেই</span>
                         `}
                     </div>
                 </div>
             </div>
         `;
     }).join('');
-}
-
-function getDefaultFoodImage(name) {
-    name = (name || '').toLowerCase();
-    if (name.includes('গরু') || name.includes('কালাভুনা') || name.includes('গোশত') || name.includes('beef')) {
-        return 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80';
-    } else if (name.includes('হাঁস') || name.includes('duck')) {
-        return 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=400&q=80';
-    } else if (name.includes('মুরগী') || name.includes('মুরগি') || name.includes('chicken')) {
-        return 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=80';
-    } else if (name.includes('মাছ') || name.includes('ইলিশ') || name.includes('রুই') || name.includes('fish')) {
-        return 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=400&q=80';
-    } else if (name.includes('ভাত') || name.includes('rice')) {
-        return 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=400&q=80';
-    } else {
-        return 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80';
-    }
 }
 </script>
 @endsection
