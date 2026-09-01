@@ -15,7 +15,51 @@
 </head>
 <body>
     <!-- ═══════════════════════════════════════════════════════
-         1. FOOD DELIVERY APP TOP BAR
+         0. DESKTOP LUXURY NAVBAR (Matching Brand Design)
+         ═══════════════════════════════════════════════════════ -->
+    <header class="desktop-navbar">
+        <div class="desktop-nav-inner">
+            <!-- Brand Logo -->
+            <a href="/" class="desktop-nav-brand">
+                <img src="/images/logo.jpg" alt="শ্যামনগর নজরুল হোটেল" class="desktop-nav-logo">
+                <span class="desktop-nav-brand-text">শ্যামনগর নজরুল হোটেল</span>
+            </a>
+
+            <!-- Central Pill Menu Navigation -->
+            <nav class="desktop-nav-pill">
+                <a href="/" class="desktop-nav-link {{ request()->is('/') ? 'active' : '' }}">
+                    <span class="nav-icon">🏠</span> <span>হোম</span>
+                </a>
+                <a href="/menu" class="desktop-nav-link {{ request()->is('menu') ? 'active' : '' }}">
+                    <span class="nav-icon">🍲</span> <span>মেনু</span>
+                </a>
+                <a href="/order" class="desktop-nav-link {{ request()->is('order') ? 'active' : '' }}">
+                    <span class="nav-icon">🛒</span> <span>অর্ডার</span>
+                </a>
+                <a href="/track" class="desktop-nav-link {{ request()->is('track*') ? 'active' : '' }}">
+                    <span class="nav-icon">🕒</span> <span>অর্ডার ট্র্যাক</span>
+                </a>
+                <a href="/about" class="desktop-nav-link {{ request()->is('about') ? 'active' : '' }}">
+                    <span class="nav-icon">💬</span> <span>সম্পর্কে</span>
+                </a>
+                <a href="/contact" class="desktop-nav-link {{ request()->is('contact') ? 'active' : '' }}">
+                    <span class="nav-icon">📞</span> <span>যোগাযোগ</span>
+                </a>
+            </nav>
+
+            <!-- Right Action CTA -->
+            <div class="desktop-nav-actions">
+                <button type="button" onclick="openCartSheet()" class="desktop-cart-btn" title="কার্ট">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span class="desktop-cart-badge" id="desktopCartBadge" style="display:none;">0</span>
+                </button>
+                <a href="/order" class="btn-desktop-order-cta">অর্ডার করুন</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════
+         1. FOOD DELIVERY APP TOP BAR (Mobile Screen)
          ═══════════════════════════════════════════════════════ -->
     <header class="app-topbar" id="appTopbar">
         <div class="app-container">
@@ -53,7 +97,7 @@
     </header>
 
     <!-- ═══════════════════════════════════════════════════════
-         2. MAIN APP CONTENT VIEWPORT
+         2. MAIN CONTENT VIEWPORT
          ═══════════════════════════════════════════════════════ -->
     <main class="app-main-viewport">
         @yield('content')
@@ -199,7 +243,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
-         5. FIXED APP BOTTOM NAVIGATION BAR
+         5. FIXED APP BOTTOM NAVIGATION BAR (Mobile Screen)
          ═══════════════════════════════════════════════════════ -->
     <nav class="app-bottom-nav">
         <div class="app-bottom-nav-inner">
@@ -230,6 +274,57 @@
             </a>
         </div>
     </nav>
+
+    <!-- ═══════════════════════════════════════════════════════
+         6. DESKTOP LUXURY FOOTER
+         ═══════════════════════════════════════════════════════ -->
+    <footer class="desktop-footer">
+        <div class="desktop-footer-inner">
+            <div class="footer-col">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
+                    <img src="/images/logo.jpg" alt="লোগো" style="width:48px;height:48px;border-radius:12px;border:1.5px solid var(--secondary);">
+                    <h3 style="color:#fff;font-size:1.35rem;font-weight:900;">শ্যামনগর নজরুল হোটেল</h3>
+                </div>
+                <p style="margin-bottom:1rem;">সাতক্ষীরার ঐতিহ্যবাহী খাঁটি চুইঝালের খাবারের সুপরিচিত প্রতিষ্ঠান। এখানে প্রতিদিন তাজা মাংস ও দেশি মশলায় রান্না করা খাবার পরিবেশন করা হয়।</p>
+                <div style="color:var(--secondary);font-weight:800;font-size:0.95rem;">প্রোঃ আল-মামুন</div>
+            </div>
+
+            <div class="footer-col">
+                <h4>দ্রুত লিংক</h4>
+                <ul>
+                    <li><a href="/">হোম পেজ</a></li>
+                    <li><a href="/menu">খাবারের মেনু</a></li>
+                    <li><a href="/order">অনলাইন অর্ডার</a></li>
+                    <li><a href="/track">অর্ডার ট্র্যাকিং</a></li>
+                    <li><a href="/about">আমাদের গল্প</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>জনপ্রিয় পদ</h4>
+                <ul>
+                    <li><a href="/menu">চুইঝালের গরুর গোশত</a></li>
+                    <li><a href="/menu">স্পেশাল হাঁসের মাংস</a></li>
+                    <li><a href="/menu">ঐতিহ্যবাহী কালাভুনা</a></li>
+                    <li><a href="/menu">তাজা পদ্মার ইলিশ</a></li>
+                    <li><a href="/menu">দেশি মুরগী ভুনা</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>যোগাযোগ ও ঠিকানা</h4>
+                <p>📍 উকিলবার পকেট গেটের বাহিরে, সাতক্ষীরা</p>
+                <p style="margin-top:6px;">📞 <a href="tel:01918976269" style="color:#fff;font-weight:700;">০১৯১৮-৯৭৬২৬৯</a></p>
+                <p style="margin-top:6px;">⏰ প্রতিদিন সকাল ৭:০০ - রাত ১১:০০</p>
+                <p style="margin-top:10px;color:#ef4444;font-weight:800;">বিঃদ্রঃ বিভিন্ন অনুষ্ঠানে খাবার অর্ডার নেওয়া হয়</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div>&copy; {{ date('Y') }} শ্যামনগর নজরুল হোটেল। সর্বস্বত্ব সংরক্ষিত।</div>
+            <div>সাতক্ষীরার সেরা চুইঝালের স্বাদ</div>
+        </div>
+    </footer>
 
     <!-- Global App Scripts -->
     <script src="/js/app.js"></script>

@@ -781,3 +781,84 @@ input:checked + .owner-slider:before {
 .owner-btn-submit:active {
   transform: scale(0.97);
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP WEB ADMIN DASHBOARD (Screen width >= 1024px)
+   ═══════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  body {
+    padding-bottom: 2rem !important;
+  }
+
+  .owner-topbar {
+    padding: 0 3rem;
+  }
+
+  .owner-app-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+  }
+
+  .owner-kpi-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1.25rem !important;
+  }
+
+  .owner-bottom-nav {
+    top: calc(var(--topbar-height) + 12px);
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 720px;
+    border-radius: 9999px;
+    border: 1px solid var(--card-border-gold);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    padding: 4px 12px;
+  }
+
+  .owner-nav-tab {
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+  }
+
+  .owner-nav-tab.active {
+    background: var(--card-surface);
+  }
+
+  .owner-nav-icon {
+    font-size: 1.15rem;
+  }
+
+  .owner-nav-label {
+    font-size: 0.85rem;
+  }
+
+  #tabContent {
+    margin-top: 60px;
+  }
+
+  /* Multi-column grids for desktop admin */
+  .desktop-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .desktop-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .owner-sheet-modal {
+    border-radius: 1.5rem;
+    border-bottom: 1px solid var(--card-border-gold);
+    position: relative;
+    max-height: 85vh;
+  }
+}
+
