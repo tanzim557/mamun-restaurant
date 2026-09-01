@@ -1,352 +1,314 @@
 @extends('layouts.app')
-@section('title', 'অর্ডার ট্র্যাক — শ্যামনগর নজরুল হোটেল')
+@section('title', 'লাইভ ফুড অর্ডার ট্র্যাকিং — শ্যামনগর নজরুল হোটেল')
 
 @section('content')
-<section class="hero hero-short" style="margin-top:-64px;">
-    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="hero-content">
-        <span class="text-secondary font-bold uppercase tracking-wide text-sm" style="display:inline-block;margin-bottom:0.75rem;background:rgba(245,158,11,0.15);padding:4px 14px;border-radius:9999px;border:1px solid rgba(245,158,11,0.3);">লাইভ ট্র্যাকিং</span>
-        <h1>অর্ডার ট্র্যাক করুন</h1>
-        <p style="color:rgba(255,255,255,0.7);margin-top:0.5rem;font-size:1.1rem;">আপনার অর্ডার আইডি অথবা মোবাইল নম্বর দিয়ে লাইভ স্ট্যাটাস দেখুন</p>
-    </div>
-</section>
-
-<section class="section track-page-section">
-    <!-- Ambient Glow Spheres -->
-    <div class="ambient-glow glow-1" style="top:20%;left:5%;"></div>
-    <div class="ambient-glow glow-2" style="bottom:15%;right:5%;"></div>
-
-    <div class="container relative" style="max-width:680px;margin:0 auto;z-index:2;">
-        <!-- Search Card -->
-        <div class="track-search-card animate-fade-up">
-            <form onsubmit="return handleTrackSubmit(event)">
-                <label class="track-search-label">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--secondary);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <span>অর্ডার আইডি অথবা মোবাইল নম্বর দিন</span>
-                </label>
-                <div class="track-input-group">
-                    <input type="text" id="trackInput" class="track-input" placeholder="যেমন: MR-9446F9 অথবা 01988976269" required>
-                    <button type="submit" class="btn-track-submit" id="trackBtn">
+<div class="app-container">
+    <div class="live-track-wrapper">
+        <!-- Track Search Box -->
+        <section class="app-search-section">
+            <div class="app-section-header" style="margin-top:0;">
+                <div class="app-section-title-wrap">
+                    <span class="app-section-icon">🛵</span>
+                    <h2 class="app-section-title">লাইভ ফুড অর্ডার ট্র্যাকিং</h2>
+                </div>
+            </div>
+            
+            <form onsubmit="return handleAppTrackSubmit(event)">
+                <div class="app-search-box">
+                    <span class="app-search-icon">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <span>খুঁজুন</span>
-                    </button>
+                    </span>
+                    <input type="text" id="trackQueryInput" class="app-search-input" placeholder="অর্ডার আইডি (যেমন: MR-9446F9) বা মোবাইল নম্বর দিন" required>
+                    <button type="submit" class="promo-btn-mini" id="trackSubmitBtn" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);margin-top:0;background:var(--fire-gradient);">খুঁজুন</button>
                 </div>
             </form>
-            <p id="trackError" class="track-error-pill hidden"></p>
+            <p id="trackErrorPill" class="text-primary text-xs font-bold mt-2 hidden"></p>
+        </section>
+
+        <!-- Loading -->
+        <div id="trackLoadingState" class="hidden text-center" style="padding:3rem 0;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;" class="pulse-dot-green"></div>
+            <p class="text-muted text-sm">অর্ডারের লাইভ তথ্য খোঁজা হচ্ছে...</p>
         </div>
 
-        <!-- Loading State -->
-        <div id="trackLoading" class="hidden text-center" style="padding:3rem 0;">
-            <div class="spinner-icon" style="width:40px;height:40px;margin:0 auto 1rem;color:var(--primary);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+        <!-- Result View -->
+        <div id="trackResultState" class="hidden mt-4">
+            <!-- Animated Delivery Map Simulation -->
+            <div class="live-map-simulation">
+                <span class="est-delivery-badge" id="trackEstBadge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="trackEstText">⏱️ আনুমানিক ২০-৩০ মিনিটের মধ্যে ডেলিভারি</span>
+                </span>
+
+                <div class="map-route-line">
+                    <div class="map-route-progress" id="mapRouteProgress" style="width: 25%;"></div>
+                </div>
+
+                <div class="map-pin-restaurant" title="নজরুল হোটেল">🥘</div>
+                <div class="map-rider-bike" id="mapRiderBike" style="left: 25%;">🛵</div>
+                <div class="map-pin-customer" title="আপনার ঠিকানা">📍</div>
             </div>
-            <p style="color:#a1a1aa;">অর্ডার তথ্য লোড হচ্ছে...</p>
-        </div>
 
-        <!-- Result Card -->
-        <div id="trackResult" class="hidden animate-fade-up">
-            <div class="track-result-card">
-                <!-- Result Header -->
-                <div class="track-result-header">
+            <!-- Order Live Card -->
+            <div class="track-card-app">
+                <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:1rem;margin-bottom:1.25rem;">
                     <div>
-                        <span style="font-size:0.75rem;color:#a1a1aa;text-transform:uppercase;font-weight:700;">অর্ডার নম্বর</span>
-                        <div class="flex items-center gap-3 mt-1">
-                            <h3 id="resOrderId" class="track-order-id"></h3>
-                            <button type="button" onclick="copyTrackId()" class="btn-copy-id" id="trackCopyBtn">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                                <span id="trackCopyText">কপি</span>
-                            </button>
-                        </div>
+                        <span style="font-size:0.72rem;color:var(--zinc-400);text-transform:uppercase;font-weight:700;">অর্ডার নম্বর</span>
+                        <h3 id="trackOrderIdDisplay" style="font-family:'Outfit',monospace;font-size:1.25rem;font-weight:900;color:var(--secondary);"></h3>
                     </div>
-                    <div id="resStatusBadge" class="track-status-pill"></div>
+                    <span id="trackStatusPill" class="loc-status-chip" style="font-size:0.8rem;padding:4px 12px;"></span>
                 </div>
 
-                <!-- Live Status Stepper -->
-                <div class="track-stepper-box">
-                    <h4 class="track-section-title">লাইভ ডেলিভারি স্ট্যাটাস</h4>
-                    <div class="track-steps">
-                        <div class="track-step" id="step1">
-                            <div class="track-step-dot">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <div class="track-step-text">
-                                <p class="track-step-name">অর্ডার গৃহীত হয়েছে</p>
-                                <span class="track-step-desc">অর্ডারটি সিস্টেমে নিশ্চিত হয়েছে</span>
-                            </div>
+                <!-- 4-Stage Stepper -->
+                <div class="track-app-stepper-box mb-4">
+                    <div class="track-app-step" id="trackStep1">
+                        <div class="track-app-dot">1</div>
+                        <div class="track-app-text">
+                            <h4>অর্ডার গৃহীত হয়েছে</h4>
+                            <p>সিস্টেমে অর্ডার নিশ্চিত করা হয়েছে।</p>
                         </div>
+                    </div>
 
-                        <div class="track-step-line" id="line1"></div>
-
-                        <div class="track-step" id="step2">
-                            <div class="track-step-dot">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
-                            </div>
-                            <div class="track-step-text">
-                                <p class="track-step-name">রান্না ও প্রস্তুতি চলছে</p>
-                                <span class="track-step-desc">আমাদের মাস্টার শেফ খাবার প্রস্তুত করছেন</span>
-                            </div>
+                    <div class="track-app-step" id="trackStep2">
+                        <div class="track-app-dot">2</div>
+                        <div class="track-app-text">
+                            <h4>রান্না ও প্রস্তুতি চলছে</h4>
+                            <p>মাস্টার শেফ চুইঝাল দিয়ে খাবার প্রস্তুত করছেন।</p>
                         </div>
+                    </div>
 
-                        <div class="track-step-line" id="line2"></div>
-
-                        <div class="track-step" id="step3">
-                            <div class="track-step-dot">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                            </div>
-                            <div class="track-step-text">
-                                <p class="track-step-name">ডেলিভারিতে বের হয়েছে</p>
-                                <span class="track-step-desc">রাইডার আপনার ঠিকানার উদ্দেশ্যে রওনা দিয়েছেন</span>
-                            </div>
+                    <div class="track-app-step" id="trackStep3">
+                        <div class="track-app-dot">3</div>
+                        <div class="track-app-text">
+                            <h4>রাইডার ডেলিভারিতে বের হয়েছে</h4>
+                            <p>খাবার আপনার ঠিকানার উদ্দেশ্যে রওনা দিয়েছে।</p>
                         </div>
+                    </div>
 
-                        <div class="track-step-line" id="line3"></div>
-
-                        <div class="track-step" id="step4">
-                            <div class="track-step-dot">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <div class="track-step-text">
-                                <p class="track-step-name">ডেলিভারি সম্পন্ন</p>
-                                <span class="track-step-desc">খাবার সফলভাবে পৌঁছে দেওয়া হয়েছে</span>
-                            </div>
+                    <div class="track-app-step" id="trackStep4">
+                        <div class="track-app-dot">4</div>
+                        <div class="track-app-text">
+                            <h4>ডেলিভারি সম্পন্ন</h4>
+                            <p>খাবার সফলভাবে পৌঁছে দেওয়া হয়েছে।</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Customer Details & Items Grid -->
-                <div class="track-info-grid">
-                    <!-- Customer Details -->
-                    <div class="track-info-card">
-                        <h4 class="track-info-title">গ্রাহকের বিবরণ</h4>
-                        <p class="track-info-row"><strong>নাম:</strong> <span id="resCustName"></span></p>
-                        <p class="track-info-row"><strong>মোবাইল:</strong> <span id="resCustPhone"></span></p>
-                        <p class="track-info-row"><strong>ঠিকানা:</strong> <span id="resCustAddr"></span></p>
-                        <p class="track-info-row" id="resNoteRow" style="display:none;"><strong>নির্দেশনা:</strong> <span id="resCustNote"></span></p>
-                        <p class="track-info-row"><strong>অর্ডারের সময়:</strong> <span id="resOrderTime"></span></p>
-                    </div>
+                <!-- Customer Details & Order Items -->
+                <div style="background:#14141b;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:1rem;margin-bottom:1rem;">
+                    <h4 style="font-size:0.88rem;font-weight:800;color:#fff;margin-bottom:0.5rem;display:flex;align-items:center;gap:6px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <span>গ্রাহক ও ডেলিভারির তথ্য</span>
+                    </h4>
+                    <p style="font-size:0.8rem;color:var(--zinc-300);margin-bottom:3px;"><strong>নাম:</strong> <span id="trackCustName"></span></p>
+                    <p style="font-size:0.8rem;color:var(--zinc-300);margin-bottom:3px;"><strong>মোবাইল:</strong> <span id="trackCustPhone"></span></p>
+                    <p style="font-size:0.8rem;color:var(--zinc-300);margin-bottom:3px;"><strong>ঠিকানা:</strong> <span id="trackCustAddr"></span></p>
+                    <p style="font-size:0.8rem;color:var(--zinc-300);" id="trackNoteRow"><strong>নির্দেশনা:</strong> <span id="trackCustNote"></span></p>
+                </div>
 
-                    <!-- Items Summary -->
-                    <div class="track-info-card">
-                        <h4 class="track-info-title">অর্ডারকৃত খাবার</h4>
-                        <div id="resItemsList" class="track-items-box"></div>
-                        <div class="track-total-box">
-                            <span>সর্বমোট পরিশোধ:</span>
-                            <span class="text-primary font-bold text-lg" id="resTotalAmount"></span>
-                        </div>
+                <!-- Itemized Receipt -->
+                <div style="background:#14141b;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem;">
+                    <h4 style="font-size:0.88rem;font-weight:800;color:#fff;margin-bottom:0.5rem;display:flex;align-items:center;gap:6px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        <span>অর্ডারকৃত খাবারের পদ</span>
+                    </h4>
+                    <div id="trackItemsList" style="margin-bottom:0.75rem;"></div>
+                    <div style="display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;font-weight:900;font-size:1.05rem;">
+                        <span>সর্বমোট প্রদেয়:</span>
+                        <span style="color:var(--secondary);" id="trackTotalAmount">৳০</span>
                     </div>
                 </div>
 
-                <!-- Direct Support Buttons -->
-                <div class="track-actions-footer">
-                    <a href="tel:01988976269" class="btn btn-outline-primary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        <span>সরাসরি কল দিন</span>
+                <!-- Support Buttons -->
+                <div class="quick-action-pills">
+                    <a href="tel:01988976269" class="btn-app-action">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>রাইডারকে কল দিন</span>
                     </a>
-                    <a href="https://wa.me/8801988976269" target="_blank" class="footer-wa-btn" style="flex:1;justify-content:center;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        <span>হোয়াটসঅ্যাপে হেল্পলাইন</span>
+                    <a href="https://wa.me/8801988976269" target="_blank" class="btn-app-action whatsapp">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>হোয়াটসঅ্যাপ হেল্পলাইন</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('id') || urlParams.get('orderId') || urlParams.get('phone');
-    if (orderId) {
-        document.getElementById('trackInput').value = orderId;
-        searchOrder(orderId);
+    const query = urlParams.get('id') || urlParams.get('phone') || urlParams.get('query');
+    if (query) {
+        document.getElementById('trackQueryInput').value = query;
+        fetchTrackInfo(query);
     }
 });
 
-function handleTrackSubmit(e) {
+function handleAppTrackSubmit(e) {
     e.preventDefault();
-    const query = document.getElementById('trackInput').value.trim();
-    if (query) searchOrder(query);
+    const query = document.getElementById('trackQueryInput').value.trim();
+    if (query) fetchTrackInfo(query);
     return false;
 }
 
-let pollInterval = null;
+let activeTrackQuery = null;
+let trackPollTimer = null;
 
-async function searchOrder(query, isAutoPoll = false) {
-    const loading = document.getElementById('trackLoading');
-    const result = document.getElementById('trackResult');
-    const errorEl = document.getElementById('trackError');
-    const btn = document.getElementById('trackBtn');
+async function silentRefreshTrack(query) {
+    try {
+        const res = await fetch(`/api/orders/track?query=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        if (data.success && data.order) {
+            renderTrackDetails(data.order);
+        }
+    } catch(e) {}
+}
 
-    if (!isAutoPoll) {
-        errorEl.classList.add('hidden');
-        result.classList.add('hidden');
-        loading.classList.remove('hidden');
-        btn.disabled = true;
-    }
+async function fetchTrackInfo(query) {
+    const loading = document.getElementById('trackLoadingState');
+    const result = document.getElementById('trackResultState');
+    const errPill = document.getElementById('trackErrorPill');
+    const btn = document.getElementById('trackSubmitBtn');
+
+    if (errPill) errPill.classList.add('hidden');
+    if (loading && !activeTrackQuery) loading.classList.remove('hidden');
+    if (btn) btn.disabled = true;
 
     try {
         const res = await fetch(`/api/orders/track?query=${encodeURIComponent(query)}`);
         const data = await res.json();
 
-        if (!isAutoPoll) {
-            loading.classList.add('hidden');
-            btn.disabled = false;
-        }
-
-        if (res.ok && data.success && data.order) {
+        if (data.success && data.order) {
             renderTrackDetails(data.order);
-            result.classList.remove('hidden');
-
-            // Setup real-time auto polling every 7 seconds if order is active
-            if (!pollInterval && data.order.status !== 'DELIVERED' && data.order.status !== 'CANCELLED') {
-                pollInterval = setInterval(() => {
-                    searchOrder(query, true);
-                }, 7000);
+            if (result) result.classList.remove('hidden');
+            activeTrackQuery = query;
+            if (!trackPollTimer) {
+                trackPollTimer = setInterval(() => {
+                    if (activeTrackQuery) silentRefreshTrack(activeTrackQuery);
+                }, 2500);
             }
         } else {
-            if (!isAutoPoll) {
-                errorEl.innerText = data.error || 'কোনো অর্ডার পাওয়া যায়নি। সঠিক আইডি বা ফোন নম্বর দিন।';
-                errorEl.classList.remove('hidden');
-            }
+            throw new Error(data.error || 'কোনো অর্ডার পাওয়া যায়নি। সঠিক অর্ডার আইডি বা মোবাইল নম্বর দিন।');
         }
     } catch(e) {
-        if (!isAutoPoll) {
-            loading.classList.add('hidden');
-            btn.disabled = false;
-            errorEl.innerText = 'তথ্য লোড করতে সমস্যা হয়েছে। ইন্টারনেট চেক করুন।';
-            errorEl.classList.remove('hidden');
+        if (errPill) {
+            errPill.textContent = e.message;
+            errPill.classList.remove('hidden');
         }
+        showToast(e.message, 'error');
+    } finally {
+        if (loading) loading.classList.add('hidden');
+        if (btn) btn.disabled = false;
     }
 }
 
 function renderTrackDetails(order) {
     const shortId = order.shortId || ('MR-' + order.id.substring(0, 6).toUpperCase());
-    document.getElementById('resOrderId').innerText = shortId;
-    document.getElementById('resOrderId').dataset.id = shortId;
+    document.getElementById('trackOrderIdDisplay').textContent = shortId;
+    document.getElementById('trackCustName').textContent = order.customer_name || '—';
+    document.getElementById('trackCustPhone').textContent = order.phone_number || '—';
+    document.getElementById('trackCustAddr').textContent = order.address || '—';
 
-    document.getElementById('resCustName').innerText = order.customerName || 'N/A';
-    document.getElementById('resCustPhone').innerText = order.phoneNumber || 'N/A';
-    
-    // Clean Address Format
-    let addrText = (order.address || '').trim();
-    const mapMatch = addrText.match(/(?:\[(?:ম্যাপ|ম্যাপ লিংক|Google Maps Pin|Google Maps|GPS)\s*:\s*)?(https:\/\/maps\.google\.com\/\?q=[^\]\s\n]+)\]?/i);
-    let mapUrl = mapMatch ? mapMatch[1] : null;
-    let cleanAddr = addrText.replace(/\[.*?(https:\/\/maps\.google\.com[^\s\]]+).*?\]/gi, '')
-                            .replace(/https:\/\/maps\.google\.com\/\?q=[^\s]+/gi, '')
-                            .replace(/\s+/g, ' ')
-                            .replace(/^[-,\s]+|[-,\s]+$/g, '');
-    
-    if (!cleanAddr) cleanAddr = 'লাইভ জিপিএস লোকেশন';
-    
-    document.getElementById('resCustAddr').innerHTML = `
-        <span>${cleanAddr}</span>
-        ${mapUrl ? `<div style="margin-top:4px;"><a href="${mapUrl}" target="_blank" style="color:#60a5fa;text-decoration:underline;font-size:0.8rem;display:inline-flex;align-items:center;gap:4px;">📍 গুগল ম্যাপে দেখুন ↗</a></div>` : ''}
-    `;
-
-    if (order.note && order.note.trim() !== '') {
-        document.getElementById('resCustNote').innerText = order.note;
-        document.getElementById('resNoteRow').style.display = 'block';
+    const noteEl = document.getElementById('trackCustNote');
+    const noteRow = document.getElementById('trackNoteRow');
+    if (order.note && order.note.trim()) {
+        noteEl.textContent = order.note;
+        noteRow.style.display = 'block';
     } else {
-        document.getElementById('resNoteRow').style.display = 'none';
+        noteRow.style.display = 'none';
     }
 
-    if (order.createdAt) {
-        const d = new Date(order.createdAt);
-        document.getElementById('resOrderTime').innerText = d.toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' });
-    }
+    // Items list
+    const itemsList = document.getElementById('trackItemsList');
+    const items = order.order_items || order.orderItems || [];
+    let calcTotal = 0;
 
-    // Items
-    const itemsContainer = document.getElementById('resItemsList');
-    if (order.items && order.items.length > 0) {
-        itemsContainer.innerHTML = order.items.map(i => `
-            <div class="flex justify-between text-sm py-1" style="border-bottom:1px dashed rgba(255,255,255,0.06);">
-                <span style="color:#d4d4d8;">${i.menu_item_name || i.name} × ${i.quantity || i.qty}</span>
-                <span class="font-bold text-white">৳${i.price * (i.quantity || i.qty)}</span>
+    itemsList.innerHTML = items.map(item => {
+        const name = item.menu_item_name || item.name || 'খাবার পদ';
+        const qty = item.quantity || item.qty || 1;
+        const price = parseFloat(item.price) || 0;
+        const itemTotal = price * qty;
+        calcTotal += itemTotal;
+
+        return `
+            <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:var(--zinc-300);padding:3px 0;">
+                <span>${name} × ${qty}</span>
+                <span class="font-bold text-white">৳${itemTotal}</span>
             </div>
-        `).join('');
+        `;
+    }).join('');
+
+    const finalTotal = order.total_amount > 0 ? order.total_amount : calcTotal;
+    document.getElementById('trackTotalAmount').textContent = `৳${finalTotal}`;
+
+    // Update Stepper & Rider Map Animation
+    updateStepperAndMap(order.status || 'PENDING');
+}
+
+function updateStepperAndMap(status) {
+    const statusUpper = (status || '').toUpperCase();
+    const pill = document.getElementById('trackStatusPill');
+    const progress = document.getElementById('mapRouteProgress');
+    const bike = document.getElementById('mapRiderBike');
+    const estText = document.getElementById('trackEstText');
+
+    const step1 = document.getElementById('trackStep1');
+    const step2 = document.getElementById('trackStep2');
+    const step3 = document.getElementById('trackStep3');
+    const step4 = document.getElementById('trackStep4');
+
+    [step1, step2, step3, step4].forEach(s => {
+        s.className = 'track-app-step';
+    });
+
+    if (statusUpper === 'PENDING') {
+        pill.textContent = 'অর্ডার গৃহীত';
+        pill.style.color = '#fbbf24';
+        step1.classList.add('active');
+        progress.style.width = '20%';
+        bike.style.left = '20%';
+        estText.textContent = '⏱️ কিচেনে খাবার তৈরির প্রস্তুতি চলছে (২৫-৩৫ মিনিট)';
+    } else if (statusUpper === 'PREPARING') {
+        pill.textContent = 'রান্না হচ্ছে';
+        pill.style.color = '#f97316';
+        step1.classList.add('completed');
+        step2.classList.add('active');
+        progress.style.width = '45%';
+        bike.style.left = '45%';
+        estText.textContent = '🔥 মাস্টার শেফ গরম চুইঝাল দিয়ে রান্না করছেন (১৫-২০ মিনিট)';
+    } else if (statusUpper === 'DELIVERING' || statusUpper === 'OUT_FOR_DELIVERY') {
+        pill.textContent = 'ডেলিভারিতে বের হয়েছে';
+        pill.style.color = '#38bdf8';
+        step1.classList.add('completed');
+        step2.classList.add('completed');
+        step3.classList.add('active');
+        progress.style.width = '75%';
+        bike.style.left = '75%';
+        estText.textContent = '🛵 রাইডার আপনার ঠিকানার উদ্দেশ্যে রওনা দিয়েছেন (১০-১৫ মিনিট)';
+    } else if (statusUpper === 'DELIVERED' || statusUpper === 'COMPLETED') {
+        pill.textContent = 'ডেলিভারি সম্পন্ন';
+        pill.style.color = '#4ade80';
+        step1.classList.add('completed');
+        step2.classList.add('completed');
+        step3.classList.add('completed');
+        step4.classList.add('completed');
+        progress.style.width = '100%';
+        bike.style.left = '88%';
+        estText.textContent = '✓ খাবার সফলভাবে পৌঁছে দেওয়া হয়েছে! উপভোগ করুন।';
+    } else if (statusUpper === 'CANCELLED') {
+        pill.textContent = 'বাতিল হয়েছে';
+        pill.style.color = '#ef4444';
+        estText.textContent = '❌ এই অর্ডারটি বাতিল করা হয়েছে।';
     } else {
-        itemsContainer.innerHTML = '<p class="text-muted text-xs">আইটেমের বিবরণ পাওয়া যায়নি</p>';
+        pill.textContent = 'প্রক্রিয়াধীন';
+        pill.style.color = '#fbbf24';
+        step1.classList.add('active');
+        progress.style.width = '20%';
+        bike.style.left = '20%';
     }
-
-    const total = (parseFloat(order.totalAmount) > 0) ? parseFloat(order.totalAmount) : (order.items || []).reduce((acc, i) => acc + ((i.price || 0) * (i.quantity || i.qty || 1)), 0);
-    document.getElementById('resTotalAmount').innerText = '৳' + total;
-
-    // Status Stepper & Badge
-    updateStatusStepper(order.status);
-}
-
-function updateStatusStepper(status) {
-    const s = (status || 'pending').toLowerCase();
-    const badge = document.getElementById('resStatusBadge');
-
-    // Reset all steps
-    ['step1', 'step2', 'step3', 'step4'].forEach(id => {
-        document.getElementById(id).className = 'track-step';
-    });
-    ['line1', 'line2', 'line3'].forEach(id => {
-        document.getElementById(id).className = 'track-step-line';
-    });
-
-    let currentStep = 1;
-    let badgeText = 'অর্ডার গৃহীত হয়েছে';
-    let badgeClass = 'status-pending';
-
-    if (s === 'pending' || s === 'confirmed') {
-        currentStep = 1;
-        badgeText = 'অর্ডার নিশ্চিত হয়েছে';
-        badgeClass = 'status-pending';
-    } else if (s === 'preparing' || s === 'cooking') {
-        currentStep = 2;
-        badgeText = 'রান্না হচ্ছে';
-        badgeClass = 'status-preparing';
-    } else if (s === 'out_for_delivery' || s === 'on_the_way') {
-        currentStep = 3;
-        badgeText = 'ডেলিভারিতে বের হয়েছে';
-        badgeClass = 'status-shipping';
-    } else if (s === 'delivered' || s === 'completed') {
-        currentStep = 4;
-        badgeText = 'ডেলিভারি সম্পন্ন';
-        badgeClass = 'status-delivered';
-    } else if (s === 'cancelled') {
-        badge.innerHTML = `<span class="track-badge-cancelled">অর্ডার বাতিল হয়েছে</span>`;
-        return;
-    }
-
-    badge.innerHTML = `<span class="${badgeClass}">${badgeText}</span>`;
-
-    for (let i = 1; i <= currentStep; i++) {
-        const stepEl = document.getElementById(`step${i}`);
-        if (i === currentStep && currentStep < 4) {
-            stepEl.classList.add('current');
-        } else {
-            stepEl.classList.add('completed');
-        }
-
-        if (i < currentStep) {
-            const lineEl = document.getElementById(`line${i}`);
-            if (lineEl) lineEl.classList.add('active');
-        }
-    }
-}
-
-function copyTrackId() {
-    const idEl = document.getElementById('resOrderId');
-    if (!idEl) return;
-    const textToCopy = idEl.innerText.trim();
-
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        const btnText = document.getElementById('trackCopyText');
-        if (btnText) {
-            btnText.innerText = 'কপি হয়েছে!';
-            setTimeout(() => {
-                btnText.innerText = 'কপি';
-            }, 2500);
-        }
-    }).catch(() => {
-        alert('আইডি: ' + textToCopy);
-    });
 }
 </script>
 @endsection

@@ -32,11 +32,21 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = $request->all();
+            $settingsFile = storage_path('app/restaurant_settings.json');
+            if (file_exists($settingsFile)) {
+                $settings = json_decode(file_get_contents($settingsFile), true) ?: [];
+                if (isset($settings['isOpen']) && $settings['isOpen'] === false) {
+                    return response()->json([
+                        'error' => 'সম্মানিত গ্রাহক, নজরুল হোটেল বর্তমানে সাময়িকভাবে বন্ধ আছে। খোলার সময়: ভোর ৫:০০ - রাত ১০:০০।'
+                    ], 400);
+                }
+            }
+
+            $data = $request->json()->all() ?: ($request->all() ?: (json_decode($request->getContent(), true) ?: []));
 
             $order = Order::create([
-                'customer_name' => $data['customerName'] ?? '',
-                'phone_number' => $data['phoneNumber'] ?? '',
+                'customer_name' => $data['customerName'] ?? $data['customer_name'] ?? '',
+                'phone_number' => $data['phoneNumber'] ?? $data['phone_number'] ?? '',
                 'address' => $data['address'] ?? '',
                 'total_amount' => 0,
                 'status' => 'PENDING',
@@ -44,7 +54,7 @@ class OrderController extends Controller
             ]);
 
             $total = 0;
-            $items = $data['items'] ?? [];
+            $items = $data['items'] ?? $data['orderItems'] ?? [];
             foreach ($items as $item) {
                 $qty = (int)($item['qty'] ?? $item['quantity'] ?? 1);
                 $price = (float)($item['price'] ?? 0);
@@ -52,7 +62,7 @@ class OrderController extends Controller
 
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'menu_item_name' => $item['name'] ?? '',
+                    'menu_item_name' => $item['name'] ?? $item['menu_item_name'] ?? '',
                     'quantity' => $qty,
                     'price' => $price,
                 ]);
@@ -67,7 +77,12 @@ class OrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'order' => array_merge($order->toArray(), ['shortId' => $shortId])
+                'order' => array_merge($order->toArray(), [
+                    'shortId' => $shortId,
+                    'customer_name' => $order->customer_name,
+                    'phone_number' => $order->phone_number,
+                    'order_items' => $order->orderItems->toArray()
+                ])
             ], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -103,7 +118,12 @@ class OrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'order' => array_merge($order->toArray(), ['shortId' => $shortId])
+                'order' => array_merge($order->toArray(), [
+                    'shortId' => $shortId,
+                    'customer_name' => $order->customer_name,
+                    'phone_number' => $order->phone_number,
+                    'order_items' => $order->orderItems ? $order->orderItems->toArray() : []
+                ])
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

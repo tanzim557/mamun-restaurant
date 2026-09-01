@@ -11,9 +11,9 @@ class Employee extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['name', 'position', 'phone', 'salary', 'salary_due', 'join_date', 'note'];
+    protected $fillable = ['name', 'position', 'phone', 'salary', 'salary_paid', 'salary_due', 'join_date', 'note'];
 
-    protected $casts = ['salary' => 'float', 'salary_due' => 'float'];
+    protected $casts = ['salary' => 'float', 'salary_paid' => 'float', 'salary_due' => 'float'];
 
     protected static function boot()
     {
@@ -31,6 +31,7 @@ class Employee extends Model
             'position' => $this->position,
             'phone' => $this->phone,
             'salary' => $this->salary,
+            'salaryPaid' => $this->salary_paid,
             'salaryDue' => $this->salary_due,
             'joinDate' => $this->join_date,
             'note' => $this->note,

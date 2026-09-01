@@ -43,6 +43,7 @@ return new class extends Migration
             $table->string('position', 100);
             $table->string('phone', 20)->nullable();
             $table->float('salary')->default(0);
+            $table->float('salary_paid')->default(0);
             $table->float('salary_due')->default(0);
             $table->string('join_date', 20)->nullable();
             $table->text('note')->nullable();

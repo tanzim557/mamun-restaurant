@@ -92,4 +92,56 @@ class AdminController extends Controller
             return response()->json(['message' => 'Item deleted']);
         }
     }
+
+    public function getRestaurantStatus()
+    {
+        $file = storage_path('app/restaurant_settings.json');
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true) ?: [];
+        } else {
+            $data = [
+                'isOpen' => true,
+                'statusMessage' => 'খোলা আছে — সরাসরি কিচেন থেকে ডেলিভারি হচ্ছে',
+                'openingTime' => '05:00',
+                'closingTime' => '22:00',
+                'acceptingOrders' => true,
+                'notice' => ''
+            ];
+            @file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+
+        return response()->json($data);
+    }
+
+    public function updateRestaurantStatus(Request $request)
+    {
+        $file = storage_path('app/restaurant_settings.json');
+        $current = [];
+        if (file_exists($file)) {
+            $current = json_decode(file_get_contents($file), true) ?: [];
+        }
+
+        $input = $request->json()->all() ?: ($request->all() ?: (json_decode($request->getContent(), true) ?: []));
+
+        $updated = array_merge([
+            'isOpen' => true,
+            'statusMessage' => 'খোলা আছে — সরাসরি কিচেন থেকে ডেলিভারি হচ্ছে',
+            'openingTime' => '05:00',
+            'closingTime' => '22:00',
+            'acceptingOrders' => true,
+            'notice' => ''
+        ], $current, $input);
+
+        if (isset($input['isOpen'])) {
+            $updated['isOpen'] = filter_var($input['isOpen'], FILTER_VALIDATE_BOOLEAN);
+            $updated['acceptingOrders'] = $updated['isOpen'];
+        }
+
+        @file_put_contents($file, json_encode($updated, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        return response()->json([
+            'success' => true,
+            'status' => $updated
+        ]);
+    }
 }

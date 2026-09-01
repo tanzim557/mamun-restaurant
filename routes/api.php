@@ -22,6 +22,11 @@ Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
 Route::get('/orders/track', [OrderController::class, 'track']);
 
+// Restaurant Status (Open/Closed)
+Route::get('/restaurant/status', [AdminController::class, 'getRestaurantStatus']);
+Route::post('/admin/restaurant/status', [AdminController::class, 'updateRestaurantStatus']);
+Route::post('/restaurant/status', [AdminController::class, 'updateRestaurantStatus']);
+
 // Contact / Reservation
 Route::post('/contact', [ReservationController::class, 'store']);
 

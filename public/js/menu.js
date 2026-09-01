@@ -1,89 +1,118 @@
-// Menu Page Logic
-let allCategories = [];
-let allMenuItems = [];
-let activeCategory = 'all';
-let searchKeyword = '';
+// In-App Menu Catalog Logic
+let catalogItems = [];
+let catalogCategories = [];
+let selectedCategory = 'all';
+let menuSearchKeyword = '';
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchMenuData();
+const foodPlaceholders = {
+    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    'নেহারী': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    'হাঁস': 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
+    'মুরগী': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
+    'মাছ': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
+    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=800&q=80',
+    'ডাল': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    'default': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80'
+};
 
-    const searchInput = document.getElementById('menuSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            searchKeyword = e.target.value.toLowerCase().trim();
-            renderMenuItems();
-        });
+function getCatalogImg(dish) {
+    if (dish.image && dish.image.trim() !== '') return dish.image;
+    for (const [k, url] of Object.entries(foodPlaceholders)) {
+        if (dish.name && dish.name.includes(k)) return url;
     }
-});
+    return foodPlaceholders['default'];
+}
 
-async function fetchMenuData() {
+let lastCatalogHash = '';
+
+async function syncLiveCatalog() {
     try {
         const [catRes, itemRes] = await Promise.all([
             fetch('/api/menu/categories'),
             fetch('/api/menu/items')
         ]);
-        allCategories = await catRes.json();
-        allMenuItems = await itemRes.json();
-        
-        renderCategoryTabs();
-        renderMenuItems();
-        
-        const loading = document.getElementById('menuLoading');
-        if (loading) loading.style.display = 'none';
-    } catch (e) {
-        console.error('Error fetching menu data:', e);
-    }
+        const newCats = await catRes.json();
+        const newItems = await itemRes.json();
+
+        const currentHash = JSON.stringify(newItems.map(i => `${i.id}_${i.price}_${i.isAvailable}_${i.is_available}_${i.name}`));
+        if (currentHash !== lastCatalogHash) {
+            lastCatalogHash = currentHash;
+            catalogCategories = newCats;
+            catalogItems = newItems;
+            renderCategoryPills();
+            renderMenuGrid();
+        }
+        document.getElementById('menuLoading')?.classList.add('hidden');
+    } catch(e) {}
 }
 
-function renderCategoryTabs() {
-    const container = document.getElementById('categoryTabs');
-    if (!container) return;
+document.addEventListener('DOMContentLoaded', async () => {
+    await syncLiveCatalog();
+    setInterval(syncLiveCatalog, 3000);
+});
 
-    let html = `<button class="filter-tab ${activeCategory === 'all' ? 'active' : ''}" onclick="setCategory('all')">All Dishes</button>`;
-    allCategories.forEach(cat => {
-        html += `<button class="filter-tab ${activeCategory === cat.slug ? 'active' : ''}" onclick="setCategory('${cat.slug}')">${cat.name}</button>`;
+function renderCategoryPills() {
+    const pillsContainer = document.getElementById('menuCategoryPills');
+    if (!pillsContainer) return;
+
+    let html = `<button class="cat-pill ${selectedCategory === 'all' ? 'active' : ''}" onclick="selectMenuCat('all', this)">🔥 সকল পদ</button>`;
+    catalogCategories.forEach(cat => {
+        html += `<button class="cat-pill ${selectedCategory === cat.slug ? 'active' : ''}" onclick="selectMenuCat('${cat.slug}', this)">${cat.name}</button>`;
     });
-    container.innerHTML = html;
+
+    pillsContainer.innerHTML = html;
 }
 
-function setCategory(slug) {
-    activeCategory = slug;
-    renderCategoryTabs();
-    renderMenuItems();
-}
+function selectMenuCat(slug, el) {
+    selectedCategory = slug;
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    if (el) el.classList.add('active');
 
-const menuFoodImages = {
-    'গরু': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
-    'কালাভুনা': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
-    'নেহারী': 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80',
-    'হাঁস': 'https://images.unsplash.com/photo-1514944298352-7b0078907869?auto=format&fit=crop&w=600&q=80',
-    'মুরগী': 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80',
-    'মাছ': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
-    'ইলিশ': 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=600&q=80',
-    'রুই': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
-    'ভাত': 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=600&q=80',
-    'চা': 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80'
-};
-
-function getMenuDishImage(item) {
-    if (item.image && item.image.trim() !== '') return item.image;
-    const name = item.name || '';
-    for (const [kw, url] of Object.entries(menuFoodImages)) {
-        if (name.includes(kw)) return url;
+    const titleEl = document.getElementById('menuSectionTitle');
+    if (titleEl) {
+        if (slug === 'all') {
+            titleEl.textContent = 'সকল খাবারের মেনু';
+        } else {
+            const found = catalogCategories.find(c => c.slug === slug);
+            titleEl.textContent = found ? found.name : 'খাবারের তালিকা';
+        }
     }
-    return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80';
+
+    renderMenuGrid();
 }
 
-function renderMenuItems() {
+function filterMenuSearch(val) {
+    menuSearchKeyword = val.trim();
+    const clearBtn = document.getElementById('menuSearchClear');
+    if (clearBtn) {
+        if (menuSearchKeyword) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+    }
+    renderMenuGrid();
+}
+
+function clearMenuSearch() {
+    const input = document.getElementById('menuSearchInput');
+    if (input) input.value = '';
+    menuSearchKeyword = '';
+    document.getElementById('menuSearchClear')?.classList.add('hidden');
+    renderMenuGrid();
+}
+
+function renderMenuGrid() {
     const grid = document.getElementById('menuGrid');
     const empty = document.getElementById('menuEmpty');
+    const countEl = document.getElementById('menuItemCount');
     if (!grid) return;
 
-    let filtered = allMenuItems.filter(item => {
-        const matchesCat = (activeCategory === 'all') || (item.category && item.category.slug === activeCategory) || (item.categoryId === activeCategory);
-        const matchesSearch = !searchKeyword || item.name.toLowerCase().includes(searchKeyword) || (item.description && item.description.toLowerCase().includes(searchKeyword));
-        return matchesCat && matchesSearch;
+    let filtered = catalogItems.filter(item => {
+        const matchesCategory = (selectedCategory === 'all') || (item.category && item.category.slug === selectedCategory) || (item.categoryId === selectedCategory);
+        const matchesSearch = !menuSearchKeyword || (item.name && item.name.toLowerCase().includes(menuSearchKeyword.toLowerCase())) || (item.description && item.description.toLowerCase().includes(menuSearchKeyword.toLowerCase()));
+        return matchesCategory && matchesSearch;
     });
+
+    if (countEl) countEl.textContent = `${filtered.length} টি পদ`;
 
     if (filtered.length === 0) {
         grid.innerHTML = '';
@@ -93,30 +122,43 @@ function renderMenuItems() {
 
     if (empty) empty.classList.add('hidden');
 
-    grid.innerHTML = filtered.map(item => {
-        const imgUrl = getMenuDishImage(item);
-        const isAvail = (item.isAvailable === true || item.is_available === true || item.isAvailable === 1 || item.is_available === 1 || item.isAvailable === undefined);
-        const isFeat = (item.isFeatured === true || item.is_featured === true || item.isFeatured === 1 || item.is_featured === 1);
+    grid.innerHTML = filtered.map(dish => {
+        const img = getCatalogImg(dish);
+        const cartItem = globalCart.find(ci => String(ci.id) === String(dish.id));
+        const qty = cartItem ? cartItem.qty : 0;
+        const isSpicy = dish.name.includes('চুইঝাল') || dish.name.includes('ঝাল') || dish.name.includes('কালাভুনা');
+        const isAvail = (dish.isAvailable === true || dish.is_available === true || dish.isAvailable === 1 || dish.is_available === 1 || dish.isAvailable === undefined);
 
         return `
-            <div class="card animate-fade-up ${!isAvail ? 'opacity-70' : ''}">
-                <div class="card-img" style="position:relative;">
-                    <img src="${imgUrl}" alt="${item.name}">
-                    <div class="card-badge">৳${item.price}</div>
-                    ${!isAvail ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;"><span style="background:#ef4444;color:#fff;padding:4px 12px;border-radius:9999px;font-size:0.8rem;font-weight:800;">স্টক শেষ</span></div>' : ''}
+            <div class="food-app-card ${!isAvail ? 'opacity-70' : ''}">
+                <div class="food-app-img-wrap" onclick="addToAppCart('${dish.id}', '${dish.name.replace(/'/g, "\\'")}', ${dish.price}, '${img}', '${dish.category?.name || ''}')">
+                    <img src="${img}" alt="${dish.name}" loading="lazy">
+                    ${isSpicy ? '<span class="food-app-tag-spicy">🌶️ চুইঝাল</span>' : ''}
+                    <span class="food-app-rating">★ ৪.৯</span>
                 </div>
-                <div class="card-body">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 style="font-size:1.3rem;font-weight:800;">${item.name}</h3>
-                        ${isFeat ? '<span class="text-xs text-secondary font-bold" style="background:rgba(245,158,11,0.15);padding:2px 8px;border-radius:4px;border:1px solid rgba(245,158,11,0.3);">★ Featured</span>' : ''}
-                    </div>
-                    <p class="text-muted text-sm line-clamp-2" style="margin-bottom:1.25rem;">${item.description || 'সাতক্ষীরার খাঁটি মসলা ও চুইঝাল দিয়ে রান্না করা সুস্বাদু খাবার।'}</p>
-                    <div class="flex items-center justify-between">
-                        <span class="card-tag">${item.category ? item.category.name : 'খাবার'}</span>
-                        ${isAvail 
-                            ? `<a href="/order" class="btn btn-sm btn-primary">অর্ডার করুন</a>`
-                            : `<button class="btn btn-sm" style="background:#27272a;color:#71717a;border:1px solid #3f3f46;cursor:not-allowed;" disabled>বর্তমানে নেই</button>`
-                        }
+                <div class="food-app-card-body">
+                    <h4 class="food-app-card-title">${dish.name}</h4>
+                    <p class="food-app-card-desc">${dish.description || 'সাতক্ষীরার চুইঝাল স্পেশাল ঐতিহ্যবাহী রান্না।'}</p>
+                    <div class="food-app-card-footer">
+                        <div class="food-app-price">৳${dish.price}</div>
+                        <div>
+                            ${!isAvail ? `
+                                <button type="button" class="food-app-add-btn" style="background:#27272a;color:#71717a;box-shadow:none;cursor:not-allowed;" disabled>স্টক শেষ</button>
+                            ` : (qty === 0 ? `
+                                <button type="button" class="food-app-add-btn" onclick="addToAppCart('${dish.id}', '${dish.name.replace(/'/g, "\\'")}', ${dish.price}, '${img}', '${dish.category?.name || ''}')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    <span>যোগ</span>
+                                </button>
+                            ` : `
+                                <div class="food-app-stepper">
+                                    <button type="button" class="stepper-btn ${qty === 1 ? 'danger' : ''}" onclick="changeAppQty('${dish.id}', -1)">
+                                        ${qty === 1 ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' : '−'}
+                                    </button>
+                                    <span class="stepper-val">${qty}</span>
+                                    <button type="button" class="stepper-btn" onclick="changeAppQty('${dish.id}', 1)">+</button>
+                                </div>
+                            `)}
+                        </div>
                     </div>
                 </div>
             </div>
