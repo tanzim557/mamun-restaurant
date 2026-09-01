@@ -21,6 +21,7 @@ Route::get('/menu/categories', [MenuController::class, 'categories']);
 Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
 Route::get('/orders/track', [OrderController::class, 'track']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
 
 // Restaurant Status (Open/Closed)
 Route::get('/restaurant/status', [AdminController::class, 'getRestaurantStatus']);

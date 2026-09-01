@@ -129,4 +129,33 @@ class OrderController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function show($id)
+    {
+        try {
+            $cleanId = str_ireplace(['#', 'MR-', 'MR', ' '], '', $id);
+            $order = Order::with('orderItems')
+                ->where('id', $id)
+                ->orWhere('id', 'LIKE', '%' . $cleanId . '%')
+                ->first();
+
+            if (!$order) {
+                return response()->json(['error' => 'Order not found'], 404);
+            }
+
+            $shortId = 'MR-' . strtoupper(substr(str_replace('-', '', $order->id), 0, 6));
+
+            return response()->json([
+                'success' => true,
+                'order' => array_merge($order->toArray(), [
+                    'shortId' => $shortId,
+                    'customer_name' => $order->customer_name,
+                    'phone_number' => $order->phone_number,
+                    'order_items' => $order->orderItems ? $order->orderItems->toArray() : []
+                ])
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
