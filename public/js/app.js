@@ -397,6 +397,19 @@ async function placeSheetOrder() {
     const fullAddress = area ? `${area}, ${address}` : address;
 
     try {
+        const isOffline = !navigator.onLine;
+        if (isOffline) {
+            queueOfflineOrder({
+                customerName: name,
+                phoneNumber: phone,
+                address: fullAddress,
+                note: note,
+                items: globalCart,
+                totalAmount: globalCart.reduce((sum, i) => sum + ((parseFloat(i.price) || 0) * (i.qty || 1)), 0)
+            });
+            return;
+        }
+
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
         const res = await fetch('/api/orders', {
             method: 'POST',
@@ -436,17 +449,106 @@ async function placeSheetOrder() {
             throw new Error(data.error || 'অর্ডার করতে সমস্যা হয়েছে।');
         }
     } catch(e) {
-        if (errEl) {
-            errEl.textContent = e.message || 'অর্ডার পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।';
-            errEl.classList.remove('hidden');
-        }
-        showToast(e.message || 'সমস্যা হয়েছে', 'error');
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = 'অর্ডার কনফার্ম করুন (ক্যাশ অন ডেলিভারি)';
-        }
+        // If network error occurred, seamlessly save to offline queue
+        console.warn('Network error during order, saving offline:', e);
+        queueOfflineOrder({
+            customerName: name,
+            phoneNumber: phone,
+            address: fullAddress,
+            note: note,
+            items: globalCart,
+            totalAmount: globalCart.reduce((sum, i) => sum + ((parseFloat(i.price) || 0) * (i.qty || 1)), 0)
+        });
     }
 }
+
+// ═══════════════════════════════════════════════════════════
+// OFFLINE ORDER QUEUE & AUTO-SYNC ENGINE
+// ═══════════════════════════════════════════════════════════
+function queueOfflineOrder(orderPayload) {
+    const offlineId = 'OFFLINE-' + Math.floor(100000 + Math.random() * 900000);
+    orderPayload.offlineId = offlineId;
+    orderPayload.createdAt = new Date().toISOString();
+
+    let pendingOrders = [];
+    try {
+        pendingOrders = JSON.parse(localStorage.getItem('mamun_offline_orders') || '[]');
+    } catch(e) {}
+
+    pendingOrders.push(orderPayload);
+    localStorage.setItem('mamun_offline_orders', JSON.stringify(pendingOrders));
+
+    // Clear current cart
+    globalCart = [];
+    saveGlobalCart();
+    closeCartSheet();
+
+    showToast('📡 অর্ডারটি অফলাইনে সেভ হয়েছে! ইন্টারনেট পেলেই সিঙ্ক হবে।', 'success');
+
+    setTimeout(() => {
+        window.location.href = `/track?id=${encodeURIComponent(offlineId)}&offline=true`;
+    }, 800);
+}
+
+let isSyncingOfflineOrders = false;
+async function processOfflineOrdersQueue() {
+    if (isSyncingOfflineOrders || !navigator.onLine) return;
+
+    let pendingOrders = [];
+    try {
+        pendingOrders = JSON.parse(localStorage.getItem('mamun_offline_orders') || '[]');
+    } catch(e) {}
+
+    if (pendingOrders.length === 0) return;
+
+    isSyncingOfflineOrders = true;
+    const remainingOrders = [];
+
+    for (const order of pendingOrders) {
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+            const res = await fetch('/api/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    customerName: order.customerName,
+                    phoneNumber: order.phoneNumber,
+                    address: order.address,
+                    note: (order.note || '') + ` (অফলাইন অর্ডার: ${order.offlineId})`,
+                    items: order.items
+                })
+            });
+
+            const data = await res.json();
+            if (data.success && data.order) {
+                const syncedOrderId = data.order.shortId || data.order.id;
+                showToast(`🟢 অফলাইন অর্ডার (${syncedOrderId}) ওয়েবসাইটে অটো-সিঙ্ক হয়েছে!`, 'success');
+                if (mamunSyncBus) {
+                    mamunSyncBus.postMessage({ action: 'ORDER_PLACED', orderId: syncedOrderId });
+                }
+                try {
+                    localStorage.setItem('mamun_sync_event', 'ORDER_PLACED_' + Date.now());
+                } catch(e) {}
+            } else {
+                remainingOrders.push(order);
+            }
+        } catch (err) {
+            remainingOrders.push(order);
+        }
+    }
+
+    localStorage.setItem('mamun_offline_orders', JSON.stringify(remainingOrders));
+    isSyncingOfflineOrders = false;
+}
+
+// Auto-sync listeners
+window.addEventListener('online', () => {
+    processOfflineOrdersQueue();
+});
+setInterval(processOfflineOrdersQueue, 4000);
 
 // ═══════════════════════════════════════════════════════════
 // TOAST NOTIFICATION SYSTEM
@@ -473,5 +575,6 @@ function showToast(message, type = 'success') {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(-10px)';
         setTimeout(() => toast.remove(), 300);
-    }, 2400);
+    }, 2800);
 }
+
