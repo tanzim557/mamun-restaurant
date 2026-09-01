@@ -45,6 +45,9 @@
                 <a href="/contact" class="desktop-nav-link {{ request()->is('contact') ? 'active' : '' }}">
                     <span class="nav-icon">📞</span> <span>যোগাযোগ</span>
                 </a>
+                <a href="/download" class="desktop-nav-link {{ request()->is('download*') ? 'active' : '' }}">
+                    <span class="nav-icon">📱</span> <span>অ্যাপ</span>
+                </a>
             </nav>
 
             <!-- Right Action CTA -->
