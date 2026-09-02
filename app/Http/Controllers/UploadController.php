@@ -9,10 +9,15 @@ class UploadController extends Controller
 {
     public function image(Request $request)
     {
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
         // 1. Check if multipart file is uploaded (file or image)
         $file = $request->file('file') ?: $request->file('image');
         if ($file && $file->isValid()) {
             $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+            if (!in_array($ext, $allowedExts)) {
+                $ext = 'jpg';
+            }
             $filename = Str::uuid()->toString() . '.' . $ext;
             $file->move(public_path('uploads'), $filename);
             return response()->json([
@@ -28,6 +33,9 @@ class UploadController extends Controller
             if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
                 $base64 = substr($base64, strpos($base64, ',') + 1);
                 $ext = strtolower($type[1]);
+                if (!in_array($ext, $allowedExts)) {
+                    $ext = 'jpg';
+                }
             } else {
                 $ext = 'jpg';
             }

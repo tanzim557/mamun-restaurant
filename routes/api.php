@@ -19,7 +19,7 @@ Route::get('/menu/categories', [MenuController::class, 'categories']);
 
 // Public orders & tracking
 Route::get('/orders', [OrderController::class, 'index']);
-Route::post('/orders', [OrderController::class, 'store']);
+Route::middleware('throttle:15,1')->post('/orders', [OrderController::class, 'store']);
 Route::get('/orders/track', [OrderController::class, 'track']);
 Route::get('/orders/{id}', [OrderController::class, 'show']);
 
@@ -28,11 +28,11 @@ Route::get('/restaurant/status', [AdminController::class, 'getRestaurantStatus']
 Route::post('/admin/restaurant/status', [AdminController::class, 'updateRestaurantStatus']);
 Route::post('/restaurant/status', [AdminController::class, 'updateRestaurantStatus']);
 
-// Contact / Reservation
-Route::post('/contact', [ReservationController::class, 'store']);
+// Contact / Reservation (Throttled to prevent spam)
+Route::middleware('throttle:6,1')->post('/contact', [ReservationController::class, 'store']);
 
-// Auth
-Route::post('/admin/login', [AuthController::class, 'login']);
+// Auth (Strictly throttled to 5 attempts/minute against brute force)
+Route::middleware('throttle:5,1')->post('/admin/login', [AuthController::class, 'login']);
 Route::post('/admin/logout', [AuthController::class, 'logout']);
 
 // Admin CRUD

@@ -23,3 +23,17 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Security Hardening: Block sensitive files
+<FilesMatch "(^\.env|^\.git|composer\.(json|lock)|package\.(json|lock)|\.sql|\.bak|\.log|\.md)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent script execution inside uploads directory
+<Directory "uploads">
+    <FilesMatch "\.(php|phtml|php3|php4|php5|phps|pl|py|jsp|asp|sh|cgi)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</Directory>
