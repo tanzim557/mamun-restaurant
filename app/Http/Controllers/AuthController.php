@@ -10,17 +10,22 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $login    = trim($request->input('email', '') ?: $request->input('username', ''));
+        $password = trim($request->input('password', ''));
 
-        $user = User::where('email', $email)->first();
+        // Find by email OR by phone (username) — only ADMIN role
+        $user = User::where('role', 'ADMIN')
+            ->where(function ($q) use ($login) {
+                $q->where('email', $login)->orWhere('phone', $login);
+            })
+            ->first();
 
-        if ($user && ($user->password === $password || Hash::check($password, $user->password))) {
+        if ($user && Hash::check($password, $user->password)) {
             session(['admin_logged_in' => true, 'admin_user' => $user->toArray()]);
             return response()->json(['success' => true, 'user' => $user]);
         }
 
-        return response()->json(['success' => false, 'error' => 'Invalid credentials'], 401);
+        return response()->json(['success' => false, 'error' => 'ভুল Username বা Password. আবার চেষ্টা করুন।'], 401);
     }
 
     public function logout()
