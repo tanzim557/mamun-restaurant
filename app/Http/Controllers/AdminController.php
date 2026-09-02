@@ -53,14 +53,26 @@ class AdminController extends Controller
     public function createMenuItem(Request $request)
     {
         $data = $request->all();
-        $categoryId = $data['categoryId'] ?? Category::first()?->id;
+        $categoryName = $data['category'] ?? ($data['categoryName'] ?? 'ভাত ও তরকারি');
+        $categoryId = $data['categoryId'] ?? null;
+        if (!$categoryId && !empty($categoryName)) {
+            $cat = Category::firstOrCreate(
+                ['name' => $categoryName],
+                ['slug' => \Illuminate\Support\Str::slug($categoryName) ?: 'food-cat']
+            );
+            $categoryId = $cat->id;
+        }
+        if (!$categoryId) {
+            $categoryId = Category::first()?->id;
+        }
 
         $item = MenuItem::create([
             'name' => $data['name'] ?? '',
             'description' => $data['description'] ?? '',
             'price' => floatval($data['price'] ?? 0),
             'image' => $data['image'] ?? null,
-            'is_featured' => $data['isFeatured'] ?? false,
+            'is_featured' => filter_var($data['isFeatured'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'is_available' => filter_var($data['isAvailable'] ?? true, FILTER_VALIDATE_BOOLEAN),
             'category_id' => $categoryId,
         ]);
 
@@ -79,6 +91,13 @@ class AdminController extends Controller
             if (isset($data['description'])) $item->description = $data['description'];
             if (isset($data['price'])) $item->price = floatval($data['price']);
             if (isset($data['image'])) $item->image = $data['image'];
+            if (!empty($data['category'])) {
+                $cat = Category::firstOrCreate(
+                    ['name' => $data['category']],
+                    ['slug' => \Illuminate\Support\Str::slug($data['category']) ?: 'food-cat']
+                );
+                $item->category_id = $cat->id;
+            }
             if (isset($data['categoryId'])) $item->category_id = $data['categoryId'];
             if (isset($data['isFeatured'])) $item->is_featured = filter_var($data['isFeatured'], FILTER_VALIDATE_BOOLEAN);
             if (isset($data['isAvailable'])) $item->is_available = filter_var($data['isAvailable'], FILTER_VALIDATE_BOOLEAN);
