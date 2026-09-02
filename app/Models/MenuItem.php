@@ -32,6 +32,15 @@ class MenuItem extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function getImageAttribute($value)
+    {
+        if (empty($value)) return null;
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+        return url($value);
+    }
+
     public function toArray()
     {
         $data = [
