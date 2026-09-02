@@ -11,7 +11,7 @@ class User extends Authenticatable
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['name', 'email', 'password', 'role'];
+    protected $fillable = ['name', 'email', 'phone', 'address', 'password', 'role'];
     protected $hidden = ['password'];
 
     protected static function boot()
@@ -28,6 +28,8 @@ class User extends Authenticatable
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
             'role' => $this->role,
             'createdAt' => $this->created_at?->toISOString(),
             'updatedAt' => $this->updated_at?->toISOString(),

@@ -35,6 +35,11 @@ Route::middleware('throttle:6,1')->post('/contact', [ReservationController::clas
 Route::middleware('throttle:5,1')->post('/admin/login', [AuthController::class, 'login']);
 Route::post('/admin/logout', [AuthController::class, 'logout']);
 
+// Customer Auth & Profile
+Route::middleware('throttle:10,1')->post('/customer/register', [AuthController::class, 'customerRegister']);
+Route::middleware('throttle:10,1')->post('/customer/login', [AuthController::class, 'customerLogin']);
+Route::post('/customer/update-profile', [AuthController::class, 'customerUpdateProfile']);
+
 // Admin CRUD
 Route::match(['patch', 'delete'], '/admin/orders/{id}', [AdminController::class, 'manageOrder']);
 Route::get('/admin/reservations', [AdminController::class, 'reservations']);
