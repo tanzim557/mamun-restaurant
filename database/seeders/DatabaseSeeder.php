@@ -402,5 +402,28 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        // Raw Materials / Kitchen Stock Items
+        \App\Models\StockItem::query()->delete();
+        $stockItems = [
+            ['name' => 'মিনিকেট চাল', 'category' => 'চাল ও আটা', 'quantity' => 75.0, 'used_quantity' => 25.0, 'unit' => 'কেজি', 'min_quantity' => 20.0, 'last_price' => 70.0],
+            ['name' => 'সয়াবিন তেল', 'category' => 'তেল ও ঘি', 'quantity' => 40.0, 'used_quantity' => 15.0, 'unit' => 'লিটার', 'min_quantity' => 10.0, 'last_price' => 175.0],
+            ['name' => 'মসুর ডাল', 'category' => 'ডাল', 'quantity' => 22.0, 'used_quantity' => 8.0, 'unit' => 'কেজি', 'min_quantity' => 5.0, 'last_price' => 130.0],
+            ['name' => 'মুগ ডাল', 'category' => 'ডাল', 'quantity' => 14.0, 'used_quantity' => 4.0, 'unit' => 'কেজি', 'min_quantity' => 4.0, 'last_price' => 145.0],
+            ['name' => 'তাজা গরুর মাংস', 'category' => 'মাংস', 'quantity' => 28.0, 'used_quantity' => 22.0, 'unit' => 'কেজি', 'min_quantity' => 8.0, 'last_price' => 780.0],
+            ['name' => 'সাতক্ষীরার চুইঝাল', 'category' => 'মশলা', 'quantity' => 6.0, 'used_quantity' => 2.0, 'unit' => 'কেজি', 'min_quantity' => 2.0, 'last_price' => 900.0],
+            ['name' => 'দেশি হাঁস', 'category' => 'মাংস', 'quantity' => 12.0, 'used_quantity' => 6.0, 'unit' => 'পিচ', 'min_quantity' => 4.0, 'last_price' => 550.0],
+            ['name' => 'সোনালী মুরগি', 'category' => 'মাংস', 'quantity' => 20.0, 'used_quantity' => 12.0, 'unit' => 'পিচ', 'min_quantity' => 6.0, 'last_price' => 280.0],
+            ['name' => 'তাজা ইলিশ মাছ', 'category' => 'মাছ', 'quantity' => 8.0, 'used_quantity' => 5.0, 'unit' => 'পিচ', 'min_quantity' => 3.0, 'last_price' => 850.0],
+            ['name' => 'তাজা ভেটকি মাছ', 'category' => 'মাছ', 'quantity' => 10.0, 'used_quantity' => 4.0, 'unit' => 'কেজি', 'min_quantity' => 3.0, 'last_price' => 650.0],
+            ['name' => 'পিঁয়াজ', 'category' => 'সবজি ও মশলা', 'quantity' => 30.0, 'used_quantity' => 12.0, 'unit' => 'কেজি', 'min_quantity' => 8.0, 'last_price' => 65.0],
+            ['name' => 'রসুন ও আদা', 'category' => 'সবজি ও মশলা', 'quantity' => 12.0, 'used_quantity' => 4.0, 'unit' => 'কেজি', 'min_quantity' => 3.0, 'last_price' => 180.0],
+            ['name' => 'আলু', 'category' => 'সবজি ও মশলা', 'quantity' => 45.0, 'used_quantity' => 15.0, 'unit' => 'কেজি', 'min_quantity' => 10.0, 'last_price' => 35.0],
+            ['name' => 'আটা ও ময়দা', 'category' => 'চাল ও আটা', 'quantity' => 25.0, 'used_quantity' => 8.0, 'unit' => 'কেজি', 'min_quantity' => 6.0, 'last_price' => 48.0],
+        ];
+
+        foreach ($stockItems as $si) {
+            \App\Models\StockItem::create($si);
+        }
     }
 }

@@ -11,10 +11,13 @@ class StockItem extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['name', 'quantity', 'unit', 'min_quantity', 'last_price'];
+    protected $fillable = ['name', 'category', 'quantity', 'used_quantity', 'unit', 'min_quantity', 'last_price'];
 
     protected $casts = [
-        'quantity' => 'float', 'min_quantity' => 'float', 'last_price' => 'float',
+        'quantity' => 'float',
+        'used_quantity' => 'float',
+        'min_quantity' => 'float',
+        'last_price' => 'float',
     ];
 
     protected static function boot()
@@ -35,7 +38,10 @@ class StockItem extends Model
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'category' => $this->category ?? 'কাঁচামাল',
             'quantity' => $this->quantity,
+            'usedQuantity' => $this->used_quantity ?? 0,
+            'remaining' => max(0, $this->quantity),
             'unit' => $this->unit,
             'minQuantity' => $this->min_quantity,
             'lastPrice' => $this->last_price,

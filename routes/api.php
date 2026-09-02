@@ -59,11 +59,16 @@ Route::post('/ledger', [LedgerController::class, 'store']);
 Route::get('/ledger/summary', [LedgerController::class, 'summary']);
 Route::delete('/ledger/{id}', [LedgerController::class, 'destroy']);
 
-// Stock
+// Stock / Raw Material Inventory
 Route::get('/stock', [StockController::class, 'index']);
+Route::get('/admin/stock', [StockController::class, 'index']);
+Route::get('/admin/stock/alerts', [StockController::class, 'alerts']);
 Route::post('/stock', [StockController::class, 'store']);
+Route::post('/admin/stock', [StockController::class, 'store']);
 Route::patch('/stock/{id}', [StockController::class, 'update']);
+Route::patch('/admin/stock/{id}', [StockController::class, 'update']);
 Route::delete('/stock/{id}', [StockController::class, 'destroy']);
+Route::delete('/admin/stock/{id}', [StockController::class, 'destroy']);
 
 // Upload
 Route::post('/upload/image', [UploadController::class, 'image']);
